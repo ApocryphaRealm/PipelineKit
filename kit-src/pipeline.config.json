@@ -1,0 +1,7 @@
+{
+  "_comment": "Written by scripts\\kit-install.ps1. Every gate script finds <ROOT> from where it sits (anywhere under <ROOT>\\.MD\\scripts) or from the PIPELINE_ROOT environment variable, and every other file through <ROOT>\\.MD\\resolvers\\resolve.py; this file records what was chosen so a person or an agent can read it. Secrets never go here - the Nexus key is the NEXUS_APIKEY environment variable.",
+  "kitVersion": "{KIT_VERSION}",
+  "root": "",
+  "mo2Instances": [],
+  "installed": ""
+}
