@@ -7,7 +7,9 @@ under dist\\ is edited by hand.
 
     python build_kit.py                      # build into dist\\ from the tree this repo sits in (or PIPELINE_ROOT)
     python build_kit.py --source <root>      # another live root
-    python build_kit.py --check              # build, then only report the leak scan (no dist write)
+    python build_kit.py --check              # build, then only report the leak scan and the screen (no dist write)
+    python build_kit.py --check --out <dir>  # the same, into a scratch folder that is kept
+    python build_kit.py --screen [<dir>]     # only the screening stage, over a built kit
 
 WHAT IT DOES
   1. copies the governing documents (entry file, digest, preflight, banned words, the seven rule parts, the logic
@@ -17,6 +19,8 @@ WHAT IT DOES
      variable or a path derived from where the script sits;
   3. adds the kit's own hand-written files from kit-src\\ (member README, the recipe README-FOR-AI.md, the install
      and self-test scripts, the example mod, the licences, pipeline.config.json);
+  3b. screens for publication (kit_screen.py): network tools cut, network parts removed, documents reduced to the mod's
+     name, the issue, the fix and the lesson; a --screen stage FAILS the build on a network call or evidence;
   4. scans everything written for the owner's private identifiers and FAILS the build if any survive - the kit's
      own gate, and the same class of check the package gate runs (gate rule kit-ships-no-machine-identity).
      The identifiers are read from a private, untracked config (role identity-patterns); without it the build
@@ -44,7 +48,9 @@ import shutil
 import subprocess
 import sys
 
-__version__ = "1.0.5"
+import kit_screen
+
+__version__ = "1.1.0"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 KIT_SRC = os.path.join(HERE, "kit-src")
@@ -71,7 +77,6 @@ DOCS = [
     # FALSIFICATION-MODE, ADVERSARIAL-MODE, TESTING-PROTOCOL and SMF-CONVERSION-PLAYBOOK moved into their skills'
     # references\ folders on 2026-10-09 and ship there, with skills\ (the .MD copies are pointers, never shipped)
     ("TRIAGE-CATEGORIES.md", "docs/TRIAGE-CATEGORIES.md"),
-    ("MACHINE-HEALTH.md", "docs/MACHINE-HEALTH.md"),
     ("DEFAULT-KEYS.md", "docs/DEFAULT-KEYS.md"),
     ("docs-archive/VERSION-RECONCILIATION.md", "docs/VERSION-RECONCILIATION.md"),
     ("docs-archive/PIPELINE-RESEARCH.md", "docs-archive/PIPELINE-RESEARCH.md"),
@@ -91,11 +96,9 @@ SCRIPTS = [
     "rules-version.ps1", "docs-pipeline.ps1", "ops/prockill.ps1", "rules-digest.py", "logic-index.py",
     "plugins/esp-audit.py", "gates/swf-colour-gate.py", "check-export-parity.py", "translation-coverage.py",
     "install-test-build.py", "plugins/make-fomod.py", "plugins/make-espfe.py",
-    "git-hooks/pre-push",
     # 1.0.1: distro-names.ps1 (package-gate and prune-test-builds dot-source it since 2026-09-29 - 1.0.0 shipped
     # without it), the one-command finalize, and the Nexus posting tools of 2026-09-30
-    "distro-names.ps1", "release/finalize-mod.ps1", "release/nexus-upload.py", "release/nexus-version-audit.py",
-    "release/nexus-media-backup.py", "ops/attention-ping.ps1",
+    "distro-names.ps1", "release/finalize-mod.ps1", "ops/attention-ping.ps1",
     # 1.0.1: the helper scripts gate-rules.json rows name ("script" kind) - a row whose script is missing fails the gate
     "gates/cpp-escape-gate.py", "gates/main-thread-task-gate.py", "gates/xinput-import-gate.py",
     # 1.0.2: the licence-label gate (gate row dll-licence-label-matches-repo-licence names it), the skill scout and the
@@ -119,13 +122,6 @@ RESOLVER_FILES = ["resolve.py", "resolve.ps1", "session-start.py",
 # rosters that never ship: every role in them is the owner's own (MO2 instances; the test instance's one-off scripts
 # roster is added from the private identity config, kitPaths.instanceRoster)
 ROSTERS_DROPPED = {"games.json"}
-# identity values the person replaces with their own (README-FOR-AI, step 3b); Nexus domains are public facts and stay
-IDENTITY_PLACEHOLDERS = {
-    "patreon": {"value": "https://www.patreon.com/YOUR-PATREON-NAME", "pattern": "patreon\\.com/([A-Za-z0-9_-]+)\\b(?!/posts)",
-                "note": "PLACEHOLDER - your own donation link (Support my work on every Nexus page); never paid or members-only content"},
-    "discord-invite": {"value": "https://discord.gg/YOUR-INVITE", "pattern": "discord\\.gg/([A-Za-z0-9]{6,})",
-                       "note": "PLACEHOLDER - your Discord server's invite link"},
-}
 # files kit-install creates (paths under <ROOT>); a role naming one of them ships although dist does not carry it
 INSTALL_CREATES = {".MD/PROGRESS.md", ".MD/docs-archive", "2. Mod Types/to-do list/to-do-list.md", ".MD/logs",
                    # the stage folders (kit-install.ps1 $STAGES; the owner's extra folders - quarantine, playerbot sources - are not)
@@ -135,7 +131,7 @@ INSTALL_CREATES = {".MD/PROGRESS.md", ".MD/docs-archive", "2. Mod Types/to-do li
 # a role note that names the owner's machine or people is dropped (the role itself ships)
 # (the owner's MO2 instance names are added from the private identity config - ownerNotePattern)
 OWNER_NOTE_RE = re.compile(r"(?i)onedrive|this pc|owner|memory [a-z-]+-[a-z-]+|step \d|phase \d|[A-Z]:\\")
-DATA_FULL = ["gate-rules.json", "game-signatures.json"]
+DATA_FULL = ["gate-rules.json"]
 DATA_EMPTY = {"version-registry.json": "{}\n", "version-ledger.json": "[]\n", "gate-ledger.json": "[]\n",
               "falsification-log.json": "[]\n",
               # the pre-release archive version-gate reads (role version-ledger-prerelease) starts empty too
@@ -150,7 +146,6 @@ SKILLS_DIR = "skills"
 # templates from 11. Nexus distro and a finished package's document set
 TEMPLATES = [
     ("11. Nexus distro/_nexus-page-template.txt", "templates/nexus-page-template.txt"),
-    ("11. Nexus distro/_CHANGELOG-TEMPLATE.txt", "templates/nexus-changelog-template.txt"),
     ("11. Nexus distro/_BANNER-DESIGN-RULES.md", "templates/banner-design-rules.md"),
     ("11. Nexus distro/_banner-template-1920x1080.html", "templates/banner-template-1920x1080.html"),
     ("11. Nexus distro/_banner-template-1300x372.html", "templates/banner-template-1300x372.html"),
@@ -307,17 +302,11 @@ def rewrite_script(rel: str, text: str) -> str:
                 if not pm:
                     raise SystemExit("no place to resolve $" + var + " in " + rel)
                 text = text[:pm.end()] + resolve + text[pm.end():]
-    if name == "version-gate.ps1":
-        # the Nexus key: the environment variable first; the live fallback reads <ROOT>\.MD\secrets.md of the person's
-        # own root (never a path of the owner's), which the kit never ships
-        text = must(r"function Get-NexusApiKey \{\r?\n",
-                    "function Get-NexusApiKey {" + nl + "    if ($env:NEXUS_APIKEY) { return $env:NEXUS_APIKEY }   # kit: the key is an environment variable, never a file in the kit" + nl,
-                    text)
     if name == "pre-finalize-check.ps1":
-        text = must(r"\$mo2Instances = @\(.*?\r?\n\)\r?\n",
-                    "$mo2Instances = @()" + nl +
-                    "# kit: the MO2 instances to check are PIPELINE_MO2_INSTANCES, a ;-separated list of <instance>\\mods folders" + nl +
-                    "foreach ($p in @(($env:PIPELINE_MO2_INSTANCES -split ';') | Where-Object { $_ })) { $mo2Instances += @{ Name = (Split-Path (Split-Path $p -Parent) -Leaf); Path = $p } }" + nl,
+        # since 2026-10-25 the list sits inside Get-Rule29Instances, indented
+        text = must(r"(?m)^    \$instances = @\(\r?\n.*?^    \)\r?\n",
+                    "    # kit: the MO2 instances to check are PIPELINE_MO2_INSTANCES, a ;-separated list of <instance>\\mods folders" + nl +
+                    "    $instances = @(); foreach ($p in @(($env:PIPELINE_MO2_INSTANCES -split ';') | Where-Object { $_ })) { $instances += @{ Name = (Split-Path (Split-Path $p -Parent) -Leaf); Path = $p } }" + nl,
                     text, flags=re.S, count=1)
     if name == "prune-test-builds.ps1":
         text = must(r"\[string\[\]\]\$Instances = @\([^)]*\)",
@@ -394,6 +383,12 @@ def rewrite_resolver(rel: str, text: str) -> str:
                          text, count=1)
         if n == 0:
             raise SystemExit("rewrite did not match in resolvers/resolve.py: the memory folder of scan_targets")
+        text = new
+    if rel == "session-start.py":
+        # the test-request tool (the original's combined test runs) is not in the kit, so its weekly line is not asked for
+        new, n = re.subn(r'(?m)^[ \t]*check_line\("test-request stats",[^\n]*\n', "", text)
+        if n == 0:
+            raise SystemExit("rewrite did not match in resolvers/session-start.py: the test-request line")
         text = new
     return text
 
@@ -493,8 +488,8 @@ def build_rosters(live_md: str, live_root: str, kit_has) -> dict:
             if name not in kept:
                 continue
             b = dict(body)
-            if fn == "identity.json" and name in IDENTITY_PLACEHOLDERS:
-                b.update(IDENTITY_PLACEHOLDERS[name])
+            if fn == "identity.json" and name in kit_screen.DROPPED_IDENTITY_ROLES:
+                continue   # no donation or chat link ships, not even as a placeholder
             if name == "memory-folder":
                 # kit-install replaces @PROJECT@ with the Claude Code project folder of the person's <ROOT>
                 b["at"] = "{role:claude-projects}\\@PROJECT@\\memory"
@@ -553,6 +548,25 @@ def build_entry_file(live_md: str) -> str:
     return sanitise(header + "\n" + body)
 
 
+def run_screen(folder: str) -> int:
+    """The --screen stage: the seeded proof that the scanner bites, then every shipped file. Any hit fails the build."""
+    bad = kit_screen.selftest()
+    if bad:
+        print("SCREEN SELF-TEST FAILED:\n  " + "\n  ".join(bad))
+        return 1
+    failures = kit_screen.screen_tree(folder)
+    if failures:
+        by = {}
+        for cls, *_ in failures:
+            by[cls] = by.get(cls, 0) + 1
+        print(f"SCREEN FAILED: {len(failures)} hit(s): " + ", ".join(f"{k} {v}" for k, v in sorted(by.items())))
+        for cls, rel, line, what in failures[:400]:
+            print(f"  {rel}:{line}: [{cls}] {what!r}")
+        return 1
+    print("screen: clean (no network call, no evidence, no advertising, nothing private; seeded self-test passed)")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     # default root: PIPELINE_ROOT, else the tree this repo sits in (<ROOT>\6. current wip mods\PipelineKit)
@@ -560,7 +574,12 @@ def main() -> int:
     ap.add_argument("--identity-config", default=None,
                     help="the private identity config (default: role identity-patterns of the source)")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--out", default=None, help="build into this folder and keep it (a scratch build); dist is left alone")
+    ap.add_argument("--screen", nargs="?", const=DIST, default=None, metavar="FOLDER",
+                    help="only run the screening stage over a built kit (default dist); every build runs it anyway")
     a = ap.parse_args()
+    if a.screen:
+        return run_screen(a.screen)
     src = a.source
     problem = load_identity(a.identity_config or identity_config_path(src), src)
     if problem:
@@ -571,13 +590,17 @@ def main() -> int:
         print(f"no .MD under {src}")
         return 2
 
-    if not a.check and os.path.isdir(DIST):
-        shutil.rmtree(DIST)
-    out = DIST if not a.check else os.path.join(HERE, "_check-dist")
-    if a.check and os.path.isdir(out):
+    if a.out:
+        out = os.path.abspath(a.out)
+    else:
+        out = DIST if not a.check else os.path.join(HERE, "_check-dist")
+    if os.path.isdir(out):
         shutil.rmtree(out)
     manifest = {"kit": "Pipeline Kit", "version": __version__, "built": _dt.datetime.now().isoformat(timespec="seconds"),
                 "sources": {}}
+
+    ov = kit_screen.Overrides(os.path.join(KIT_SRC, "screen", "overrides.json"))
+    kit_screen.COUNTS.clear()
 
     def put(rel_out: str, text: str, src_path: str | None = None, bom: bool = False):
         write(os.path.join(out, rel_out), text, bom=bom)
@@ -593,8 +616,8 @@ def main() -> int:
         t = read(p)
         if POINTER_RE.match(t) and t.count("\n") < 8:
             raise SystemExit(f"{live_rel} is a 'moved' pointer, not the document - point DOCS at the real file")
-        put(kit_rel, sanitise(t), p)
-    entry = build_entry_file(md)
+        put(kit_rel, kit_screen.screen_doc(kit_rel, sanitise(t), ov), p)
+    entry = kit_screen.screen_doc("CLAUDE.md", build_entry_file(md), ov)
     put("CLAUDE.md", entry, os.path.join(md, "CLAUDE.md"))
     put("AGENTS.md", entry.replace("# Pipeline Kit - entry file (CLAUDE.md)", "# Pipeline Kit - entry file (AGENTS.md, identical to CLAUDE.md)"),
         os.path.join(md, "CLAUDE.md"))
@@ -608,6 +631,7 @@ def main() -> int:
         if "RETIRED PATH" in raw[:400]:
             raise SystemExit(f"scripts/{s} is a RETIRED-PATH stub - ship the real file (`resolve.py find <role>`)")
         text = rewrite_script(s, raw)
+        text = kit_screen.patch_script(s, text)
         text = sanitise(text)
         put("scripts/" + s, text, p, bom=s.endswith(".ps1"))
     for d in DATA_FULL:
@@ -616,6 +640,9 @@ def main() -> int:
             t = read(p)
             if d == "gate-rules.json":
                 t = rewrite_gate_rules(t, os.path.join(md, "scripts"))
+                shipped = {x.replace("\\", "/") for x in SCRIPTS}
+                t, no_script = kit_screen.screen_gate_rules(t, lambda sc: sc.replace("\\", "/") in shipped, ov)
+                print(f"gate rows left out because their script does not ship: {len(no_script)} ({', '.join(no_script)})")
             put("scripts/" + d, sanitise(t), p)
     for d, body in DATA_EMPTY.items():
         put("scripts/" + d, body)
@@ -625,7 +652,7 @@ def main() -> int:
         p = os.path.join(md, "resolvers", r)
         if not os.path.isfile(p):
             raise SystemExit(f"resolver file missing: resolvers/{r}")
-        put("resolvers/" + r, sanitise(rewrite_resolver(r, read(p))), p, bom=r.endswith(".ps1"))
+        put("resolvers/" + r, kit_screen.neutral_names(sanitise(rewrite_resolver(r, read(p)))), p, bom=r.endswith(".ps1"))
 
     # 2b. the Claude Code skills (1.0.2): every file of every .MD\skills\<name>\, sanitised like the documents
     skills_root = os.path.join(md, SKILLS_DIR)
@@ -633,20 +660,25 @@ def main() -> int:
         for fn in files:
             p = os.path.join(dirpath, fn)
             rel = SKILLS_DIR + "/" + os.path.relpath(p, skills_root).replace("\\", "/")
+            if rel[len(SKILLS_DIR) + 1:] in kit_screen.CUT_SKILL_FILES:
+                continue
             if os.path.splitext(fn)[1].lower() in TEXT_EXT:
-                put(rel, sanitise(read(p)), p)
+                t = sanitise(read(p))
+                put(rel, kit_screen.screen_doc(rel, t, ov) if fn.lower().endswith(".md") else kit_screen.neutral_names(t), p)
 
     # 3. templates
     for live_rel, kit_rel in TEMPLATES:
         p = os.path.join(src, live_rel)
         if os.path.isfile(p):
-            put(kit_rel, sanitise(read(p)), p)
+            t = sanitise(read(p))
+            put(kit_rel, kit_screen.screen_doc(kit_rel, t, ov) if kit_rel.endswith((".md", ".txt")) else t, p)
 
     # 4. the kit's own files (and the repo's CHANGELOG.md, written by changelog.ps1 as changes happen - rule 61)
     cl = os.path.join(HERE, "CHANGELOG.md")
     if os.path.isfile(cl):
-        put("CHANGELOG.md", read(cl))
-    for dirpath, _, files in os.walk(KIT_SRC):
+        put("CHANGELOG.md", kit_screen.screen_doc("CHANGELOG.md", read(cl), ov))
+    for dirpath, dirs, files in os.walk(KIT_SRC):
+        dirs[:] = [d for d in dirs if d != "screen"]    # the screen's own override file is the build's, never shipped
         for fn in files:
             if fn == "CLAUDE-header.md":
                 continue
@@ -671,7 +703,7 @@ def main() -> int:
     dropped = rosters.pop("_dropped")
     for fn, text in rosters.items():
         p = os.path.join(md, "resolvers", "rosters", fn)
-        put("resolvers/rosters/" + fn, sanitise(text), p)
+        put("resolvers/rosters/" + fn, kit_screen.neutral_names(sanitise(text)), p)
     print(f"rosters: {len(rosters)} shipped, {len(dropped)} role(s) left out (the owner's machine, or a file the kit does not ship)")
 
     # 5. the indexes are regenerated over the SANITISED text. logic-index.py asks the resolver of its own tree for the
@@ -692,6 +724,12 @@ def main() -> int:
             return 1
         shutil.copy2(os.path.join(smd, "PAST-MISTAKES-LIBRARY.md"), os.path.join(out, "PAST-MISTAKES-LIBRARY.md"))
         print("past-mistakes library index: regenerated and current")
+        # the digest is derived from the rule parts, so it is regenerated over the screened text
+        r = subprocess.run([sys.executable, os.path.join(smd, "scripts", "rules-digest.py")], capture_output=True, text=True)
+        if r.returncode != 0:
+            print("rules-digest.py failed on the kit copy:\n" + r.stdout + r.stderr)
+            return 1
+        shutil.copy2(os.path.join(smd, "RULES-DIGEST.md"), os.path.join(out, "RULES-DIGEST.md"))
         r = subprocess.run([sys.executable, os.path.join(smd, "resolvers", "resolve.py"), "check", "--schema", "gate-rules",
                             "--rules-file", os.path.join(smd, "scripts", "gate-rules.json")], capture_output=True, text=True)
         if r.returncode != 0:
@@ -706,6 +744,14 @@ def main() -> int:
         return 1
     print("gate-rules index: regenerated")
 
+    # 5b. the counts the kit's own README states are taken from what shipped, so they cannot go stale
+    gate_rows = len(json.loads(read(os.path.join(out, "scripts", "gate-rules.json")))["rules"])
+    rule_count = len(re.findall(r"(?m)^\*\*\d+\. ", read(os.path.join(out, "RULES-DIGEST.md"))))
+    lib_entries = len(re.findall(r"(?m)^## ", read(os.path.join(out, "PAST-MISTAKES-LIBRARY.md"))))
+    for rel_doc in ("README.md", "README-FOR-AI.md"):
+        pd = os.path.join(out, rel_doc)
+        write(pd, read(pd).replace("{GATE_ROWS}", str(gate_rows)).replace("{RULE_COUNT}", str(rule_count)).replace("{LIB_ENTRIES}", str(lib_entries)))
+
     # 6. the leak scan - the kit's own gate
     leaks = []
     for dirpath, _, files in os.walk(out):
@@ -714,12 +760,14 @@ def main() -> int:
             if os.path.splitext(fn)[1].lower() not in TEXT_EXT:
                 continue
             t = read(p)
-            for pid, rx in LEAK_PATTERNS + [("generic", GENERIC_LEAK_RE)]:
-                for m in rx.finditer(t):
-                    line = t.count("\n", 0, m.start()) + 1
-                    leaks.append(f"{os.path.relpath(p, out)}:{line}: [{pid}] {m.group(0)!r}")
+            # the second pass reads the text with regex punctuation taken out: a name spelled as [x]yz in a gate pattern
+            for scan in (t, re.sub(r"[\[\]\\?()|^$]", "", t)):
+                for pid, rx in LEAK_PATTERNS + [("generic", GENERIC_LEAK_RE)]:
+                    for m in rx.finditer(scan):
+                        line = scan.count("\n", 0, m.start()) + 1
+                        leaks.append(f"{os.path.relpath(p, out)}:{line}: [{pid}] {m.group(0)!r}")
             if fn != "build_kit.py":
-                for m in re.finditer(r"\{(KIT_VERSION|BUILT|RULES_VERSION)\}", t):   # an unsubstituted placeholder is a defect too
+                for m in re.finditer(r"\{(KIT_VERSION|BUILT|RULES_VERSION|GATE_ROWS|RULE_COUNT|LIB_ENTRIES)\}", t):   # an unsubstituted placeholder is a defect too
                     line = t.count("\n", 0, m.start()) + 1
                     leaks.append(f"{os.path.relpath(p, out)}:{line}: unsubstituted {m.group(0)}")
     # 1.0.3: "files" hashes every file AS SHIPPED, so a member can verify the download; "sources" keeps the hash of the
@@ -739,7 +787,12 @@ def main() -> int:
             print("  " + l)
         return 1
     print("leak scan: clean")
-    if a.check:
+    for s_line in ov.stale():
+        print("  screen override matched nothing (stale?): " + s_line)
+    print("evidence removed: " + ", ".join(f"{k} {v}" for k, v in sorted(kit_screen.COUNTS.items())))
+    if run_screen(out) != 0:
+        return 1
+    if a.check and not a.out:
         shutil.rmtree(out)
     return 0
 

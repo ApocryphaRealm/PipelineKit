@@ -1,0 +1,31 @@
+TEMPLATE - the changelog style every published changelog.txt follows.
+
+SCOPE: this format is not only for the distro folder's own changelog.txt. It is ALSO the format for the
+"WHAT CHANGED IN X.Y.Z" section of each mod's packaged README.txt - the changelog that ships inside the zip. The two
+texts (shipped README, Nexus page) should read as one voice.
+
+THE FORMAT
+  Version X.Y.Z            <- bare line, no date, no status, no markdown heading marks
+  One change per line, a plain sentence starting with a verb (Fixed / Added / Updated /
+  Improved / Removed). No dashes, no bullets, no "### Added" grouping.
+  Newest version first, running back through the whole history in one file.
+  Each line says what changed for the player and stops. Design reasoning and quoted
+  decisions stay in the private notes, not here.
+
+-------------------------------------------------------------------------------------------
+A WORKED EXAMPLE (an invented mod)
+-------------------------------------------------------------------------------------------
+
+Version 1.2.0
+Added a setting that hides the widget during dialogue.
+Improved the widget's position on ultrawide screens.
+
+Version 1.1.1
+Fixed the widget staying on screen after a fast travel.
+
+Version 1.1.0
+Added a keybind to toggle the widget.
+Updated the French translation.
+
+Version 1.0.0
+Initial release.

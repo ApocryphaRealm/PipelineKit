@@ -1,0 +1,19 @@
+#!/bin/sh
+# The global pre-push hook (README-FOR-AI, section 4). Installed via a global git hooksPath, so it applies to every
+# repo on this machine with no per-repo step. It looks only at what you are about to push, locally: it refuses a push
+# whose added lines carry something shaped like an API key. Patterns are yours to extend.
+#
+# Git passes one line per ref on stdin: "<local ref> <local sha> <remote ref> <remote sha>"
+
+zero=0000000000000000000000000000000000000000
+status=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+    [ "$local_sha" = "$zero" ] && continue
+    if [ "$remote_sha" = "$zero" ]; then range="$local_sha --not --remotes"; else range="$remote_sha..$local_sha"; fi
+    # shellcheck disable=SC2086
+    if git log -p --no-color $range | grep -E '^\+' | grep -Eiq '(api[_-]?key|apikey|secret|token)["'"'"' ]*[:=]["'"'"' ]*[A-Za-z0-9+/=_-]{20,}'; then
+        echo "pre-push: $local_ref adds a line shaped like an API key - refused. Move the secret to an environment variable." >&2
+        status=1
+    fi
+done
+exit $status

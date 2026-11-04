@@ -1,0 +1,275 @@
+{
+  "_about": "The part of the screen that cannot be mechanical: per-document and per-entry rewordings. rx is a regex (DOTALL, MULTILINE), to is literal text. This folder never ships. See kit_screen.py.",
+  "PAST-MISTAKES-LIBRARY.md": [
+    {
+      "rx": "^## A link to the owner's members-only Patreon kit went onto 33 Nexus pages.*?(?=^## )",
+      "to": "## A link to paid modding content went onto 33 Nexus pages before anyone read Nexus's anti-solicitation policy (2026-10-02)\n\n**What happened.** Asked to add a link to every mod page, Claude added it to all 58 distro pages and all 33 live pages, verified every one - and checked nothing about whether Nexus allows it. The owner then asked for the policy to be checked. Nexus allows donation links but its Anti-Solicitation Policy forbids offering files, updates or modding-related services in exchange for money. The line came out again the same day.\n\n**Why it looked fine.** The owner had asked for it, and the page already carried a donation link - the difference between a donation link and a link to paid modding content was not looked for.\n\n**Do instead.** Before putting anything on a public page that points at money, read the platform's own policy for that kind of link and say what it allows before posting.\n\n"
+    },
+    {
+      "rx": "for Patreon\\s+members\\.",
+      "to": "for outside users."
+    },
+    {
+      "rx": "in the Patreon distro folder",
+      "to": "in its distro folder"
+    },
+    {
+      "rx": "in the Patreon folder",
+      "to": "in its distro folder"
+    },
+    {
+      "rx": "\\(the same user, Sylaous, on Discord\\)",
+      "to": "(the same user)"
+    },
+    {
+      "rx": "`foreach \\(\\$u in \\$lj\\) \\{ curl -o \\$dest\\s+\\$u\\.URI \\}`",
+      "to": "a loop handing each item's URI to the download command"
+    }
+  ],
+  "CHANGELOG.md": [
+    {
+      "rx": "had been packaged for Patreon",
+      "to": "had been packaged"
+    },
+    {
+      "rx": "[^\\n]*\\b(?:donation and Discord links|Discord links)\\b[^\\n]*\\n",
+      "to": ""
+    }
+  ],
+  "rules/03-versioning-and-release.md": [
+    {
+      "rx": "> \\*\\*Amended 2026-09-29 \\(the owner\\): every Nexus page carries a \"Support my work\" section.*?(?=^> \\*\\*Amended 2026-09-14)",
+      "to": "> **Amended 2026-09-29, reduced for the kit: a page may close with a plain donation link, if the person wants one and the site's rules allow it** - never a link to a paid post, file, kit or service.\n\n"
+    },
+    {
+      "rx": "at 1\\.1\\.1 \\(2026-10-02, the same day - the Pipeline Kit line.*?Before that, 1\\.0\\.8 \\(",
+      "to": "at 1.1.1 (2026-10-02 - after Nexus's Donation Options & Guidelines and Anti-Solicitation Policy were read: a page may carry a donation link, never a link to paid files, updates or modding services). Before that, 1.0.8 ("
+    },
+    {
+      "rx": "\\(\"norden ui og same options work fine\"\\)",
+      "to": ""
+    },
+    {
+      "rx": "the Discord hub",
+      "to": "a community hub"
+    },
+    {
+      "rx": "the Patreon or Nexus page sync",
+      "to": "the page sync"
+    },
+    {
+      "rx": "189707\\*\\*, `https://www\\.nexusmods\\.com/skyrimspecialedition/mods/189707`",
+      "to": "(its page)**"
+    },
+    {
+      "rx": "^## 35\\. The dedicated request page.*?(?=^## 48\\.)",
+      "to": "## 35. A bug report has to reach the mod's author by a route that is watched\n\nReports arrive on each mod's own Bugs and Posts tabs, not only on one dedicated page. The original kept a single \"request hub\" page with tagged submissions and a scheduled poller. Relying on it silently cost real reports: the hub page was removed by Nexus staff for not being a mod, and the poller read the placeholder that a removed page still serves as \"nothing new\".\n\n- A route that is checked by a tool needs a check on the tool: zero entries from a page that had entries is a failure, not a quiet day.\n- Watch the pages the reports actually arrive on, the mods' own, and read them directly whenever the queue may be stale.\n- A tag on a submission's first line saves guessing its category; an untagged one still goes on the to-do list instead of being dropped.\n- The poller reaches the internet, so it is not in the kit (`OPTIONAL-SCRIPTS.md`, item 8).\n\n"
+    },
+    {
+      "rx": "`curl` a canonical `\\.txt` URL, e\\.g\\. ",
+      "to": "a canonical `.txt` URL, e.g. "
+    }
+  ],
+  "rules/02-build-toolchain.md": [
+    {
+      "rx": "\\*\\*If DSD ever does need building from source, build the `dev` branch, not `main`\\*\\* - `main`'s tip\\s+has four hook sites with their AE Address Library IDs left as `0`\\.",
+      "to": "**If a mod ever does need building from source, check which branch the author actually maintains** - the default branch's tip may not be the one that works on every game version."
+    }
+  ],
+  "rules/07-operations-and-machine-health.md": [
+    {
+      "rx": "\\*\\*Entering the mode starts with\\s+the day's usage allotment.*?carry the larger shares\\.\\*\\*",
+      "to": "**Entering the mode starts with the day's budget, if the person paces usage: state what is spent and left and ask for a confirmation against those numbers; the run stops itself when the share is reached.**"
+    },
+    {
+      "rx": "\\*\\*The Claude usage limit is paced the same way.*?and today's share so the owner can override the pace\\.",
+      "to": "**A usage limit can be paced the same way.** The original gave each day of the week an even share of a weekly limit, weighted toward the hours the owner could answer questions, with a configurable quiet window in which nothing runs. A tool (`usage-pacing`, not in the kit) printed GO or STOP with the day's allowance and spend; the health gate turned STOP into its own STOP. When the share is reached, finish the step in hand, save, schedule a wake for the next slot and idle. Every closing recap states the percentage so the owner can override the pace."
+    },
+    {
+      "rx": "And \\*\\*two GPUs\\*\\* are present - the 9800X3D's integrated\\s+Radeon and the discrete RX 7900 XT, both tagged `ati\\.png`",
+      "to": "And **two GPUs** may be present - an integrated one and a discrete one, possibly tagged alike"
+    }
+  ],
+  "commands.md": [
+    {
+      "rx": "- \\*\\*AM hours - SUSPENDED \\(the owner.*?Kept below for the\\s+day he re-enables it\\.",
+      "to": "- **Quiet hours.** The original keeps a daily window in which nothing runs and moves its budget to other hours. Kept below for a person who wants unattended morning runs."
+    },
+    {
+      "rx": " A day is his waking\\s+day \\(wakes.*?get the larger shares\\.",
+      "to": ""
+    }
+  ],
+  "skills/named-commands/SKILL.md": [
+    {
+      "rx": "08:00-14:00 local is a blackout\\. ",
+      "to": ""
+    }
+  ],
+  "docs/AI-PIPELINE-REFERENCE.md": [
+    {
+      "rx": "including the\\s+working-day weighting and the daily blackout, ",
+      "to": ""
+    },
+    {
+      "rx": "AM hours are currently suspended entirely \\(blackout\\s+08:00-14:00 local, freed budget redistributed to working days\\), and PM hours mean the owner is at\\s+work and cannot",
+      "to": "quiet hours may suspend it entirely, and hours when the owner is away mean he cannot"
+    },
+    {
+      "rx": "the Discord link is the hub's server invite \\(gate rule\\s+`page-discord-link-is-an-invite`; Lurker Bot's `get-invite\\.py` lists it\\)\\.",
+      "to": "community links are real invites."
+    },
+    {
+      "rx": "- \\*\\*The weekly pacing number is specifically the all-models weekly row\\*\\*.*?(?=^- \\*\\*Local wall-clock time)",
+      "to": "- **The weekly pacing number is one chosen row of the account's usage**, and a \"day\" is the owner's own day rather than a calendar day; a configurable quiet window runs nothing, and hours he can answer questions get a larger share.\n"
+    },
+    {
+      "rx": "with the owner's actual working days weighted higher",
+      "to": "with the owner's available hours weighted higher"
+    },
+    {
+      "rx": ", and a Discord bot token - key names only",
+      "to": " - key names only"
+    }
+  ],
+  "sub-agent-routing.md": [
+    {
+      "rx": "the weekly budget",
+      "to": "the usage budget"
+    }
+  ],
+  "LOGIC-LIBRARY.md": [
+    {
+      "rx": "asked a Nexus commenter something they had already said: \"add a gate[^\\n]*",
+      "to": "asked a Nexus commenter something they had already said: the original comment must be reread before a reply, and a reply that passes an independent review may post unattended."
+    },
+    {
+      "rx": "; Discord replies and other user-facing messages are not ga",
+      "to": "; other user-facing messages are not ga"
+    }
+  ],
+  "PREFLIGHT.md": [
+    {
+      "rx": "reply line: the reply gate \\(role reply-gate\\) takes Discord threads too \\(snapshot --discord\\)",
+      "to": "reply line: the reply gate (role reply-gate)"
+    },
+    {
+      "rx": ", or in a Discord thread",
+      "to": ""
+    },
+    {
+      "rx": " \\(Discord: `snapshot --discord <thread URL or id>`, the lurker's local copy\\)",
+      "to": ""
+    }
+  ],
+  "skills/nexus-page/SKILL.md": [
+    {
+      "rx": "What the framework licences require in Credits and Requirements is this skill's\\s+`references\\\\FRAMEWORK-LICENCE-AND-CREDITS\\.md` \\(role `framework-licence-credits`\\) - read it before writing either section\\.",
+      "to": "What a framework's licence requires in Credits and Requirements: read that framework's own licence file at the version you build against, before writing either section, and quote nothing you did not read."
+    },
+    {
+      "rx": "- Close the Description with the Generative AI disclosure line; end with \"Support my work\".*?The Pipeline Kit is never\\s+mentioned on Nexus\\.",
+      "to": "- Close the Description with the Generative AI disclosure line. A donation link is optional; Nexus's anti-solicitation policy forbids a link to anything paid - a post, kit or service."
+    },
+    {
+      "rx": " Screenshots of Njordlinger must contain no explicit content \\(it runs TNG\\)\\.",
+      "to": " Screenshots must follow Nexus's image rules."
+    },
+    {
+      "rx": "; the closing line links the ApocryphaRealm Modding HUB with the server invite\\s+\\(identity roster role `discord-invite`\\)",
+      "to": ""
+    },
+    {
+      "rx": ", the link opens the invite",
+      "to": ""
+    }
+  ],
+  "skills/mod-release/SKILL.md": [
+    {
+      "rx": "Pipeline Kit: copy the zip into `11\\. Nexus distro\\\\1\\. patreon` - the gate reads the folder and records it posted\\. ",
+      "to": ""
+    }
+  ],
+  "skills/in-game-test/SKILL.md": [
+    {
+      "rx": "Console commands for driving a test, each one sourced: `references\\\\SKYRIM-CONSOLE-COMMANDS\\.md` \\(role `console-commands`\\)\\.",
+      "to": "Console commands for driving a test: compile your own sourced list from the public references for your game (the original kept one per source; it is not shipped because it quoted other people's text)."
+    }
+  ],
+  "skills/amf-menu-port/references/SMF-CONVERSION-PLAYBOOK.md": [
+    {
+      "rx": "`Minimap\\.as` declares the HUD mode flags the\\s+vanilla HUD tests against:\\s+var All:Boolean;\\s+var StealthMode:Boolean;\\s+and assigns them",
+      "to": "ActionScript declares the HUD mode flags the vanilla HUD tests against and assigns them"
+    },
+    {
+      "rx": "`HUDMovieBaseInstance\\.ShowElements`",
+      "to": "the vanilla HUD's visibility routine"
+    }
+  ],
+  "templates/nexus-page-template.txt": [
+    {
+      "rx": "\\[size=5\\]\\[b\\]Support my work\\[/b\\]\\[/size\\]\\r?\\n[^\\n]*\\n[^\\n]*\\n\\r?\\n?",
+      "to": ""
+    }
+  ],
+  "*": [
+    {
+      "rx": "\\bSupport my work\\b",
+      "to": "Support section"
+    },
+    {
+      "rx": "`gh api [^`\n]*`",
+      "to": "the GitHub API"
+    },
+    {
+      "rx": "`gh api`",
+      "to": "the GitHub API"
+    },
+    {
+      "rx": "\\(`gh repo view --json visibility`\\)",
+      "to": ""
+    },
+    {
+      "rx": "`gh repo view --json visibility`",
+      "to": "the repository's visibility"
+    },
+    {
+      "rx": "MS-7D75",
+      "to": "mainboard"
+    },
+    {
+      "rx": "RX 7900 XT",
+      "to": "GPU"
+    },
+    {
+      "rx": "a blackout boundary",
+      "to": "a quiet-hours boundary"
+    },
+    {
+      "rx": "`l\\[i\\][^`\n]*`",
+      "to": "`[pattern removed]`"
+    },
+    {
+      "rx": "`\\(\\?i\\)\\\\bl\\[i\\][^`\n]*`",
+      "to": "`[pattern removed]`"
+    },
+    {
+      "rx": "a 3200x1800 display",
+      "to": "a high-resolution display"
+    },
+    {
+      "rx": "3200x1800",
+      "to": "its native resolution"
+    },
+    {
+      "rx": "RTX \\d{4}( GAMING OC)?",
+      "to": "GPU"
+    }
+  ],
+  "rules/01-pipeline-topology.md": [
+    {
+      "rx": " It fetches through `curl\\.exe`, per the\\s+request-hub poller's finding that nexusmods\\.com fingerprint-blocks `Invoke-WebRequest`\\.",
+      "to": ""
+    }
+  ]
+}

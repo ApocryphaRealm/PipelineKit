@@ -1,24 +1,24 @@
-Pipeline Kit self-test  20261021-090345
+Pipeline Kit self-test  20261103-225422
 kit:  <KIT>
-temp: <TEMP>\pipeline-kit-selftest-<stamp>
+temp: <HOME>\AppData\Local\Temp\pipeline-kit-selftest
 
   ok  kit-install into a temp root  (exit 0)
-          ok  13 stage folders under <TEMP>\pipeline-kit-selftest-<stamp>
-          ok  133 kit files copied into <TEMP>\pipeline-kit-selftest-<stamp>\.MD
-          ok  role memory-folder = {home}\.claude\projects\C--<TEMP>-pipeline-kit-selftest-<stamp>\memory
-          ok  memory folder <TEMP>\pipeline-kit-selftest-<stamp>\home\.claude\projects\C--<TEMP>-pipeline-kit-selftest-<stamp>\memory
-          ok  <TEMP>\pipeline-kit-selftest-<stamp>\pipeline.config.json
-          ok  resolve.py check: OK 114 roles in 7 rosters
-              git hook not installed: run  git config --global core.hooksPath "<TEMP>\pipeline-kit-selftest-<stamp>\.MD\scripts\git-hooks"  (or rerun with -SetGitHooks)
+          ok  13 stage folders under <HOME>\AppData\Local\Temp\pipeline-kit-selftest
+          ok  128 kit files copied into <HOME>\AppData\Local\Temp\pipeline-kit-selftest\.MD
+          ok  role memory-folder = {home}\.claude\projects\<PROJECT>\memory
+          ok  memory folder <HOME>\AppData\Local\Temp\pipeline-kit-selftest\home\.claude\projects\<PROJECT>\memory
+          ok  <HOME>\AppData\Local\Temp\pipeline-kit-selftest\pipeline.config.json
+          ok  resolve.py check: OK 107 roles in 7 rosters
+              git hook not installed: run  git config --global core.hooksPath "<HOME>\AppData\Local\Temp\pipeline-kit-selftest\.MD\scripts\git-hooks"  (or rerun with -SetGitHooks)
         
-        installed. Next: powershell -NoProfile -ExecutionPolicy Bypass -File "<TEMP>\pipeline-kit-selftest-<stamp>\.MD\scripts\kit-selftest.ps1"
+        installed. Next: powershell -NoProfile -ExecutionPolicy Bypass -File "<HOME>\AppData\Local\Temp\pipeline-kit-selftest\.MD\scripts\kit-selftest.ps1"
   ok  stage folders present
   ok  ledgers are empty
   ok  no retired-path stub in the installed tree
-  ok  resolve.py check: every shipped role resolves to a file of this tree  - OK 114 roles in 7 rosters
-  ok  resolve.py find version-gate answers inside the temp root  - <TEMP>\pipeline-kit-selftest-<stamp>\.MD\scripts\gates\version-gate.ps1
-  ok  resolve.py: role past-mistakes-library is PAST-MISTAKES-LIBRARY.md  - <TEMP>\pipeline-kit-selftest-<stamp>\.MD\PAST-MISTAKES-LIBRARY.md
-  ok  session-start.py prints the SessionStart payload for this tree  - {"systemMessage": "Project rules: read CLAUDE.md, RULES-DIGEST.md and PREFLIGHT.md in <TEMP>\pipeline-kit-selftest-<stamp>...
+  ok  resolve.py check: every shipped role resolves to a file of this tree  - OK 107 roles in 7 rosters
+  ok  resolve.py find version-gate answers inside the temp root  - <HOME>\AppData\Local\Temp\pipeline-kit-selftest\.MD\scripts\gates\version-gate.ps1
+  ok  resolve.py: role past-mistakes-library is PAST-MISTAKES-LIBRARY.md  - <HOME>\AppData\Local\Temp\pipeline-kit-selftest\.MD\PAST-MISTAKES-LIBRARY.md
+  ok  session-start.py prints the SessionStart payload for this tree  - {"systemMessage": "Project rules: read CLAUDE.md, RULES-DIGEST.md and PREFLIGHT.md in <HOME>\\AppData\\Local\\Temp\\pipeline-kit-selftest-20261103-225
   ok  version-gate register  (exit 0)
         register  ExampleMod   repo 'ExampleMod'   display 'Example Mod'
           ok  location: example_mod.py __version__
@@ -33,10 +33,10 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
   ok  bump wrote the number into the repo
   ok  changelog add  (exit 0)
         ExampleMod 1.0.0 [Added] first version: one toolbar button that says hello
-          -> <TEMP>\pipeline-kit-selftest-<stamp>\6. current wip mods\ExampleMod\CHANGELOG.md
+          -> <HOME>\AppData\Local\Temp\pipeline-kit-selftest\6. current wip mods\ExampleMod\CHANGELOG.md
   ok  CHANGELOG.md carries the entry
   ok  package-gate passes the good package  (exit 0)
-        package-gate  Example Mod 1.0.0  (116 rule(s), 5 file(s))
+        package-gate  Example Mod 1.0.0  (115 rule(s), 5 file(s))
           schema: OK
           skip  [keep-what-the-previous-release-shipped] no previous release found to compare with
           skip  [distro-archive-equals-finalized-folder] no distro folder
@@ -54,12 +54,14 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
           skip  [address-library-guard-is-checked-once] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibsse
           skip  [shipped-translations-are-the-repos] repo has no dist\Interface\Translations
           skip  [shipped-ini-is-the-repos] repo has no dist
+          skip  [shipped-plugin-is-the-repos] repo has no dist
           skip  [repo-shipped-text-never-calls-the-mod-mit] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)GPL-3\.0
           skip  [package-keeps-the-previous-releases-installer] no previous release found to compare with
           skip  [package-ships-everything-in-the-repos-dist] repo has no dist folder
           skip  [distro-images-are-sdr] no distro folder
           skip  [runtime-data-members-through-the-accessor] repo has no ^vcpkg\.json$ matching commonlibsse-ng
           skip  [mo2-plugin-toolbar-icon-follows-the-theme] repo has no ^.*\.py$ matching QToolBar
+          skip  [shipped-text-carries-no-private-identity] no identity-patterns role in this tree
           skip  [page-release-link-label-matches-tag] no nexus-page.txt
           skip  [fomod-delivers-every-file-of-previous] not a FOMOD package
           skip  [distro-zip-entries-use-forward-slashes] no distro folder
@@ -72,24 +74,24 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
           skip  [or-menumode-gameplay-is-one] repo has no ^xmake\.lua$ matching (?i)commonlibob64
           skip  [or-equipobject-never-locks] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibob64
           skip  [or-reflect-selfcheck-never-latches-not-found] repo has no ^xmake\.lua$ matching (?i)commonlibob64
-          skip  [sliders-are-precise] repo has no ^(xmake\.lua|CMakeLists\.txt)$ matching (?i)imgui|SKSEMenuFramework
+          skip  [sliders-are-precise] repo has no ^(xmake\.lua|CMakeLists\.txt|SKSEMenuFramework\.h)$ matching (?i)imgui|SKSE-?Menu-?Framework
+          skip  [precise-sliders-always-clamp] repo has no ^(xmake\.lua|CMakeLists\.txt|SKSEMenuFramework\.h|PreciseSlider\.h)$ matching (?i)imgui|SKSEMenuFramework
+          skip  [scaleform-calls-only-on-the-ui-thread] repo has no ^(xmake\.lua|CMakeLists\.txt|vcpkg\.json)$ matching (?i)commonlib|skse
           skip  [or-player-actor-values-need-a-placed-player] repo has no ^.*\.(cpp|h)$ matching PlayerCharacter::GetSingleton\(\)[\s\S]{0,600}->\s*GetActor(Float)?Value\(
           skip  [or-world-context-calls-are-guarded] repo has no ^xmake\.lua$ matching (?i)commonlibob64
           skip  [or-linked-spdlog-keeps-its-notice] repo has no ^xmake\.lua$ matching (?i)commonlibob64
           skip  [linked-minhook-keeps-its-notice] repo has no ^xmake\.lua$ matching add_requires\([^)]*"minhook"
           skip  [linked-nlohmann-json-keeps-its-notice] repo has no ^xmake\.lua$ matching add_requires\([^)]*"nlohmann_json"
           skip  [linked-imgui-keeps-its-notice] repo has no ^xmake\.lua$ matching (?i)add_deps\("imgui"\)|target\("imgui"\)
-          skip  [page-discord-link-is-an-invite] no nexus-page.txt
           skip  [no-isnoneobject-as-value-test] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibsse
           skip  [translation-gate-reads-whole-keys] repo has no \.py$ matching (?i)_english\.txt|LANGS\s*=
-          skip  [page-carries-the-donation-link] no nexus-page.txt
-          skip  [page-discord-link-is-the-invite] no nexus-page.txt
-          skip  [checkbox-is-a-toggle] repo has no ^(xmake\.lua|CMakeLists\.txt)$ matching (?i)imgui|SKSEMenuFramework
+          skip  [checkbox-is-a-toggle] repo has no ^(xmake\.lua|CMakeLists\.txt|SKSEMenuFramework\.h)$ matching (?i)imgui|SKSE-?Menu-?Framework
           skip  [distro-sticky-fits-a-nexus-comment] no distro folder
           skip  [distro-banner-highlights-match-their-spec] no distro folder
           skip  [build-env-hook-present-in-find-msvc] repo has no ^find-msvc\.bat$ matching (?i)vcvars
           skip  [build-env-hook-reads-the-saved-variable] repo has no ^find-msvc\.bat$ matching MODS_BUILD_ENV
           skip  [page-is-in-the-standard-layout] no distro folder
+          skip  [no-address-resolved-at-static-init] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibsse
           PASS  every rule clear
   ok  version-gate record working  (exit 0)
               compared with the package Skyrim - Example Mod\Example Mod 1.0.0
@@ -105,7 +107,7 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
           ok  git tag v1.0.0 is at HEAD
         PASS  ExampleMod 1.0.0 clears the finalize gate.
   ok  package-gate REFUSES the bad package (test script, .esl, unparseable json)  (exit 1)
-        package-gate  Example Mod 1.0.0  (116 rule(s), 3 file(s))
+        package-gate  Example Mod 1.0.0  (115 rule(s), 3 file(s))
           schema: OK
           skip  [keep-what-the-previous-release-shipped] no previous release found to compare with
           skip  [distro-archive-equals-finalized-folder] no distro folder
@@ -123,12 +125,14 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
           skip  [address-library-guard-is-checked-once] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibsse
           skip  [shipped-translations-are-the-repos] repo has no dist\Interface\Translations
           skip  [shipped-ini-is-the-repos] repo has no dist
+          skip  [shipped-plugin-is-the-repos] repo has no dist
           skip  [repo-shipped-text-never-calls-the-mod-mit] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)GPL-3\.0
           skip  [package-keeps-the-previous-releases-installer] no previous release found to compare with
           skip  [package-ships-everything-in-the-repos-dist] repo has no dist folder
           skip  [distro-images-are-sdr] no distro folder
           skip  [runtime-data-members-through-the-accessor] repo has no ^vcpkg\.json$ matching commonlibsse-ng
           skip  [mo2-plugin-toolbar-icon-follows-the-theme] repo has no ^.*\.py$ matching QToolBar
+          skip  [shipped-text-carries-no-private-identity] no identity-patterns role in this tree
           skip  [shipped-changelog-is-the-repos] the package ships none of those files
           skip  [page-release-link-label-matches-tag] no nexus-page.txt
           skip  [fomod-delivers-every-file-of-previous] not a FOMOD package
@@ -142,33 +146,32 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
           skip  [or-menumode-gameplay-is-one] repo has no ^xmake\.lua$ matching (?i)commonlibob64
           skip  [or-equipobject-never-locks] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibob64
           skip  [or-reflect-selfcheck-never-latches-not-found] repo has no ^xmake\.lua$ matching (?i)commonlibob64
-          skip  [sliders-are-precise] repo has no ^(xmake\.lua|CMakeLists\.txt)$ matching (?i)imgui|SKSEMenuFramework
+          skip  [sliders-are-precise] repo has no ^(xmake\.lua|CMakeLists\.txt|SKSEMenuFramework\.h)$ matching (?i)imgui|SKSE-?Menu-?Framework
+          skip  [precise-sliders-always-clamp] repo has no ^(xmake\.lua|CMakeLists\.txt|SKSEMenuFramework\.h|PreciseSlider\.h)$ matching (?i)imgui|SKSEMenuFramework
+          skip  [scaleform-calls-only-on-the-ui-thread] repo has no ^(xmake\.lua|CMakeLists\.txt|vcpkg\.json)$ matching (?i)commonlib|skse
           skip  [or-player-actor-values-need-a-placed-player] repo has no ^.*\.(cpp|h)$ matching PlayerCharacter::GetSingleton\(\)[\s\S]{0,600}->\s*GetActor(Float)?Value\(
           skip  [or-world-context-calls-are-guarded] repo has no ^xmake\.lua$ matching (?i)commonlibob64
           skip  [or-linked-spdlog-keeps-its-notice] repo has no ^xmake\.lua$ matching (?i)commonlibob64
           skip  [linked-minhook-keeps-its-notice] repo has no ^xmake\.lua$ matching add_requires\([^)]*"minhook"
           skip  [linked-nlohmann-json-keeps-its-notice] repo has no ^xmake\.lua$ matching add_requires\([^)]*"nlohmann_json"
           skip  [linked-imgui-keeps-its-notice] repo has no ^xmake\.lua$ matching (?i)add_deps\("imgui"\)|target\("imgui"\)
-          skip  [page-discord-link-is-an-invite] no nexus-page.txt
           skip  [no-isnoneobject-as-value-test] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibsse
           skip  [translation-gate-reads-whole-keys] repo has no \.py$ matching (?i)_english\.txt|LANGS\s*=
-          skip  [page-carries-the-donation-link] no nexus-page.txt
-          skip  [page-discord-link-is-the-invite] no nexus-page.txt
-          skip  [checkbox-is-a-toggle] repo has no ^(xmake\.lua|CMakeLists\.txt)$ matching (?i)imgui|SKSEMenuFramework
+          skip  [checkbox-is-a-toggle] repo has no ^(xmake\.lua|CMakeLists\.txt|SKSEMenuFramework\.h)$ matching (?i)imgui|SKSE-?Menu-?Framework
           skip  [distro-sticky-fits-a-nexus-comment] no distro folder
           skip  [distro-banner-highlights-match-their-spec] no distro folder
           skip  [build-env-hook-present-in-find-msvc] repo has no ^find-msvc\.bat$ matching (?i)vcvars
           skip  [build-env-hook-reads-the-saved-variable] repo has no ^find-msvc\.bat$ matching MODS_BUILD_ENV
           skip  [page-is-in-the-standard-layout] no distro folder
+          skip  [no-address-resolved-at-static-init] repo has no ^(vcpkg\.json|CMakeLists\.txt|xmake\.lua)$ matching (?i)commonlibsse
           !!    [no-esl-files] example.esl
           !!    [license-file-is-the-gpl-text] no file matching (^|[\\/])LICENSE(-[^\\/]*)?(\.txt|\.md)?$ in the package
           !!    [notice-file-present] no file matching (^|[\\/])NOTICE\.md$ in the package
-          !!    [esp-counts-match-entries] example.esl   FAIL  <TEMP>\pipeline-kit-selftest-<stamp>\7. current test builds\Example Mod 1.0.0 BAD\example.esl is not a plugin (no TES4 header)
-          !!    [esp-counts-match-entries] example.esl esp-audit  FAIL  1 plugin(s) would load a lie to the engine
+          !!    [esp-counts-match-entries] example.esl   FAIL  <HOME>\AppData\Local\Temp\pipeline-kit-selftest\7. current test builds\Example Mod 1.0.0 BAD\example.esl is not a plugin (no TES4 header)
           !!    [shipped-json-parses] broken.json is not valid JSON: Unrecognized escape sequence. (17): { "path": "Data\Interface" }
         
           !!    [no-test-scripts-in-packages] scripts\ExampleTest.pex
-          FAIL  7 hit(s). Fix the package, or - if a rule is wrong - fix the rule in gate-rules.json with a dated reason. Never ship past it.
+          FAIL  6 hit(s). Fix the package, or - if a rule is wrong - fix the rule in gate-rules.json with a dated reason. Never ship past it.
   ok  version-gate link (local channel)  (exit 0)
           ok  ExampleMod is published through 'local'
   ok  version-gate posted 1.0.0  (exit 0)
@@ -229,12 +232,12 @@ temp: <TEMP>\pipeline-kit-selftest-<stamp>
           verdict distribution:
             compatible                       1   100%
         
-          bare passes at stage 8: 1 of 1 compatible verdicts carry no guard
+          bare passes at stage 8: 0 of 1 compatible verdicts carry no guard
         
           Too few tested (0) to state an accuracy. Report the count, not a rate.
         
-  ok  rules-digest.py regenerates the digest (70 rules)  - RULES-DIGEST.md: 70 rules, 24 KB, ~6292 tokens
+  ok  rules-digest.py regenerates the digest (70 rules)  - RULES-DIGEST.md: 70 rules, 24 KB, ~6283 tokens
   ok  logic-index.py --check: the past-mistakes library index is current  - 455 entries predate the root-cause rule
-  ok  gate-rules-index.py --check: the gate-rules index is current  - OK 116 rules
+  ok  gate-rules-index.py --check: the gate-rules index is current  - OK 115 rules
 
 PASS  (33 checks)

@@ -8,6 +8,24 @@ Written as changes happen, not reconstructed afterwards (rule 61). Each version 
 * **failed** - built but crashed or malfunctioned; the number was reclaimed
 * **scratch** - a hypothesis-test build that never held a real number
 
+## 1.1.0 - 2026-11-03 - untested
+
+### Removed
+- Gate rows naming the original's page links, rows that spelled a private identifier inside a pattern, and 13 rows whose helper script is not shipped (package-gate treats a missing helper as a failure).
+- Other people's content: game-signatures.json (byte signatures), the console-command reference compiled from wikis, the record of framework licence texts, another mod's changelog used as the template's example. Promotion of outside services, and one PC's hardware and schedule, including the whole machine-health record (a short design document replaces it).
+- Every tool and code path that reaches the internet: nexus-upload.py, nexus-version-audit.py, nexus-media-backup.py; the Nexus page read in version-gate.ps1; the git fetch, push and remote-tag reads in finalize-mod.ps1 and version-gate.ps1; the GitHub visibility query in pre-finalize-check.ps1. Nothing in the kit makes a network call now.
+
+### Added
+- A screening stage (kit_screen.py, build_kit.py --screen) that fails the build on a network call, direct evidence, advertising or private details in any shipped file, with a seeded self-test of its own; the leak scan also reads text with regex punctuation removed, so a name spelled as a character class is caught.
+- OPTIONAL-SCRIPTS.md: for each tool left out, why it is needed, what it does, the service it talks to, what the person must supply and the pitfalls met. README-FOR-AI.md makes the agent read it and ask the person before building any of them.
+
+### Changed
+- README and NOTICE state that the kit needs a coding agent and that the person is responsible for other mods' permissions, including Nexus's Ask Me setting for AI workflows. The pre-push hook is a small local secret check; the old one called helpers the kit does not ship.
+- The documents are reduced in the build: each past-mistakes entry keeps the mod's name, the issue, the fix, the problems met and the lesson; offsets, byte patterns, disassembly, code from others, record IDs and asset paths show as [... removed]. The live files are not touched. The Patreon publish channel is the neutral 'members' channel.
+
+### Fixed
+- The self-test passes against the current scripts again: the build's rewrite for pre-finalize-check.ps1 matched its new shape, session-start.py no longer asks for a role the kit does not ship, and the self-test supplies the -PriorArt note and the -Guard and -EvidenceRef values the gates now require.
+
 ## 1.0.5 - 2026-10-21 - working
 
 ### Changed

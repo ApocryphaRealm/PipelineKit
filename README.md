@@ -5,11 +5,14 @@ record of past failures and the gate scripts that refuse to issue a version, pac
 unless the rules are met), packaged so that an AI coding agent can rebuild it on another machine.
 
 The kit itself is a **build**, not hand-edited files: `build_kit.py` regenerates `dist\` from the live pipeline
-documents and scripts, sanitising as it goes, and then fails the build if any private identifier survived.
+documents and scripts, sanitising and screening as it goes, and then fails the build if any private identifier, network
+call or direct evidence survived.
 
 | Path | What it is |
 |---|---|
 | `build_kit.py` | the build: copies, rewrites and sanitises the live files into `dist\`, then leak-scans the result |
+| `kit_screen.py` | the screen: what is cut, the network cuts, the rule that reduces the documents, and the `--screen` gate |
+| `kit-src\screen\overrides.json` | the part of the screen that cannot be mechanical (rewordings by document or entry); never shipped |
 | `kit-src\` | the kit's own hand-written files - the member README, the rebuild recipe (`README-FOR-AI.md`), the install and self-test scripts, the example mod, the licences |
 | `CHANGELOG.md` | every kit version, with its ledger status |
 | `dist\` | build output - never committed |
@@ -19,7 +22,9 @@ documents and scripts, sanitising as it goes, and then fails the build if any pr
 ```
 python build_kit.py                      # build into dist\ from the pipeline tree this repo sits in
 python build_kit.py --source <root>      # build from another pipeline root (or set PIPELINE_ROOT)
-python build_kit.py --check              # build into a scratch folder and only report the leak scan
+python build_kit.py --check              # build into a scratch folder and only report the leak scan and the screen
+python build_kit.py --check --out <dir>  # the same, keeping the scratch folder
+python build_kit.py --screen [<dir>]     # only the screening stage, over a built kit (default dist)
 ```
 
 The build needs a **private identity config** that is never committed: role `identity-patterns` of the source
@@ -30,6 +35,15 @@ Without it the build refuses to run. Its keys: `identity` and `kitLeak` (lists o
 leak the build fails on), `kitSubstitutions` (ordered `[regex, replacement]` pairs), `ownerNotePattern`, and
 `kitPaths` (`root`, `mo2Root`, `testInstance`, `testProfile`, `instanceRoster`) for the live scripts' defaults that
 the build rewrites.
+
+## Screening (what may ship)
+
+The kit is for Nexus Mods' Modding Tools, whose rules forbid files that connect to the internet unless crucial, other
+authors' content without permission, and advertising. Every build runs the screen after the leak scan and fails on any of:
+a network call in code (HTTP libraries, curl, gh, git push and fetch, the Nexus API), a working network command in a document
+(except `OPTIONAL-SCRIPTS.md`), evidence (the classes are listed at the top of `kit_screen.py`), advertising, or private
+details. When a live script grows a network call, cut it in `patch_script` and describe it in `OPTIONAL-SCRIPTS.md`. The live
+pipeline's documents are never edited for this.
 
 ## Remotes (maintainers)
 

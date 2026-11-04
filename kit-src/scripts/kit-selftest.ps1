@@ -85,7 +85,10 @@ try {
     & git -C $repo init -q 2>$null | Out-Null
 
     # 3. register, bump, current
-    Run 'version-gate register' (Join-Path $s 'gates\version-gate.ps1') @('-Action', 'register', '-Mod', 'ExampleMod', '-Repo', 'ExampleMod', '-DisplayName', 'Example Mod') 0 'location: example_mod.py __version__' | Out-Null
+    # a new mod needs a note of what already exists (the version gate asks for one); the example's is a line
+    $prior = Join-Path $tmp 'example-prior-art.txt'
+    Set-Content -LiteralPath $prior -Value 'Self-test: the example is not for release, so nothing on Nexus or GitHub was searched.' -Encoding UTF8
+    Run 'version-gate register' (Join-Path $s 'gates\version-gate.ps1') @('-Action', 'register', '-Mod', 'ExampleMod', '-Repo', 'ExampleMod', '-DisplayName', 'Example Mod', '-PriorArt', $prior) 0 'location: example_mod.py __version__' | Out-Null
     $bump = Run 'version-gate bump issues 1.0.0' (Join-Path $s 'gates\version-gate.ps1') @('-Action', 'bump', '-Mod', 'ExampleMod', '-Kind', 'patch') 0 '1\.0\.0'
     $cur = Run 'version-gate current' (Join-Path $s 'gates\version-gate.ps1') @('-Action', 'current', '-Mod', 'ExampleMod') 0 '1\.0\.0'
     $ver = '1.0.0'
@@ -141,7 +144,7 @@ try {
 
     # 9. the housekeeping tools run
     Run 'prune-test-builds (dry run)' (Join-Path $s 'prune-test-builds.ps1') @('-ModName', 'Example Mod', '-SkipMO2') | Out-Null
-    Run 'gate-ledger record a verdict' (Join-Path $s 'gate-ledger.ps1') @('-Action', 'record', '-Stage', '8', '-Subject', 'Example Mod', '-Verdict', 'compatible', '-Evidence', 'self-test: shares no file with any other mod') | Out-Null
+    Run 'gate-ledger record a verdict' (Join-Path $s 'gate-ledger.ps1') @('-Action', 'record', '-Stage', '8', '-Subject', 'Example Mod', '-Verdict', 'compatible', '-Evidence', 'self-test: shares no file with any other mod', '-Guard', 'holds while no other mod ships these files', '-EvidenceRef', $prior) | Out-Null
     Run 'gate-ledger stats' (Join-Path $s 'gate-ledger.ps1') @('-Action', 'stats') | Out-Null
 
     # 10. python tools: the digest regenerates, the library index is current

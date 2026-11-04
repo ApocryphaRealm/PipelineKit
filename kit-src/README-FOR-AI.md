@@ -5,10 +5,20 @@ folder because they want the pipeline it describes running on their machine, for
 recipe. Follow it in order; every step names the command and the check that proves it worked. Do not report the
 pipeline as up until the self-test in step 6 prints `PASS`.
 
+**Two things you must do, before anything else:**
+
+1. **Read `OPTIONAL-SCRIPTS.md` and ask.** Nothing in this kit connects to the internet. That document lists the tools left
+   out because they do: why each is needed, what it does, the service and what the person would supply. Ask the person,
+   item by item, whether they are interested. Build one only after a clear yes to that item. Never build one unprompted,
+   even when a rule or skill names it as if it were there.
+2. **Respect other authors' permissions.** Before working on, patching or reading into a mod the person did not write, ask
+   them to confirm they have checked its permissions, including Nexus's "Ask Me" setting for AI workflows: files under it may
+   not be integrated into automated AI workflows without the author's written permission. If they have not, stop there.
+
 ## 0. What you are rebuilding, in one paragraph
 
 A folder tree where the folder names ARE the pipeline (twelve numbered stages plus a `.MD` folder of governance), a
-set of 70 standing rules split into seven parts and read at the moment they apply, a library of past mistakes that
+set of {RULE_COUNT} standing rules split into seven parts and read at the moment they apply, a library of past mistakes that
 is looked up by topic before acting, a short catalogue of the design ideas ("logics") the pipeline applies
 everywhere, a set of gates - PowerShell and Python scripts - that refuse to issue a version number, package a build
 or finalize a release unless the rules are mechanically satisfied, and a role resolver through which every script
@@ -32,7 +42,7 @@ After step 3 the tree looks like this (only the parts you will touch):
     docs\  docs-archive\               reference documents
     scripts\                           ledgers, gate-rules.json, and the scripts that sit at the top level
       gates\                           every *-gate script: version-gate.ps1, package-gate.ps1, the helper gates
-      release\                         changelog, pre-finalize-check, finalize-mod, the Nexus distro and upload tools
+      release\                         changelog, pre-finalize-check, finalize-mod, the Nexus distro tools
       ops\                             session-digest, attention-ping, prockill
       plugins\                         ESP/FOMOD tools: esp-audit, make-fomod, make-espfe, fomod-destinations
       git-hooks\pre-push
@@ -71,6 +81,7 @@ in the second the same day.
 | Order | File | Why |
 |---|---|---|
 | 1 | `README-FOR-AI.md` (this file) | the recipe and the self-test |
+| 1b | `OPTIONAL-SCRIPTS.md` | what was left out and why; ask the person about each item (see the top of this file) |
 | 2 | `CLAUDE.md` | the entry file: what a session reads, the always-on rules, the index of all rules, the loading table |
 | 3 | `RULES-DIGEST.md` | one page: every rule's heading, its latest amendment and its opening sentences |
 | 4 | `PREFLIGHT.md` | WHEN / DO lines matched at the moment of implementing anything |
@@ -93,13 +104,8 @@ path, `resolve.py find <role>` is right). `docs-archive\PIPELINE-RESEARCH.md` is
 - Python 3.10 or newer on `PATH` (`python --version`) **with the Python launcher** (`py -3 --version`; the python.org
   installer adds it): the scripts call the resolver as `py -3 ...\resolvers\resolve.py`, and the digest, the indexes,
   the plugin audit and the FOMOD maker are Python.
-- git 2.30 or newer, and the `gh` CLI if the person publishes to GitHub (rule 3 and rule 9 assume a public repo per mod).
-- `curl.exe` (built into Windows) for the optional Nexus API reads. The Nexus key, if the person has one, goes in the
-  `NEXUS_APIKEY` environment variable. **Never write it into a file in this tree.** The posting scripts
-  (`nexus-upload.py`, `nexus-version-audit.py`) read it from there and send it in a request header only.
-- Optional, for posting pages: Google Chrome with the Claude in Chrome extension, signed in to the person's Nexus
-  account (section 7b). `pefile` (`pip install pefile`) lets the audit read a version from a DLL inside a zip, and
-  7-Zip lets it look inside a `.7z`.
+- git 2.30 or newer. Rule 3 and rule 9 assume a public repo per mod; pushing to it is the person's step, because the kit
+  pushes nothing.
 - Optional, only for Skyrim mods: a C++ toolchain (CMake, vcpkg, MSVC) for SKSE plugins, Mod Organizer 2 for testing.
   The pipeline runs without them; the DLL-specific gate rules skip packages that ship no DLL.
 
@@ -124,19 +130,11 @@ refuses to overwrite a `.MD` that already holds a ledger with entries.
 **Check:** `Get-ChildItem <ROOT>` lists 13 numbered folders and `.MD`; `<ROOT>\.MD\scripts\version-ledger.json`
 contains `[]`; the install printed `ok  resolve.py check: OK <n> roles in 7 rosters`.
 
-### 3b. Fill in the person's public identity
+### 3b. The person's public identity
 
-`<ROOT>\.MD\resolvers\rosters\identity.json` holds one value per public fact the Nexus page rules check. Two ship as
-placeholders - replace them with the person's own, or delete the role and the gate rows that name it
-(`{identity:patreon}`, `{identity:discord-invite}` in `scripts\gate-rules.json`) if they have none:
-
-| role | placeholder | what it is |
-|---|---|---|
-| `patreon` | `https://www.patreon.com/YOUR-PATREON-NAME` | the donation link every Nexus page carries (rule 10) |
-| `discord-invite` | `https://discord.gg/YOUR-INVITE` | the Discord server invite a page may link |
-
-The Nexus game domains (`nexus-domain-*`) are public facts and stay. The same placeholders appear wherever a rule or
-skill quotes the original's links. Then run `py -3 <ROOT>\.MD\resolvers\resolve.py check`.
+`<ROOT>\.MD\resolvers\rosters\identity.json` holds the public facts the Nexus page rules check: the Nexus game domains,
+which stay. Add a role for any other public link the person wants a gate row to check, then run
+`py -3 <ROOT>\.MD\resolvers\resolve.py check`.
 
 ### 3c. The SessionStart hook (Claude Code, optional but recommended)
 
@@ -152,9 +150,9 @@ the file moves. Changing settings.json is a persistent configuration change: ask
 git config --global core.hooksPath "<ROOT>\.MD\scripts\git-hooks"
 ```
 
-The `pre-push` hook rejects any tag whose patch component is 10 or more - the shape that can never exist under the
-rollover rule (`1.0.9 -> 1.1.0`). It is global on purpose: every repo on the machine, present and future, with no
-per-repo step. Tell the person you set a global git setting; `kit-install.ps1 -SetGitHooks` does it for you.
+The `pre-push` hook looks at what is about to be pushed, locally, and refuses added lines shaped like an API key. It is
+global on purpose: every repo on the machine, present and future, with no per-repo step. Tell the person you are changing
+a global git setting and ask first; `kit-install.ps1 -SetGitHooks` does it for you.
 
 **Check:** `git config --global core.hooksPath` prints the path.
 
@@ -180,7 +178,7 @@ chosen because it needs no compiler) through the stages a real mod takes:
 0. the layout: no file in the installed tree is a retired-path stub; `resolve.py check` passes; `resolve.py find
    version-gate` answers `<temp>\.MD\scripts\gates\version-gate.ps1` (the resolver answers inside its own tree); the
    role `past-mistakes-library` is `PAST-MISTAKES-LIBRARY.md`; `session-start.py --print` emits the hook payload.
-1. `gates\version-gate.ps1 -Action register` - one identity: ledger key, repo folder, display name, the scanned version locations.
+1. `gates\version-gate.ps1 -Action register` (with a `-PriorArt` note) - one identity: ledger key, repo folder, display name, the scanned version locations.
 2. `version-gate.ps1 -Action bump -Kind patch` - the tool issues `1.0.0` for the example's first number and writes it into the repo; nothing was typed.
 3. `release\changelog.ps1 -Action add` - the entry is written as the change happens (rule 61).
 4. the package is laid out under `7. current test builds\Skyrim - Example Mod\Example Mod 1.0.0` with its README,
@@ -192,10 +190,10 @@ chosen because it needs no compiler) through the stages a real mod takes:
 7. the repo is committed and tagged `v1.0.0` (rule 9), then `version-gate.ps1 -Action gate -Stage finalize` - it
    passes only because 6 and the tag happened.
 8. a deliberate failure: a second package that ships a test script, a `.esl`, and an unparseable JSON, and lacks
-   LICENSE and NOTICE; `package-gate.ps1` must REFUSE it (expected: eight hits, exit 1).
+   LICENSE and NOTICE; `package-gate.ps1` must REFUSE it (expected: it lists the hits, exit 1).
 9. `bump -Kind patch` issues `1.0.1`, it is recorded `failed`, and `next` shows `1.0.1` again - a failed build never consumes a number.
 10. `prune-test-builds.ps1` (dry run), `gate-ledger.ps1` records and scores a verdict, `rules-digest.py` regenerates
-    the digest (70 rules), `logic-index.py --check` confirms the past-mistakes library's index is current and
+    the digest ({RULE_COUNT} rules), `logic-index.py --check` confirms the past-mistakes library's index is current and
     `gate-rules-index.py --check` the gate-rules index.
 
 Every step prints `ok` or `FAIL` with the gate's own output, then a summary line: `PASS  (n checks)` or
@@ -212,7 +210,9 @@ With `<ROOT>` as the working folder and `$s = "<ROOT>\.MD\scripts"` (or ask by r
 
 ```powershell
 # once per mod: its source repo lives under "6. current wip mods\<RepoFolder>"
-& "$s\gates\version-gate.ps1" -Action register -Mod MyMod -Repo MyMod -DisplayName "My Mod"
+#   a new mod needs -PriorArt <file>: a note, written by the person or by you from a search they asked for, of what already
+#   exists on Nexus and GitHub. The gate reads the note; the kit does no searching itself.
+& "$s\gates\version-gate.ps1" -Action register -Mod MyMod -Repo MyMod -DisplayName "My Mod" -PriorArt "<that note>"
 
 # every change
 & "$s\gates\version-gate.ps1" -Action bump -Mod MyMod -Kind patch|minor|major   # issues the next number of that kind and writes every location (semantic versioning; -Kind is required)
@@ -229,31 +229,20 @@ With `<ROOT>` as the working folder and `$s = "<ROOT>\.MD\scripts"` (or ask by r
 & "$s\release\nexus-distro-sweep.ps1"                      # every distro folder holds exactly the newest zip
 ```
 
-## 7b. Posting to Nexus Mods - the agent posts the page
+## 7b. Posting to Nexus Mods
 
-The original pipeline's agent posts the pages itself (rule 10). Two tools split the work:
+The kit posts nothing. The person uploads through the page's own form, or through a tool they asked for in
+`OPTIONAL-SCRIPTS.md`, and then the posting is recorded so the number is spent:
 
-- **Files go through the Nexus API.** `python "$s\release\nexus-upload.py" "<distro folder>" --dry-run`, then without
-  `--dry-run`: it uploads the folder's newest build (md5-bound, finalised, waited on), adds it as the new version of
-  the page's primary main file (name = the mod's name with no version and no "FOMOD"; the version in the version
-  field; the old file's description kept, "FOMOD" added for a FOMOD archive; mod version updated; primary for mod
-  managers), and appends that version's section of the folder's `changelog.txt`. Requirements carry over to the new
-  version. The page must be registered with `nexusModId` (and `nexusDomain` for a game other than Skyrim SE) in
-  `version-registry.json`. A registry entry with `nexusRemoved` (a page the moderators took down) is refused.
-- **Everything else goes through the browser.** With Claude in Chrome: the description (Nexus's editor is SCEditor -
-  set it with `sceditor.instance(textarea).val(text)` and save with the form's own button; plain input events are
-  not enough), requirements, permissions, tags, media, a file's name or version in its Edit dialog. Form fields take
-  real keystrokes. Wait for a dialog's save to finish before the next click. The browser cannot upload a file over
-  10 MB and the page cannot fetch one from anywhere else, which is why files use the API.
-- **Proof, every time:** `python "$s\release\nexus-version-audit.py"` compares every registered page with the newest build in
-  its distro folder (reading the version from the DLL or the CHANGELOG inside an archive whose name carries none) and
-  exits 1 while a page is behind, its General version disagrees with its file, or a file is versioned "1". A page is
-  not "current" until this exits 0. The v1 API caches a page's version for minutes; trust the file and md5 lookup.
-- Before deleting or replacing any image on a page, `python "$s\release\nexus-media-backup.py" "<distro folder>" urls.json`
-  saves the live images into that folder's `assets\` - a deleted Nexus image cannot be put back otherwise.
+```powershell
+& "$s\gates\version-gate.ps1" -Action posted -Mod MyMod -Version <version> -Channel nexus -File "<the zip>" -Evidence "<where it was posted>"
+```
+
+- The page text follows `templates\nexus-page-template.txt` and the `nexus-page` skill. That skill describes the original's
+  browser-driven posting; here, a post is the person's to make unless they set up something else.
 - A changelog entry on Nexus can be edited but not deleted or renamed; correct a wrong one in place.
-- Uploads and description saves are public: post a batch only on the person's go-ahead, and show any comment that
-  will appear in their name word for word first.
+- Keep a copy of any image before deleting or replacing it on a page: a deleted Nexus image cannot be put back.
+- Every claim on a page must be true, and the page carries the site's AI tags if AI made the work.
 - `scripts\ops\attention-ping.ps1` plays three notification sounds; the original's agent puts its question in chat first
   and then plays it, so the person can work on something else while it runs.
 
@@ -371,7 +360,16 @@ cost nothing, or prune them once the person's own rows outnumber them.
 
 ## 10. What the kit deliberately leaves out
 
-- Secrets. There is no key file; the Nexus key is `NEXUS_APIKEY` in the environment.
+- Secrets. There is no key file and nothing reads a key.
+- Every tool that reaches the internet (`OPTIONAL-SCRIPTS.md`).
+- Direct evidence from other people's work: code, disassembly, byte signatures, offsets, record IDs, asset paths, quoted licence
+  and wiki text. The original's console-command reference, which was compiled from public wikis, and its record of framework
+  licence terms are gone too: go to the source for those.
+- A rule, skill or library entry may name a tool that is not here: `health-gate`, `usage-pacing`, `combined-run`, `package-mod`,
+  the DevBench, TestBench and gamelink test tools, a watcher, a bot, and others. If `resolve.py find <role>` does not know it,
+  it is the original's. Do not report it as missing or try to run it. Tell the person what the rule wants done and do that by
+  hand, or offer to write a local version, only where it touches no network.
+- Gate rows whose helper script is not shipped were removed. The ones naming the original's page links were removed too.
 - The owner's data: their ledgers, progress log, mod repos, test instances, memories. The ledgers ship EMPTY.
 - The owner's roles: the rosters for their MO2 instances (`games.json`) and their one-off modlist scripts
   (`njordlinger.json`), every role naming a program at a fixed path on their machine, and every role whose file the
@@ -388,6 +386,6 @@ cost nothing, or prune them once the person's own rows outnumber them.
 
 Tell the person, in this order: where `<ROOT>` is, that the self-test passed (paste its summary line), which global
 settings you changed (`core.hooksPath`, `PIPELINE_ROOT`, `PIPELINE_MO2_INSTANCES`, the SessionStart hook if added),
-that `resolvers\rosters\identity.json` still holds placeholders until they give you their links (3b), and that the next thing the
+what they answered about each item of `OPTIONAL-SCRIPTS.md`, and that the next thing the
 pipeline needs is their first mod under `6. current wip mods` and its `register` call. Then, at the start of every
 later session, read the three files `CLAUDE.md` names and act as the rules say.
