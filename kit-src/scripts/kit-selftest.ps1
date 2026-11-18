@@ -2,7 +2,8 @@
 .SYNOPSIS
     The Pipeline Kit self-test: builds a throwaway pipeline in a temp folder and carries the example mod through
     register -> bump -> changelog -> package -> package gate -> record working -> finalize gate, then proves the
-    package gate REFUSES a package that breaks a rule. Prints PASS or FAIL; exit code 0 only on PASS.
+    package gate REFUSES a package that breaks a rule, and runs the render pipeline's checks that need no Blender (a
+    missing Blender is a SKIP). Prints PASS or FAIL; exit code 0 only on PASS.
 .DESCRIPTION
     Step 6 of README-FOR-AI.md. An agent must not report the pipeline as up until this passes. Nothing outside the
     temp folder is written: the environment variables are set for this process only and restored afterwards.
@@ -36,6 +37,17 @@ function Run([string]$name, [string]$file, [string[]]$argv, [int[]]$expectExit =
     $script:results.Add([pscustomobject]@{ name = $name; ok = $ok; exit = $code })
     Say ("{0}  {1}  (exit {2})" -f $(if ($ok) { '  ok' } else { 'FAIL' }), $name, $code)
     foreach ($l in $out) { Say ("        " + $l) }
+    return $text
+}
+function PyRun([string]$name, [string[]]$argv, [int[]]$expectExit = @(0), [string]$expectText = $null, [int]$tail = 4) {
+    # a Python tool, judged by its exit code and its output; only the last lines are kept (the gate self-tests print every case)
+    $out = & python @argv 2>&1 | ForEach-Object { "$_" }
+    $code = $LASTEXITCODE
+    $text = ($out -join "`n")
+    $ok = ($expectExit -contains $code) -and (-not $expectText -or ($text -match $expectText))
+    $script:results.Add([pscustomobject]@{ name = $name; ok = $ok; exit = $code })
+    Say ("{0}  {1}  (exit {2})" -f $(if ($ok) { '  ok' } else { 'FAIL' }), $name, $code)
+    foreach ($l in @($out | Select-Object -Last $tail)) { Say ("        " + $(if ($l.Length -gt 220) { $l.Substring(0, 220) + ' ...' } else { $l })) }
     return $text
 }
 function Check([string]$name, [bool]$cond, [string]$detail = '') {
@@ -162,6 +174,36 @@ try {
         Check 'gate-rules-index.py --check: the gate-rules index is current' ($LASTEXITCODE -eq 0) (($o | Select-Object -Last 1))
     } else {
         Check 'python on PATH (needed by the digest, the index, the plugin audit)' $false 'python not found'
+    }
+
+    # 11. 1.1.0: the render work pipeline (README-FOR-AI 7e) - no Blender needed and no game mesh: every mesh and
+    # pattern here is made up by the test (example\render-test)
+    if ($py) {
+        $fx = Join-Path $Kit 'example\render-test'
+        $rt = Join-Path $tmp 'render-test'
+        New-Item -ItemType Directory -Force -Path $rt | Out-Null
+        PyRun 'package-render: the example package ships no NIF, so it passes at once' @((Join-Path $s 'release\package-render.py'), '--mod', 'ExampleMod', '--version', $ver, '--package', $pkg) 0 'ships no \.nif' | Out-Null
+        foreach ($g in @('gates\package-render-gate.py', 'gates\engraving-layout-gate.py', 'gates\fomod-option-image-gate.py', 'gates\surface-profile-gate.py', 'render\nif-readback.py', 'render\before-after-sheet.py')) {
+            PyRun "$(Split-Path $g -Leaf) --self-test" @((Join-Path $s $g), '--self-test') 0 'self-test PASS' 1 | Out-Null
+        }
+        $cli = Join-Path $s 'art\patternlib\cli.py'
+        $pg = Join-Path $s 'gates\pattern-gate.py'
+        PyRun 'patternlib: a triquetra on its medallion at 80 px per unit passes its validators' @($cli, (Join-Path $fx 'triquetra.json'), (Join-Path $rt 'good')) 0 'patternlib: PASS' 1 | Out-Null
+        PyRun 'pattern-gate passes the saved pattern' @($pg, (Join-Path $rt 'good')) 0 'pattern-gate: OK' 1 | Out-Null
+        PyRun 'patternlib REFUSES the same triquetra at 6 px per unit (too fine for the texture)' @($cli, (Join-Path $fx 'triquetra-coarse.json'), (Join-Path $rt 'coarse')) @(2) 'REFUSED min-feature' 1 | Out-Null
+        PyRun 'pattern-gate REFUSES the refused pattern' @($pg, (Join-Path $rt 'coarse')) @(1) 'pattern-gate: FAIL' 1 | Out-Null
+        PyRun 'package_render_uv: an evenly mapped strip passes, the same strip squashed fails' @((Join-Path $fx 'uv-strip-test.py'), (Join-Path $s 'release')) 0 'even strip: PASS   squashed strip: FAIL' 1 | Out-Null
+        # Blender finds its add-ons (PyNifly) under the person's own profile, so the probe - which only starts Blender in
+        # the background with factory settings and saves nothing - runs with the real USERPROFILE, not the temp one
+        $env:USERPROFILE = $saved.USERPROFILE
+        $probe = (& python (Join-Path $fx 'blender-probe.py') (Join-Path $s 'render') 2>&1 | ForEach-Object { "$_" }) -join ' '
+        $env:USERPROFILE = Join-Path $tmp 'home'
+        if ($probe -match 'BLENDER-OK') {
+            Check 'Blender with PyNifly found - the render steps can run' $true ($probe -replace '^.*BLENDER-OK ', '')
+        } else {
+            # no Blender (or no PyNifly in it): a render step must say SKIP and write nothing, not fail
+            PyRun 'before-after-sheet render reports SKIP without Blender / PyNifly' @((Join-Path $s 'render\before-after-sheet.py'), 'render', '--out', (Join-Path $rt 'sheet'), '--before', 'none.nif', '--before-tex', $rt, '--after', 'none.nif', '--after-tex', $rt) @(3) 'SKIP' 1 | Out-Null
+        }
     }
 }
 finally {

@@ -24,6 +24,14 @@
     {
       "rx": "`foreach \\(\\$u in \\$lj\\) \\{ curl -o \\$dest\\s+\\$u\\.URI \\}`",
       "to": "a loop handing each item's URI to the download command"
+    },
+    {
+      "rx": "^\\*\\*Root cause\\.\\*\\* (\\\"Same writes as the game's setter\\\")",
+      "to": "**Root cause:** \"Same writes as the game's setter\""
+    },
+    {
+      "rx": "^## A test assumed a kept TNG cover item meant a safe frame.*?(?=^## )",
+      "to": ""
     }
   ],
   "CHANGELOG.md": [
@@ -264,11 +272,53 @@
     {
       "rx": "RTX \\d{4}( GAMING OC)?",
       "to": "GPU"
+    },
+    {
+      "rx": "Claude in Chrome on discord\\.com",
+      "to": "Claude in Chrome on the chat server's site"
+    },
+    {
+      "rx": "`discord-new-release-posted\\.txt`",
+      "to": "`new-release-posted.txt`"
     }
   ],
   "rules/01-pipeline-topology.md": [
     {
       "rx": " It fetches through `curl\\.exe`, per the\\s+request-hub poller's finding that nexusmods\\.com fingerprint-blocks `Invoke-WebRequest`\\.",
+      "to": ""
+    }
+  ],
+  "skills/weapon-engraving/SKILL.md": [
+    {
+      "rx": "\\(the dark Nordic Steel shading -\\s*`[^`]*notes\\.md`\\)",
+      "to": "(the dark Nordic Steel shading)"
+    },
+    {
+      "rx": "Tools \\(set2\\): `katana_build\\.py` builds the blade this way \\(`KATANA_BLANK=1` builds the blank\\); `halberd_paint\\.py`\\s*\\nstraight_face opt-ins per face:",
+      "to": "Tools: in the original a blade builder and a face painter of its design workspace did this (not in the kit; build the\nfaces with `scripts\\art\\patternlib` - role `patternlib-cli`). The painter's straight-face opt-ins, per face:"
+    },
+    {
+      "rx": "^Sheets: `[^`]*katana-bevel-sheet\\.jpg`[^\\n]*\\n",
+      "to": ""
+    },
+    {
+      "rx": "`design_gate\\.require\\(WORK\\)`",
+      "to": "the design workspace's gate chain (the original's design-workspace scripts, not in the kit)"
+    },
+    {
+      "rx": "run by `design_gate\\.require` after the layout gate",
+      "to": "run after the layout gate"
+    },
+    {
+      "rx": "written by `set2\\\\medallion_audit\\.py <out> --write-work` \\(add a new symbol to its\\s*\\n\\s*MEDALLIONS table: work folder, atlas stem, centre px, rough radius px, layout face names\\)\\. `set2\\\\medallion_measure\\.py`\\s*\\n\\s*finds",
+      "to": "written by a medallion measure of the maps (the original's design-workspace scripts, not in the kit; the fields are\n  the ones `scripts\\gates\\engraving-layout-gate.py` reads). The measure finds"
+    },
+    {
+      "rx": "Measured by `set2\\\\surface_profile_measure\\.py`\\s*\\n\\s*\\(Blender, on the exported NIF\\) then `set2\\\\surface_profile_analyze\\.py` \\(system Python\\) into",
+      "to": "Measured (by the original's design-workspace scripts, not in the kit)\n  in Blender, on the exported NIF, then analysed in system Python into"
+    },
+    {
+      "rx": "^- Work and briefs for the Truly Nordic set:[^\\n]*\\n[^\\n]*HANDOFF-six-weapons\\.md\\)\\.\\n",
       "to": ""
     }
   ]

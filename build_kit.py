@@ -112,7 +112,31 @@ SCRIPTS = [
     "release/test-build-pick.ps1", "release/post-release-prune.ps1",
     # 1.0.4: gate rows added since 1.0.3 name these three scripts
     "gates/banner-highlight-gate.py", "gates/theme-outline-gate.py", "gates/translation-script-gate.py",
+    # 1.1.0: the render work pipeline (README-FOR-AI section 7e) - the package re-render before posting and its gate,
+    # the model-mod package gates (their gate-rules rows ship with them), the NIF tools, the engraving gates, the
+    # feature-banner maker; and the render tools promoted into .MD\scripts\render from the Truly Nordic repos
+    "release/package-render.py", "release/package_render_blender.py", "release/package_render_uv.py",
+    "gates/package-render-gate.py", "gates/nif-uv-overlap-gate.py", "gates/fomod-option-image-gate.py", "gates/esp-obnd-gate.py",
+    "plugins/Inspect-NifShapes.py", "plugins/Repath-NifTextures.py",
+    "gates/pattern-gate.py", "gates/engraving-layout-gate.py", "gates/surface-profile-gate.py",
+    "art/make-feature-banners.py",
+    "render/niflib.py", "render/winding.py", "render/nif-readback.py", "render/render_lib.py", "render/before-after-sheet.py",
 ]
+# 1.1.0: folders that ship WHOLE (every .py in them, __pycache__ left out), so a module added to one is never missed;
+# an empty or missing folder stops the build like a missing listed script
+SCRIPT_FOLDERS = ["art/patternlib"]
+
+
+def all_scripts(md: str) -> list:
+    """SCRIPTS plus every .py of every SCRIPT_FOLDERS folder (paths under .MD\\scripts, forward slashes)."""
+    out = list(SCRIPTS)
+    for folder in SCRIPT_FOLDERS:
+        d = os.path.join(md, "scripts", folder)
+        found = sorted(f for f in os.listdir(d) if f.endswith(".py")) if os.path.isdir(d) else []
+        if not found:
+            raise SystemExit(f"script folder missing or empty in the live tree: scripts/{folder}")
+        out += [folder + "/" + f for f in found if folder + "/" + f not in out]
+    return out
 # the role resolver (rule 70): .MD\resolvers -> dist\resolvers. render-preamble.py (the owner's sub-agent preamble,
 # test-instance-specific), render-hooks.py (the owner's settings.json guard hooks) and tests\ (fixtures of the owner's
 # tree) stay out; INDEX.md is generated on the person's machine by kit-install (resolve.py index --build).
@@ -142,6 +166,9 @@ DATA_EMPTY = {"version-registry.json": "{}\n", "version-ledger.json": "[]\n", "g
 
 # 1.0.2: the Claude Code skills (.MD\skills\<name>\, junctioned into ~\.claude\skills by the person - README-FOR-AI 7c)
 SKILLS_DIR = "skills"
+# 1.1.0: skills that stay out whole. norse-ue4ss is the owner's route through his own NORSE (UE 5.6) repos - another game,
+# its paths and plans are his, and it was still being written in another session when 1.1.0 was built
+SKILLS_LEFT_OUT = {"norse-ue4ss"}
 
 # templates from 11. Nexus distro and a finished package's document set
 TEMPLATES = [
@@ -372,6 +399,46 @@ def rewrite_script(rel: str, text: str) -> str:
         text = must(r'aside = os\.path\.join\(r"{MO2}\\{INSTANCE}\\_removed-20260921", "locked-dlls"\) if "--mods-dir" not in sys\.argv \\\r?\n\s*else ',
                     'aside = ', text, count=1)
         text = must(r'else "{TEST_PROFILE}"', 'else "Default"  # kit: the MO2 default profile name', text, count=1)
+    # 1.1.0, the render work pipeline: the programs come from the person's machine (BLENDER / TEXCONV, then PATH); the
+    # docstrings that name the original's design workspace (4. plans, set2) or its upload tool say what the kit has
+    if name == "package-render.py":
+        # role blender is the owner's install path and is dropped from the kit's rosters (an absolute path outside <ROOT>)
+        text = must(r'    for c in \(r"C:\\Program Files\\Blender Foundation\\Blender [\d.]+\\blender\.exe",\):\r?\n        if os\.path\.isfile\(c\): return c\r?\n',
+                    '    c = os.environ.get("BLENDER") or shutil.which("blender")   # kit: BLENDER, then blender on PATH' + nl +
+                    '    if c and os.path.isfile(c): return c' + nl, text, count=1)
+        text = must(r'Blender not found \(role blender\)', 'Blender not found (set BLENDER, or put blender on PATH)', text, count=1)
+        text = must(r'nexus-upload\.py runs the gate\.', 'the upload step runs the gate (the kit uploads nothing - OPTIONAL-SCRIPTS.md).', text, count=1)
+    if name == "package-render-gate.py":
+        text = must(r'\(nexus-upload\.py, finalize-mod\.ps1\)', '(the upload step, finalize-mod.ps1)', text, count=1)
+    if name == "nif-uv-overlap-gate.py":
+        text = must(r'TEXCONV = r"[^"\r\n]*texconv\.exe"',
+                    'TEXCONV = os.environ.get("TEXCONV") or __import__("shutil").which("texconv")   # kit: TEXCONV, then texconv on PATH (Microsoft DirectXTex, not shipped)',
+                    text, count=1)
+        # without texconv no DDS is decoded: _load_tex returns None and judge() says it found no texture to judge by
+        text = must(r'    if not os\.path\.exists\(png\):\r?\n        subprocess\.run\(\[TEXCONV,',
+                    '    if not os.path.exists(png) and TEXCONV:' + nl + '        subprocess.run([TEXCONV,', text, count=1)
+    if name == "package_render_uv.py":
+        text = must(r'\(set2\\\\uv_stretch_check\.py\)', '(a design-workspace script of the original, not in the kit)', text, count=1)
+    if name == "engraving-layout-gate.py":
+        text = must(r'\(set2/engraving_measure\.py, fragments\(\)\)', '(patternlib.measure, fragments())', text, count=1)
+        text = must(r'set2/medallion_audit\.py --write-work \(set2/medallion_measure\.py on the atlas:',
+                    'a medallion measure of the maps (the original\'s design-workspace audit, not in the kit; this file\'s fields are read below):', text, count=1)
+        text = must(r'# run thresholds \(set2\\engraving_measure\.py uses the same\)', '# run thresholds (patternlib.measure uses the same)', text, count=1)
+        text = must(r'# the standard medallion, measured \(set2\\medallion_measure\.py uses the same numbers\)', '# the standard medallion, measured', text, count=1)
+        text = must(r'MED_HOW = "set2\\\\medallion_audit\.py <out> --write-work \(add the symbol to its MEDALLIONS table\)"',
+                    'MED_HOW = "a medallion measure that writes medallion_check.json beside engraving_check.json (the fields medallion_problems() reads)"',
+                    text, count=1)
+    if name == "surface-profile-gate.py":
+        text = must(r'THE MEASURE \(set2\\\\surface_profile_measure\.py in Blender \+ set2\\\\surface_profile_analyze\.py, written to',
+                    'THE MEASURE (in the original, a Blender pass and an analysis script of its design workspace, not in the kit; written to',
+                    text, count=1)
+    if rel == "art/patternlib/__init__.py":
+        text = must(r'\(absorbed from set2 engraving_measure\)', "(absorbed from the original's design-workspace measure)", text, count=1)
+    if rel == "art/patternlib/damascus.py":
+        text = must(r'\(4\. plans\\\\[^\r\n]*\\\\work\\\\\r?\ndamascus_options\\\\make_options\.py, the owner chose',
+                    '(the original\'s design workspace,' + nl + 'the owner chose', text, count=1)
+    if rel == "art/patternlib/measure.py":
+        text = must(r'ABSORBED from set2\\engraving_measure\.py \(', "ABSORBED from the original's design-workspace measure (", text, count=1)
     return text
 
 
@@ -623,7 +690,8 @@ def main() -> int:
         os.path.join(md, "CLAUDE.md"))
 
     # 2. scripts and data
-    for s in SCRIPTS:
+    scripts_shipped = all_scripts(md)
+    for s in scripts_shipped:
         p = os.path.join(md, "scripts", s)
         if not os.path.isfile(p):
             raise SystemExit(f"script missing in the live tree: scripts/{s} (moved again? `resolve.py find <role>` names it)")
@@ -640,7 +708,7 @@ def main() -> int:
             t = read(p)
             if d == "gate-rules.json":
                 t = rewrite_gate_rules(t, os.path.join(md, "scripts"))
-                shipped = {x.replace("\\", "/") for x in SCRIPTS}
+                shipped = {x.replace("\\", "/") for x in scripts_shipped}
                 t, no_script = kit_screen.screen_gate_rules(t, lambda sc: sc.replace("\\", "/") in shipped, ov)
                 print(f"gate rows left out because their script does not ship: {len(no_script)} ({', '.join(no_script)})")
             put("scripts/" + d, sanitise(t), p)
@@ -660,7 +728,9 @@ def main() -> int:
         for fn in files:
             p = os.path.join(dirpath, fn)
             rel = SKILLS_DIR + "/" + os.path.relpath(p, skills_root).replace("\\", "/")
-            if rel[len(SKILLS_DIR) + 1:] in kit_screen.CUT_SKILL_FILES:
+            if rel[len(SKILLS_DIR) + 1:] in kit_screen.CUT_SKILL_FILES or rel.split("/")[1] in SKILLS_LEFT_OUT:
+                continue
+            if "__pycache__" in rel:
                 continue
             if os.path.splitext(fn)[1].lower() in TEXT_EXT:
                 t = sanitise(read(p))

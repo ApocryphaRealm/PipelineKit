@@ -44,7 +44,9 @@ After step 3 the tree looks like this (only the parts you will touch):
       gates\                           every *-gate script: version-gate.ps1, package-gate.ps1, the helper gates
       release\                         changelog, pre-finalize-check, finalize-mod, the Nexus distro tools
       ops\                             session-digest, attention-ping, prockill
-      plugins\                         ESP/FOMOD tools: esp-audit, make-fomod, make-espfe, fomod-destinations
+      plugins\                         ESP/FOMOD/NIF tools: esp-audit, make-fomod, make-espfe, fomod-destinations, Inspect-NifShapes
+      render\                          the render work pipeline: niflib, winding, nif-readback, render_lib, before-after-sheet
+      art\                             patternlib (the engraving pattern library), make-feature-banners
       git-hooks\pre-push
     resolvers\
       resolve.py  resolve.ps1          the role resolver (rule 70)
@@ -104,6 +106,14 @@ path, `resolve.py find <role>` is right). `docs-archive\PIPELINE-RESEARCH.md` is
 - Python 3.10 or newer on `PATH` (`python --version`) **with the Python launcher** (`py -3 --version`; the python.org
   installer adds it): the scripts call the resolver as `py -3 ...\resolvers\resolve.py`, and the digest, the indexes,
   the plugin audit and the FOMOD maker are Python.
+- For the render work pipeline (section 7e) and the model-mod rows of the package gate: the Python packages **numpy**,
+  **scipy** and **Pillow** (`python -m pip install numpy scipy pillow`); the pattern library also uses **matplotlib**
+  and **scikit-image**. The package gate runs the NIF rows on every package, so install numpy even for a pipeline
+  that never makes a model mod.
+- Optional, for renders: **Blender** (a recent version) with **PyNifly**, a third-party NIF add-on - the person
+  installs it into Blender themselves; the kit never ships or copies any of it. And Microsoft's **texconv**
+  (DirectXTex, not shipped), which the UV-overlap gate uses to decode DDS. Point the scripts at them with the
+  `BLENDER` and `TEXCONV` environment variables, or put them on `PATH`.
 - git 2.30 or newer. Rule 3 and rule 9 assume a public repo per mod; pushing to it is the person's step, because the kit
   pushes nothing.
 - Optional, only for Skyrim mods: a C++ toolchain (CMake, vcpkg, MSVC) for SKSE plugins, Mod Organizer 2 for testing.
@@ -195,6 +205,12 @@ chosen because it needs no compiler) through the stages a real mod takes:
 10. `prune-test-builds.ps1` (dry run), `gate-ledger.ps1` records and scores a verdict, `rules-digest.py` regenerates
     the digest ({RULE_COUNT} rules), `logic-index.py --check` confirms the past-mistakes library's index is current and
     `gate-rules-index.py --check` the gate-rules index.
+11. the render work pipeline, with no Blender and no game mesh (every mesh is made up by the test): `package-render.py`
+    on the example package exits 0 (it ships no NIF); the self-tests of `package-render-gate.py`,
+    `engraving-layout-gate.py`, `fomod-option-image-gate.py`, `surface-profile-gate.py`, `render\nif-readback.py` and
+    `render\before-after-sheet.py`; the pattern library generates a small triquetra that `pattern-gate.py` passes and
+    a seeded, too-coarse one that it refuses; `package_render_uv.py` passes an evenly mapped strip and fails the same
+    strip with its UVs stretched; and Blender with PyNifly is found - or the step reports SKIP, which passes.
 
 Every step prints `ok` or `FAIL` with the gate's own output, then a summary line: `PASS  (n checks)` or
 `FAIL  (n of m)`. `example\expected-selftest-output.txt` is the output the kit's author got; compare yours to it.
@@ -261,12 +277,13 @@ is the rule the whole tool exists for: a version is earned by working, and a cha
 The rules say WHAT must be true; `skills\` says HOW a kind of work is done, as Claude Code skills. Each `SKILL.md`
 is a route: which rule part to read, which scripts to run in which order, which past-mistakes library topics to grep. It
 copies no rule text (a rule lives in exactly one place), so a skill stays right when a rule is amended - as long as
-the script names and arguments it lists still exist. The nine: `mod-release`, `nexus-page`, `in-game-test` (its `references\TESTING-PROTOCOL.md` is the test-run
+the script names and arguments it lists still exist. The ten: `mod-release`, `nexus-page`, `in-game-test` (its `references\TESTING-PROTOCOL.md` is the test-run
 protocol of rule 20),
 `amf-menu-port` (its `references\SMF-CONVERSION-PLAYBOOK.md` is the settings-port playbook), `modding-tools` (with `skills\modding-tools\scripts\esm_lookup.py`, a FormID-by-EditorID reader - a
 FormID is looked up, never recalled), `troubleshooting` (falsification and adversarial mode, rules 56, 57 and 49 - the procedures are its
 `references\FALSIFICATION-MODE.md` and `references\ADVERSARIAL-MODE.md`), `session-records`,
-`named-commands`, `skill-scout`.
+`named-commands`, `skill-scout`, `weapon-engraving` (how carved decoration is laid out on a model part; its steps call the
+pattern library, `scripts\art\patternlib`, and the engraving gates of section 7e).
 
 Install them where every session finds them, with the source kept in the pipeline:
 
@@ -281,7 +298,7 @@ change. Many lines name the original's mods, MO2 instances and test tools - adap
 same way section 9 says for the rules. Validate a skill after editing it: its header must be valid YAML (a colon
 inside the `description` breaks it).
 
-**Check:** a new Claude Code session lists the nine skills among its available skills.
+**Check:** a new Claude Code session lists the ten skills among its available skills.
 
 ## 7d. Finding what deserves a skill - `skill-scout.py`
 
@@ -298,6 +315,44 @@ an existing one), a gate row if it is one checkable fact, a rule if it is an ins
 scheduled task and as a section of its optimisation sweep. The `skill-scout` skill is its manual.
 
 
+
+## 7e. The render work pipeline - see what ships before it is posted (model mods)
+
+For a mod that ships meshes (`.nif`). The order:
+
+1. **Build** the meshes and textures (the person's own build scripts).
+2. **Read the NIFs back**, no Blender: `scripts\render\nif-readback.py <package or folder> --tex-prefix textures\<mod>`
+   (role `nif-readback`) fails on a block reference outside the file, a skinned shape without the skinned shader flag
+   (it draws nothing), a texture path that resolves to no file, lost UVs or broken tangent frames, a hard edge
+   smoothed over, light through the mesh and faces wound the wrong way. `niflib.py` (our own NIF reader) and
+   `winding.py` (the face-direction check) sit beside it; `plugins\Inspect-NifShapes.py` lists a mesh's shapes and
+   `plugins\Repath-NifTextures.py` rewrites its texture paths without breaking the block sizes.
+3. **UV and engraving gates.** In the package gate, on every package (their `gate-rules.json` rows ship):
+   `gates\nif-uv-overlap-gate.py` (two different pieces painted into the same atlas texels; texconv decodes the maps
+   to judge whether it shows), `gates\esp-obnd-gate.py` (an item record with all-zero object bounds),
+   `gates\fomod-option-image-gate.py` (an installer option that installs a model carries a picture of it) and
+   `gates\engraving-layout-gate.py` (the engraving layout rule of the `weapon-engraving` skill). At design time:
+   `scripts\art\patternlib` (role `patternlib-cli`: an engraving pattern from a JSON spec, validated - exit 2 when a
+   validator refuses), `gates\pattern-gate.py` (re-validates a saved pattern) and `gates\surface-profile-gate.py`
+   (a carved face whose shading wanders).
+4. **Re-render the finalized package before posting:** `release\package-render.py --mod <key> --version X.Y.Z`
+   (role `package-render`; `finalize-mod.ps1` runs it as its last station) renders every unique shipped NIF in
+   Blender with the textures the package ships (`package_render_blender.py`), measures UV stretch on the shipped
+   mesh (`package_render_uv.py`, numpy only), runs the design gates and writes sheets and `package-render.json` (the
+   hash of every NIF and DDS) into the distro folder's `assets\package-renders\<version>\`. A package with no NIF
+   passes at once. `gates\package-render-gate.py` refuses posting a model mod whose render is missing, failed, or
+   made from other files than the package holds now; `package-render.py accept --reason "<the person's words>"`
+   records a reviewed ruling on a flagged result.
+5. **A before/after sheet for review:** `render\before-after-sheet.py render --before <nif> --before-tex <folder>
+   --after <nif> --after-tex <folder>` renders both sides with one camera and light (`render\render_lib.py`:
+   game-like TruePBR or classic shading) and lays them side by side; `sheet --row "label|before.png|after.png"`
+   lays out pictures that already exist (a third picture per row for original / marks / result).
+   `art\make-feature-banners.py` makes the page's feature banners from screenshots, each with its highlight box.
+
+Without Blender the render steps say so: `before-after-sheet.py render` prints SKIP (exit 3) and `package-render.py`
+exits 2 with "Blender not found". Nothing in the kit installs Blender, PyNifly or texconv.
+
+**Check:** step 11 of the self-test passes.
 
 ## 8. When something goes wrong - the loop that makes the pipeline improve
 
@@ -381,6 +436,10 @@ cost nothing, or prune them once the person's own rows outnumber them.
   scope for a first version; the rules that mention them (part 05, `PREFLIGHT.md`) are left intact as the standard
   they set.
 - A C++ toolchain. Part 02 says how the original discovers one; installing it is the person's step.
+- From the original's render work: its weapon sets' design workspace (the build, paint and measure scripts under
+  `4. plans`), the mods' own build scripts and item tables, the mesh assemblers built on the game's own meshes, a
+  shader block derived from another author's tool, and the Sketchfab tools (they reach the internet). What was
+  generic was promoted into `scripts\render` first. Blender, PyNifly and texconv are the person's to install.
 
 ## 11. When you are done
 
