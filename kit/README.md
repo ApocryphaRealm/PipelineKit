@@ -40,7 +40,7 @@ If you prefer to do it by hand, `README-FOR-AI.md` is written so a person can fo
 | `CLAUDE.md` / `AGENTS.md` | the entry file an agent reads at every session start (identical; two names so either kind of agent finds it) |
 | `RULES-DIGEST.md`, `PREFLIGHT.md`, `BANNED-WORDS.md` | the other two session-start reads, and the mechanism for phrasing the owner banned |
 | `rules\01…07-*.md` | the 70 rules in seven self-contained parts, each with the reason it exists |
-| `PAST-MISTAKES-LIBRARY.md` | 815 recorded failures: the mod's name, what the issue was, how it was fixed, what got in the way and the lesson, with an index block to grep. Direct evidence is removed |
+| `PAST-MISTAKES-LIBRARY.md` | 822 recorded failures: the mod's name, what the issue was, how it was fixed, what got in the way and the lesson, with an index block to grep. Direct evidence is removed |
 | `LOGIC-LIBRARY.md` | the short catalogue of the pipeline's logics - each design idea and where it is applied |
 | `commands.md`, `sub-agent-routing.md` | the named commands and how sub-agents are chosen |
 | `docs\`, `docs-archive\` | triage categories, the machine-health design, the default-keys registry, version reconciliation, the archive-sweep checking instructions, a long narrative reference of the whole system, and (archived) the research behind the design |

@@ -50,7 +50,7 @@ def deploy_live(instance):
 
 
 try:
-    data = json.load(sys.stdin)
+    data = json.loads(sys.stdin.buffer.read().decode("utf-8-sig") or "{}")
 except Exception:
     sys.exit(0)
 tool = data.get("tool_name")

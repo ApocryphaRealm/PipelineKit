@@ -9,9 +9,12 @@ modes: a message is a file in the receiver's inbox folder, and the receiver is i
      session as additional context at its next turn (nothing to arm, nothing to remember);
   2. a session that wants to be woken while idle runs `agent-msg wait` in the background (Bash run_in_background):
      it blocks until a new message lands in its inbox, prints one line per message and exits - one notification;
-  3. the sender may also nudge the receiver at once through the desktop app (SendMessage to its local_... session id,
-     or mcp__ccd_session_mgmt__send_message) - `send` prints the id to use when the directory knows it. The app's own
-     channel is queued, not held, when the modes differ; the file is the record either way.
+  3. THE WAKE STEP (the owner, 05:09: "what if the session is idle? how do they read the message?"): an idle session
+     has no next prompt and may not have armed `wait`, so after `send` the SENDER wakes it through the desktop app -
+     mcp__ccd_session_mgmt__send_message to the receiver's local_... session id (directory.json) with the one-line
+     pointer `send` prints - which starts the receiver's turn even across permission modes (the app queues it behind a
+     running turn instead of holding it). Then `agent-msg woken --id <id>` records that the wake was sent; `status`
+     lists every unread message with its woken state, so an unread, unwoken message is visible to anyone.
 
 Folder: {agent-bus}\messages\
   inbox\<Session Name>\<yyyymmdd-HHMMSS>-<from-slug>-<id>.md   unread messages for that session
@@ -28,6 +31,8 @@ Commands (run from any folder: py -3 resolve.py run agent-msg <command> ...):
   wait   [--for "<name>"] [--timeout <seconds, default 1500>] [--poll <seconds, default 2>]
          block until a NEW unread message lands (one not present when the wait began), print one line per message,
          exit 0; exit 3 on timeout with nothing printed. For Bash run_in_background.
+  woken  --id <id>                   record that the sender sent the wake (a Woken: line in the file, a log entry)
+  status                             every unread message in every inbox: id, to, from, age, WOKEN or UNWOKEN
   hook                               for the hooks: reads the hook JSON on stdin (session_id), prints the hook JSON with
                                      an additionalContext line listing the unread messages, or nothing when there are none.
                                      Never fails the prompt: any error prints nothing and exits 0.
@@ -219,11 +224,52 @@ def cmd_send(a):
     print("  %s sees it at its next prompt (hook), or at once if it runs 'agent-msg wait'." % to)
     entry = (load_json(DIRECTORY, {}) or {}).get(to) or {}
     ccd = entry.get("ccd_session_id")
+    pointer = "agent-msg %s from %s: %s - read it with: py -3 \"%s\" run agent-msg read --id %s" % (
+        mid, sender, a.subject.strip(), os.path.join(MD, "resolvers", "resolve.py"), mid)
     if ccd:
-        print("  nudge now (optional): SendMessage to=%s message='agent-msg %s from %s: %s - read it with: py -3 \"%s\" run agent-msg read --id %s'"
-              % (ccd, mid, sender, a.subject.strip(), os.path.join(MD, "resolvers", "resolve.py"), mid))
+        print("  WAKE STEP (an idle session has no next prompt): call mcp__ccd_session_mgmt__send_message with session_id=%s and message='%s'"
+              % (ccd, pointer))
+        print("  then record it: py -3 \"%s\" run agent-msg woken --id %s" % (os.path.join(MD, "resolvers", "resolve.py"), mid))
     else:
-        print("  no ccd session id for %s in directory.json - the hook will deliver it at its next turn." % to)
+        print("  WAKE STEP: no desktop-app session id for %s in directory.json - find it with list_sessions, store it with "
+              "'agent-msg directory --set \"%s\" --ccd-id local_...', then send_message with: '%s'" % (to, to, pointer))
+    return 0
+
+
+def cmd_woken(a):
+    name, _ = my_name()
+    path = find_by_id(a.id)
+    if not path:
+        print("agent-msg: no message with id %s" % a.id)
+        return 2
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    if "\nWoken: " in text.split("\n---\n", 1)[0]:
+        print("agent-msg: %s was already recorded as woken" % a.id)
+        return 0
+    head, body = text.split("\n---\n", 1)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(head + "\nWoken: %s by %s\n---\n" % (iso(now()), name or "?") + body)
+    h, _ = parse(path)
+    log({"event": "woken", "id": a.id, "by": name or "?", "to": h.get("to", "?")})
+    print("agent-msg: %s recorded as woken (%s)" % (a.id, h.get("to", "?")))
+    return 0
+
+
+def cmd_status(_a):
+    rows = []
+    if os.path.isdir(INBOX):
+        for n in sorted(os.listdir(INBOX)):
+            for p in unread(n):
+                h, _ = parse(p)
+                rows.append((("WOKEN " if h.get("woken") else "UNWOKEN"), n, one_line(p)))
+    if not rows:
+        print("agent-msg: no unread messages in any inbox")
+        return 0
+    rows.sort(key=lambda r: r[0] != "UNWOKEN")
+    print("agent-msg: %d unread message(s); UNWOKEN = the sender has not sent the wake step yet" % len(rows))
+    for state, n, line in rows:
+        print("  %s  to %-18s %s" % (state, n, line))
     return 0
 
 
@@ -361,6 +407,8 @@ def main(argv):
     s.add_argument("--for", dest="for_name"); s.set_defaults(fn=cmd_read)
     s = sub.add_parser("wait"); s.add_argument("--for", dest="for_name"); s.add_argument("--timeout", type=float, default=1500)
     s.add_argument("--poll", type=float, default=2); s.set_defaults(fn=cmd_wait)
+    s = sub.add_parser("woken"); s.add_argument("--id", required=True); s.set_defaults(fn=cmd_woken)
+    s = sub.add_parser("status"); s.set_defaults(fn=cmd_status)
     s = sub.add_parser("hook"); s.set_defaults(fn=cmd_hook)
     s = sub.add_parser("whoami"); s.set_defaults(fn=cmd_whoami)
     s = sub.add_parser("directory"); s.add_argument("--set", dest="set_name"); s.add_argument("--ccd-id"); s.add_argument("--note")

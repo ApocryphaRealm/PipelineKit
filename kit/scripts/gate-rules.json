@@ -1,5 +1,5 @@
 {
-  "_version": "1.0.49",
+  "_version": "1.0.50",
   "_revised": "2026-11-18",
   "_about": "Dynamic package gate rules. package-gate.ps1 evaluates every rule here against a package folder (and, when given, its Nexus distro folder and the previous release) and exits non-zero on any hit. ADD A ROW WHEN A CLASS OF DEFECT SHIPS OR NEARLY SHIPS - the same day, beside the logic-library entry. The owner, 2026-09-16: 'come up with a way to dynamically add logic gates to close logic loops as needed when possible instead of just adding to the logic library'. Kinds: see package-gate.ps1's header - forbid-path-regex, forbid-extension, esp-must-be-light, no-doubled-segment, keep-file-classes-of-previous, archive-matches-folder, page-text-forbid-regex, page-text-require-regex, require-file-content-regex, changelog-top-version, distro-file-first-line, translations-complete, lines-match-build-tree, dll-newer-than-sources, page-summary-max-chars, forbid-file-content-regex, esp-record-integrity, json-parses, swf-colour-band, distro-images-are-sdr, launch-gate (a launch gate's row: the package gate only checks it is still wired into its launcher). 'exemptMods' matches the mod's display name or ledger key. 'kinds' limits a rule to the registry kinds listed (skse-mod, or-mod, w3-mod, mo2-plugin, mo2-theme, skyrim-asset, tool).",
   "rules": [
@@ -140,6 +140,11 @@
     {
       "id": "distro-sticky-starts-with-this-version",
       "kind": "distro-file-first-line",
+      "exemptMods": [
+        "Pipeline Kit",
+        "PipelineKit"
+      ],
+      "exemptWhy": "2026-11-18, Pipeline Kit only - the owner approved 2026-11-18 05:37: the kit is released on the Members channel (11. Nexus distro\\1. members), which has no Posts-tab sticky; its Nexus Modding Tools page is an unposted draft.",
       "distroFile": "sticky.txt",
       "pattern": "^\\s*\\[b\\]Recent changes - current version {VERSION}( \\(\\d+\\.\\d+\\.\\d+ is coming soon\\))?\\[/b\\]\\s*$",
       "added": "2026-10-11",
@@ -664,6 +669,11 @@
     {
       "id": "shipped-changelog-is-the-repos",
       "kind": "package-file-matches-repo",
+      "exemptMods": [
+        "Pipeline Kit",
+        "PipelineKit"
+      ],
+      "exemptWhy": "2026-11-18, Pipeline Kit only - the owner approved 2026-11-18 05:37: the kit build screens its CHANGELOG by design (kit-edition note, neutral channel name, no donation line), so the shipped file is never the repo's byte for byte; the build's screen and leak scan judge it, and MANIFEST.json carries its shipped hash.",
       "repoGlob": "CHANGELOG.md",
       "filePattern": "^CHANGELOG\\.md$",
       "added": "2026-09-23",
@@ -1288,6 +1298,11 @@
     {
       "id": "distro-licence-claims-match-repo-licence",
       "kind": "distro-repo-script-passes",
+      "exemptMods": [
+        "Pipeline Kit",
+        "PipelineKit"
+      ],
+      "exemptWhy": "2026-11-18, Pipeline Kit only - the owner approved 2026-11-18 05:37: the kit carries two licences by design, GPL-3.0-or-later for the scripts and CC BY-SA 4.0 for the documents, and its images name both.",
       "script": "gates\\distro-licence-gate.py",
       "added": "2026-10-22",
       "fix": "make the banner pill / page text name the repo LICENSE's licence (every mod of ours: \"GPL-3.0, open source\" / GPL-3.0-or-later), re-render the PNG with headless Edge, upload it, set it as the thumbnail, hide the old picture and repoint any description [img] at the new URL",

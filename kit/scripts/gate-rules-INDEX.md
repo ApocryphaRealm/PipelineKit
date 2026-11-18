@@ -129,7 +129,7 @@ rule's id or by a word of its `why`; the row's `added` date says when the defect
 | shipped-translations-are-the-repos | 2026-09-19 | all mods | refresh every translation file in the package from the repo's dist\Interface\Translations, by file name, wherever it sit |
 | shipped-ini-is-the-repos | 2026-09-19 | all mods | copy the INI from the repo's dist\ tree rather than letting the seeded one through; the compiled defaults and the shippe |
 | shipped-plugin-is-the-repos | 2026-10-25 | all mods | copy the plugin from the repo's dist\ tree (regenerate it with the repo's generator first) over every copy in the packag |
-| shipped-changelog-is-the-repos | 2026-09-23 | all mods | refresh every CHANGELOG.md in the package (root and Common\) from the repo's CHANGELOG.md; repack-fomod.ps1 does this si |
+| shipped-changelog-is-the-repos | 2026-09-23 | all except: Pipeline Kit, PipelineKit | refresh every CHANGELOG.md in the package (root and Common\) from the repo's CHANGELOG.md; repack-fomod.ps1 does this si |
 | shipped-translations-are-the-repos-obse | 2026-09-26 | all mods | refresh the package's translation files from the repo's dist folder (package-mod does, from any Translations folder unde |
 
 ### esp-record-integrity (4)
@@ -172,7 +172,7 @@ rule's id or by a word of its `why`; the row's `added` date says when the defect
 
 | id | added | applies to | fix |
 |---|---|---|---|
-| distro-licence-claims-match-repo-licence | 2026-10-22 | all mods | make the banner pill / page text name the repo LICENSE's licence (every mod of ours: "GPL-3.0, open source" / GPL-3.0-or |
+| distro-licence-claims-match-repo-licence | 2026-10-22 | all except: Pipeline Kit, PipelineKit | make the banner pill / page text name the repo LICENSE's licence (every mod of ours: "GPL-3.0, open source" / GPL-3.0-or |
 | distro-banner-names-a-licence | 2026-10-24 | all mods | add a licence pill naming the repo LICENSE ("GPL-3.0-or-later, open source" for every GPL mod of ours) to each banner-19 |
 
 ### distro-script-passes (2)
@@ -218,7 +218,7 @@ rule's id or by a word of its `why`; the row's `added` date says when the defect
 
 | id | added | applies to | fix |
 |---|---|---|---|
-| distro-sticky-starts-with-this-version | 2026-10-11 | all mods | write or update the distro folder's sticky.txt from the _STICKY-TEMPLATE.txt in the distro root: its bold first line nam |
+| distro-sticky-starts-with-this-version | 2026-10-11 | all except: Pipeline Kit, PipelineKit | write or update the distro folder's sticky.txt from the _STICKY-TEMPLATE.txt in the distro root: its bold first line nam |
 
 ### distro-file-max-chars (1)
 
@@ -498,6 +498,18 @@ rule's id or by a word of its `why`; the row's `added` date says when the defect
 ### Oblivion Remastered - Camera Configuration Menu
 
 - ccm-settings-table-sound-at-start (only)
+
+### Pipeline Kit
+
+- distro-sticky-starts-with-this-version (exempt)
+- shipped-changelog-is-the-repos (exempt)
+- distro-licence-claims-match-repo-licence (exempt)
+
+### PipelineKit
+
+- distro-sticky-starts-with-this-version (exempt)
+- shipped-changelog-is-the-repos (exempt)
+- distro-licence-claims-match-repo-licence (exempt)
 
 ### RaceMenu Atelier
 

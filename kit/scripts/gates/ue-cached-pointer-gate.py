@@ -37,7 +37,7 @@ a = ap.parse_args()
 if not a.repo or not os.path.isdir(os.path.join(a.repo, "src")):
     print("ue-cached-pointer-gate: no repo source to read - not checked")
     sys.exit(0)
-files = [f for ext in ("cpp", "hpp", "h") for f in glob.glob(os.path.join(a.repo, "src", "**", "*." + ext), recursive=True)]
+files = [f for ext in ("cpp", "hpp", "h", "inl", "inc") for f in glob.glob(os.path.join(a.repo, "src", "**", "*." + ext), recursive=True)]
 hits = []
 for f in files:
     lines = open(f, encoding="utf-8", errors="replace").read().splitlines()

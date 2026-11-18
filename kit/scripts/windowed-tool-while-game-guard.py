@@ -21,7 +21,7 @@ TOOLS = (r"pandora|bodyslide|outfitstudio|outfit studio|nemesis|fnis|sseedit|xed
 READONLY = r"^\s*(tasklist|get-process|get-ciminstance|grep|rg|cat|head|tail|ls|dir|git|sed|awk|wc|find|select-string|echo)\b"
 
 try:
-    data = json.load(sys.stdin)
+    data = json.loads(sys.stdin.buffer.read().decode("utf-8-sig") or "{}")
 except Exception:
     sys.exit(0)
 if data.get("tool_name") not in ("Bash", "PowerShell"):

@@ -43,10 +43,16 @@ resolve.py run agent-msg whoami | directory        this session's name; the desk
 ```
 
 How the receiver learns of it: (1) every session's `UserPromptSubmit` and `SessionStart` hooks run `agent-msg hook`,
-which lists that session's unread messages as additional context at its next turn - nothing to arm; (2) a session that
-wants waking while idle runs `agent-msg wait` in the background - one notification when a message lands; (3) `send`
-prints an optional nudge: a one-line `SendMessage` to the receiver's desktop-app session id (`directory.json`), which the
-app QUEUES rather than holds when the modes differ. The sender's name is this session's `agent-lock register` name
+which lists that session's unread messages as additional context at its next turn - nothing to arm; (2) **the wake
+step** (the owner, 2026-11-18 05:09: *"what if the session is idle? how do they read the message?"* - an idle session
+has no next prompt): after `send`, the SENDER wakes the receiver through the desktop app -
+`mcp__ccd_session_mgmt__send_message` to the receiver's `local_...` session id (`directory.json`, filled from
+`list_sessions`) with the one-line pointer `send` prints - which starts the receiver's turn even across permission
+modes (the app queues it behind a running turn instead of holding it); then `agent-msg woken --id <id>` records the
+wake, and `agent-msg status` lists every unread message as WOKEN or UNWOKEN, so a message nobody woke is visible to
+anyone; (3) a session that expects an answer while idle may also run `agent-msg wait` in the background at the end of
+its turn - one notification when a message lands (it also wakes on its timeout, 25 min by default, so arm it when an
+answer is expected, not as a habit: every wake is a turn). The sender's name is this session's `agent-lock register` name
 (sessions.json); `--to` must be a registered or directory name. A message file is Markdown with a From / To / Sent /
 Subject / Id header, then `---`, then the body; the id is six hex characters and never changes. Hand-offs and results
 still go in their own folders - the bus carries the NOTE that names them, as SendMessage did. All of `messages\` is

@@ -31,10 +31,11 @@ Written as changes happen, not reconstructed afterwards (rule 61). Each version 
 - README and NOTICE state that the kit needs a coding agent and that the person is responsible for other mods' permissions, including Nexus's Ask Me setting for AI workflows. The pre-push hook is a small local secret check; the old one called helpers the kit does not ship.
 - The documents are reduced in the build: each past-mistakes entry keeps the mod's name, the issue, the fix, the problems met and the lesson; offsets, byte patterns, disassembly, code from others, record IDs and asset paths show as [... removed]. The live files are not touched. The Members publish channel is the neutral 'members' channel.
 - Requirements: numpy, scipy and Pillow for the render tools and the model-mod package rows (matplotlib and scikit-image for the pattern library); Blender with PyNifly (a third-party add-on the person installs) and texconv (Microsoft, not shipped) are optional and found through BLENDER and TEXCONV, then PATH - the kit copies of package-render.py and nif-uv-overlap-gate.py no longer name the original's install paths. Docstrings that pointed at the original's design workspace or upload tool say what the kit has instead.
-- Rebuilt from the live pipeline of 2026-11-18: rules 3.3.0 (70 rules), 814 past-mistakes entries. One new library entry about a test on a private profile is left out, and one entry's root-cause line is normalised so the index check passes; a live skill for another game, still being written, stays out.
+- Rebuilt from the live pipeline of 2026-11-18: rules 3.3.0 (70 rules), 145 gate rows, 820 past-mistakes entries. One new library entry about a test on a private profile is left out, and one entry's root-cause line is normalised so the index check passes; a live skill for another game, still being written, stays out.
 
 ### Fixed
 - The self-test passes against the current scripts again: the build's rewrite for pre-finalize-check.ps1 matched its new shape, session-start.py no longer asks for a role the kit does not ship, and the self-test supplies the -PriorArt note and the -Guard and -EvidenceRef values the gates now require.
+- The four guard hooks read their input as utf-8-sig: under a UTF-8 console (code page 65001) Windows PowerShell 5.1 puts a byte-order mark in front of what it pipes, the JSON parse failed and the guard let the call through. The self-test's hook checks now pass from either console.
 
 ## 1.0.5 - 2026-10-21 - working
 
