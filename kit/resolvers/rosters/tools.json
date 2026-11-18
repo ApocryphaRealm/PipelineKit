@@ -1,0 +1,326 @@
+{
+ "_version": "1.6.0",
+ "_revised": "2026-11-18",
+ "_about": "Pipeline tools and the programs they call. Hooks and scheduled tasks call 'resolve.ps1 run <role>'.",
+ "roles": {
+  "root-topology-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\root-topology-gate.py",
+   "note": "FAILS when the visible project root holds anything but the twelve stages, or a root-tool-folders item is not Hidden; package-gate runs it (gate-rules row root-holds-only-the-twelve-stages) - 2026-10-27"
+  },
+  "line17-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\line17-gate.py",
+   "note": "FAILS when a Skyrim SKSE DLL package ships no Line-17 build and its repo's CommonLib cannot read 1.7.x; package-gate runs it (gate-rules row skse-dll-package-ships-line-17) - 2026-11-07"
+  },
+  "hook-bash-backslash-guard": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\bash-backslash-guard.py"
+  },
+  "hook-mo2-elevated-launch-guard": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\mo2-elevated-launch-guard.py"
+  },
+  "version-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\version-gate.ps1"
+  },
+  "compat-evidence-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\compat-evidence-gate.py",
+   "note": "--path <package>: the mod's latest stage-8 compatible verdict must name evidence that still exists (batch, test request or record file); legacy verdicts without a reference pass as LEGACY; gate-rules row compat-verdict-evidence-exists - pipeline assessment item 2b, 2026-10-27"
+  },
+  "stage8-verdict-audit": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\stage8-verdict-audit.py"
+  },
+  "gate-catalogue": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\gate-catalogue.py",
+   "note": "--build / --check of scripts\\GATE-CATALOGUE.md: every gate-rules row (stage, scope, last fired from the event log) and every standalone gate script (callers), with the never-fired and finalize-only candidates; gate-rules-index.py --build rebuilds it - pipeline assessment item 11, 2026-10-27"
+  },
+  "profile-list-write-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\profile-list-write-gate.py",
+   "note": "refuses a whole modlist.txt / plugins.txt written from a saved copy: PreToolUse-hook mode (stdin), --scan of tool source (the .MD pre-commit hook runs it on staged tools; gate-rules row no-whole-list-restore-in-pipeline-tools) - pipeline assessment item 2, 2026-10-27"
+  },
+  "changelog": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\changelog.ps1"
+  },
+  "package-mod": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\package-mod.ps1"
+  },
+  "engraving-layout-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\engraving-layout-gate.py"
+  },
+  "surface-profile-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\surface-profile-gate.py"
+  },
+  "fomod-option-image-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\fomod-option-image-gate.py"
+  },
+  "package-render": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\package-render.py"
+  },
+  "package-render-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\package-render-gate.py",
+   "note": "REFUSES posting a model mod (package ships .nif) without a current, passing package render for exactly the finalized package's NIF/DDS hashes; nexus-upload.py runs it before anything is sent - 2026-11-12"
+  },
+  "md-scripts-render": {
+   "kind": "dir",
+   "at": "{role:md-scripts}\\render",
+   "note": "the render pipeline's own tools: niflib, winding, the NIF read-back, render_lib and the before/after sheet (promoted from the Truly Nordic repos 2026-11-18)"
+  },
+  "niflib": {
+   "kind": "file",
+   "at": "{role:md-scripts-render}\\niflib.py",
+   "note": "our own minimal SSE NIF block reader/writer (no third-party code); one copy, promoted 2026-11-18 from the identical copies in the Nordic Ebony / Skyforged repos"
+  },
+  "nif-winding": {
+   "kind": "file",
+   "at": "{role:md-scripts-render}\\winding.py",
+   "note": "face-direction check of a game NIF (niflib + numpy): edges against a neighbour, surfaces facing in (ray vote)"
+  },
+  "nif-readback": {
+   "kind": "file",
+   "at": "{role:md-scripts-render}\\nif-readback.py",
+   "note": "FAILS a built NIF on bad refs, skinned-flag mismatch, unresolved texture paths, lost UVs / broken tangents, smoothed hard edges, see-through, winding (--tex-prefix names our shapes); no Blender - 2026-11-18"
+  },
+  "render-lib": {
+   "kind": "file",
+   "at": "{role:md-scripts-render}\\render_lib.py",
+   "note": "game-like TruePBR / classic Blender renders of NIFs (needs Blender + PyNifly, installed by the person); same_frame groups share one camera"
+  },
+  "before-after-sheet": {
+   "kind": "file",
+   "at": "{role:md-scripts-render}\\before-after-sheet.py",
+   "note": "the before/after (or original / marks / result) side-by-side review sheet; 'render' renders both NIFs with one camera (SKIP, exit 3, without Blender)"
+  },
+  "nexus-files": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\nexus_files.py"
+  },
+  "package-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\package-gate.ps1"
+  },
+  "finalize-mod": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\finalize-mod.ps1"
+  },
+  "pre-finalize-check": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\pre-finalize-check.ps1"
+  },
+  "post-release-prune": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\post-release-prune.ps1",
+   "note": "keeps the current release and one previous in 10. finalized mods (rule 23) and prunes the mod's test builds; version-gate.ps1 -Action posted runs it after the ledger write (2026-10-13, straight flow B)"
+  },
+  "test-build-pick": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\test-build-pick.ps1",
+   "note": "dot-sourced: which of several test-build folders of one version is the build (the one whose artefact matches the ledger's working hash); used by finalize-mod, version-gate and pre-finalize-check (2026-10-13)"
+  },
+  "distro-names": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\distro-names.ps1"
+  },
+  "docs-pipeline": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\docs-pipeline.ps1"
+  },
+  "rules-version": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\rules-version.ps1"
+  },
+  "logic-index": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\logic-index.py"
+  },
+  "gate-rules-index": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\gate-rules-index.py"
+  },
+  "memory-index-tool": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\memory-index.py"
+  },
+  "touch-snapshot": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\touch-snapshot.ps1"
+  },
+  "install-test-build": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\install-test-build.py"
+  },
+  "optimize-project": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\optimize-project.ps1"
+  },
+  "pipeline-log": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\pipeline-log.ps1"
+  },
+  "pipeline-status": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\pipeline-status.ps1"
+  },
+  "falsification-log-tool": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\falsification-log.ps1"
+  },
+  "problem-card": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\problem-card.py",
+   "note": "the PROBLEM CARD (rule 56, amended 2026-11-16): new --task T [--area A] writes a skeleton to role problem-cards; check <card> refuses (exit 3) a card missing INPUTS (each with source:), RELATIONSHIPS, OUTPUT, CHECK or ASSUMPTIONS; falsification-log open -Card runs it"
+  },
+  "skill-scout": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\skill-scout.py"
+  },
+  "attention-ping": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\attention-ping.ps1"
+  },
+  "glimmer-agent": {
+   "kind": "file",
+   "retired": "sub-agent-routing"
+  },
+  "ask-glimmer": {
+   "kind": "file",
+   "retired": "sub-agent-routing",
+   "note": "retired 2026-11-05 with glimmer-agent: Muse Glimmer and LM Studio are gone; one-shot text jobs go to Claude sub-agents as sub-agent-routing.md decides; roles are never reused"
+  },
+  "prockill": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\prockill.ps1"
+  },
+  "gates": {
+   "kind": "set",
+   "find": "{role:md-scripts-gates}\\*-gate.*"
+  },
+  "resolve": {
+   "kind": "file",
+   "at": "{role:md}\\resolvers\\resolve.py",
+   "note": "the resolver itself; its own path is the one fixed literal (hooks call it)"
+  },
+  "session-start": {
+   "kind": "file",
+   "at": "{role:md}\\resolvers\\session-start.py"
+  },
+  "md-scripts-gates": {
+   "kind": "dir",
+   "at": "{role:md-scripts}\\gates"
+  },
+  "licence-label-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\licence-label-gate.py"
+  },
+  "cpp-escape-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\cpp-escape-gate.py"
+  },
+  "main-thread-task-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\main-thread-task-gate.py"
+  },
+  "pex-header-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\pex-header-gate.py"
+  },
+  "scaleform-ui-thread-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\scaleform-ui-thread-gate.py"
+  },
+  "swf-colour-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\swf-colour-gate.py"
+  },
+  "nemesis-patch-info-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\nemesis-patch-info-gate.py"
+  },
+  "tr-keys-translated-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\tr-keys-translated-gate.py"
+  },
+  "xinput-import-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\xinput-import-gate.py"
+  },
+  "esp-audit": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\esp-audit.py"
+  },
+  "fomod-destinations": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\fomod-destinations.py"
+  },
+  "md-scripts-release": {
+   "kind": "dir",
+   "at": "{role:md-scripts}\\release"
+  },
+  "nexus-distro-sweep": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\nexus-distro-sweep.ps1"
+  },
+  "sync-nexus-distro": {
+   "kind": "file",
+   "at": "{role:md-scripts-release}\\sync-nexus-distro.ps1"
+  },
+  "check-export-parity": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\check-export-parity.py"
+  },
+  "translation-coverage": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\translation-coverage.py"
+  },
+  "prune-test-builds": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\prune-test-builds.ps1"
+  },
+  "gate-ledger-tool": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\gate-ledger.ps1",
+   "note": "rule 58's verdict ledger tool (record / resolve / stats / list); role gate-ledger is its JSON (2026-10-12)"
+  },
+  "behavior-patch-enum-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\behavior-patch-enum-gate.py",
+   "note": "package gate (row behavior-patch-enum-values-are-the-class-own): fails a behaviour patch node whose selfTransitionMode / startStateMode / eventMode is not a value of its own class (Simple Dodge 1.2.0, 2026-11-12)"
+  },
+  "clip-motion-matches-motion-data-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\clip-motion-matches-motion-data-gate.py",
+   "note": "package gate (row clip-motion-matches-motion-data): fails a clip whose own animmotion annotations disagree with its clip generator's motion data, in Common and under each installer option - Animation Motion Revolution uses the annotations (Simple Dodge 1.2.0, 2026-11-13)"
+  },
+  "patternlib": {
+   "kind": "dir",
+   "at": "{role:md-scripts-art}\\patternlib"
+  },
+  "patternlib-cli": {
+   "kind": "file",
+   "at": "{role:md-scripts-art}\\patternlib\\cli.py",
+   "note": "patternlib's command line: <spec.json> <out dir> -> pattern.json + .svg + height / normal / preview PNGs + validation.json + the engraving-layout record; exit 2 when a validator refuses (REFUSED <validator>: ...)"
+  },
+  "pattern-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts-gates}\\pattern-gate.py",
+   "note": "FAILS a saved patternlib pattern (pattern.json, re-validated at its ppu) or a work folder whose engraving_check.json layouts name generator patternlib with a refused verdict; the engraving-layout gate also refuses a patternlib record whose verdict is not ok - 2026-11-16"
+  },
+  "patternlib-catalogue": {
+   "kind": "file",
+   "at": "{role:md-scripts-art}\\patternlib\\catalogue.py",
+   "note": "writes PATTERNS-sheet.png: every patternlib pattern type at three densities with its validator verdict printed under it"
+  }
+ }
+}

@@ -1,0 +1,1006 @@
+{
+  "kit": "Pipeline Kit",
+  "version": "1.1.0",
+  "built": "2026-11-18T05:15:27",
+  "sources": {
+    "RULES-DIGEST.md": {
+      "from": ".MD/RULES-DIGEST.md",
+      "source_sha256": "03e7658c82cdd3e984b9f2d846f5ada9d205846b806f36c0b5246b20d72664e9"
+    },
+    "PREFLIGHT.md": {
+      "from": ".MD/PREFLIGHT.md",
+      "source_sha256": "399caba10f004cd9a1a82a0ca2b15128ce34030e00ae3767e11fd7bd1934872e"
+    },
+    "PAST-MISTAKES-LIBRARY.md": {
+      "from": ".MD/PAST-MISTAKES-LIBRARY.md",
+      "source_sha256": "a053421d638874c354c0b5bc5af9410a1a97c59945af02ed55ec38e811b296a2"
+    },
+    "LOGIC-LIBRARY.md": {
+      "from": ".MD/LOGIC-LIBRARY.md",
+      "source_sha256": "ff9ee98eb50d7d2aef0179687f4f9028377e8bf8d7b56d6af70b19d12137efba"
+    },
+    "commands.md": {
+      "from": ".MD/commands.md",
+      "source_sha256": "9341827d80d58475a4b5fecbee3ae03a85b83e512b3ea988f1ccee625b9cc853"
+    },
+    "sub-agent-routing.md": {
+      "from": ".MD/sub-agent-routing.md",
+      "source_sha256": "d8e157d33a93fa25776747b8bc81cd7118606b68694201b2eeb47377080c48ed"
+    },
+    "rules/01-pipeline-topology.md": {
+      "from": ".MD/rules/01-pipeline-topology.md",
+      "source_sha256": "e7853cc101180cae65128cfd1c229e55c0a22e97b5ad066158c62a744bd5fa3d"
+    },
+    "rules/02-build-toolchain.md": {
+      "from": ".MD/rules/02-build-toolchain.md",
+      "source_sha256": "1818a09923ab84729d78d9a5d433abca94f7a1b58fb4bfaca95773a6b384f81b"
+    },
+    "rules/03-versioning-and-release.md": {
+      "from": ".MD/rules/03-versioning-and-release.md",
+      "source_sha256": "0fa8b142bcc6cb56d7bca9a23f4809a1ef285b4860da0c66044ced7531d802d3"
+    },
+    "rules/04-code-standards.md": {
+      "from": ".MD/rules/04-code-standards.md",
+      "source_sha256": "6e038871882b6c87c0eeb51042cee683d23cc5f7788949f86286dcbfe08e7b68"
+    },
+    "rules/05-testing-and-mo2.md": {
+      "from": ".MD/rules/05-testing-and-mo2.md",
+      "source_sha256": "e6a59f296d5df8a398b5a0e6720a97299ebdd65ad5d90a6b29efb0631998b34e"
+    },
+    "rules/06-reasoning-discipline.md": {
+      "from": ".MD/rules/06-reasoning-discipline.md",
+      "source_sha256": "41f618f03aa67d1965b4361e4076986c9c15ba17a7f97663f77894409badc007"
+    },
+    "rules/07-operations-and-machine-health.md": {
+      "from": ".MD/rules/07-operations-and-machine-health.md",
+      "source_sha256": "214968503abf078d85fc98ad7acfb270c02b43a22090b49ed8cdd93176c46e25"
+    },
+    "docs/TRIAGE-CATEGORIES.md": {
+      "from": ".MD/TRIAGE-CATEGORIES.md",
+      "source_sha256": "e0c43dae4e85feb439fd75e49722e5c017de292dbc5128cdd6725c851a601e94"
+    },
+    "docs/DEFAULT-KEYS.md": {
+      "from": ".MD/DEFAULT-KEYS.md",
+      "source_sha256": "5bf2caa76677e8329bd32869abd0ade7ffa2cd45be82f70db26bd9ab11746cab"
+    },
+    "docs/VERSION-RECONCILIATION.md": {
+      "from": ".MD/docs-archive/VERSION-RECONCILIATION.md",
+      "source_sha256": "7b32a7af74e77c9fa124573bda628b8a8878a8494b0cd61f4b668a7cff1987e8"
+    },
+    "docs-archive/PIPELINE-RESEARCH.md": {
+      "from": ".MD/docs-archive/PIPELINE-RESEARCH.md",
+      "source_sha256": "a5032c12d874f86658fa3d7b8f8ed805e98abc8434b02350f5224376272c9bd2"
+    },
+    "docs/AI-PIPELINE-REFERENCE.md": {
+      "from": ".MD/docs-archive/AI-PIPELINE-REFERENCE.md",
+      "source_sha256": "ba115efcceed647cb99683ed1878b95634e6ae3144f260349a99550f0ca140ac"
+    },
+    "docs/ARCHIVE-SWEEP-INSTRUCTIONS.md": {
+      "from": ".MD/logs/archive-sweep/INSTRUCTIONS.md",
+      "source_sha256": "8ffbdf6bcebe6c1accaf7555df700d3cb4912d9a24908a63788dcb22bc8bb83a"
+    },
+    "agent-bus/README.md": {
+      "from": ".MD/agent-bus/README.md",
+      "source_sha256": "ef6ee69e9cd8f44c1566c4fc43269220745091c2ae88ee3c19512411b6c21c9b"
+    },
+    "CLAUDE.md": {
+      "from": ".MD/CLAUDE.md",
+      "source_sha256": "7930c709e3408e2faa69604f57cf6a8fb845ba50b8e2432083cd8e4da2241eea"
+    },
+    "AGENTS.md": {
+      "from": ".MD/CLAUDE.md",
+      "source_sha256": "7930c709e3408e2faa69604f57cf6a8fb845ba50b8e2432083cd8e4da2241eea"
+    },
+    "scripts/gates/version-gate.ps1": {
+      "from": ".MD/scripts/gates/version-gate.ps1",
+      "source_sha256": "35444a83a729230c0af2346c9dea7414c92c24f702c6e3f5230285a124a33952"
+    },
+    "scripts/gates/package-gate.ps1": {
+      "from": ".MD/scripts/gates/package-gate.ps1",
+      "source_sha256": "72e62cae1074d001ef2cdba9d5fbb896c4fc4f696fe5e8420483c148b661bc53"
+    },
+    "scripts/release/pre-finalize-check.ps1": {
+      "from": ".MD/scripts/release/pre-finalize-check.ps1",
+      "source_sha256": "3449723704ba72d0f7b86e8641ad382d76be805a8050e368efb0e13d7e4c980a"
+    },
+    "scripts/release/sync-nexus-distro.ps1": {
+      "from": ".MD/scripts/release/sync-nexus-distro.ps1",
+      "source_sha256": "34827358a37a4adba31ca922fff1a7ee4ca79c78ace0bfa3c521f6b0e89bfc10"
+    },
+    "scripts/release/nexus-distro-sweep.ps1": {
+      "from": ".MD/scripts/release/nexus-distro-sweep.ps1",
+      "source_sha256": "66b00e89f30664bf57591726572da3a48293ed72f08ee51ecc4ab58327d80a00"
+    },
+    "scripts/prune-test-builds.ps1": {
+      "from": ".MD/scripts/prune-test-builds.ps1",
+      "source_sha256": "ab6a343dd68b8eadef3ee149179ec1878b4f7a64d0d912d2dd571dda620678cf"
+    },
+    "scripts/release/changelog.ps1": {
+      "from": ".MD/scripts/release/changelog.ps1",
+      "source_sha256": "215038ac3c4fcbc43f4cf9f1813c733a59736566e7e6d2647693d62697c6c3bc"
+    },
+    "scripts/gate-ledger.ps1": {
+      "from": ".MD/scripts/gate-ledger.ps1",
+      "source_sha256": "dbe001a49d7183ee84cc509c1d538afcfc871c2710e90c541f97b19437dceddc"
+    },
+    "scripts/gate-sweep.ps1": {
+      "from": ".MD/scripts/gate-sweep.ps1",
+      "source_sha256": "4a062311d6b3155c8721602847ace7bfa01e5cd59b918a4b5407eac195539a5c"
+    },
+    "scripts/pipeline-log.ps1": {
+      "from": ".MD/scripts/pipeline-log.ps1",
+      "source_sha256": "188030ba727b2cfdf6106bb6ef6e86756ba790d892488de4a7d9c922f86b7389"
+    },
+    "scripts/falsification-log.ps1": {
+      "from": ".MD/scripts/falsification-log.ps1",
+      "source_sha256": "ad57c2ad446e9c9abaf6b0f4a1397cbaaed58f699756b8837fe8d24a96ea3326"
+    },
+    "scripts/rules-version.ps1": {
+      "from": ".MD/scripts/rules-version.ps1",
+      "source_sha256": "6aa1b2feb10695f1bab141ee8f4c7b7d52e67b5a9d74adc1f649f1ff803572b8"
+    },
+    "scripts/docs-pipeline.ps1": {
+      "from": ".MD/scripts/docs-pipeline.ps1",
+      "source_sha256": "213327571d5713350a89bb76d2fe2b70a4b84876b5d8f7c90b2bf9cc8e75db57"
+    },
+    "scripts/ops/prockill.ps1": {
+      "from": ".MD/scripts/ops/prockill.ps1",
+      "source_sha256": "591506f4bcdd9e0cc5b3d01332464ab9b0231636bd39d62e22906e6375a938e0"
+    },
+    "scripts/rules-digest.py": {
+      "from": ".MD/scripts/rules-digest.py",
+      "source_sha256": "3d37bae5b01fcb5c1dfcf0a9629580af3225ca5933e9ae365c79806b7c2f9ace"
+    },
+    "scripts/logic-index.py": {
+      "from": ".MD/scripts/logic-index.py",
+      "source_sha256": "bfb6b20bbad619b0de4cb229c232380b662ee8c51edeec2ac792c9b97bb6fa8b"
+    },
+    "scripts/plugins/esp-audit.py": {
+      "from": ".MD/scripts/plugins/esp-audit.py",
+      "source_sha256": "4440af5fb7ecdd7435d0d1b31196eda2e87f3de64533e18274bbbdb8946437ac"
+    },
+    "scripts/gates/swf-colour-gate.py": {
+      "from": ".MD/scripts/gates/swf-colour-gate.py",
+      "source_sha256": "727983b51693df9c7630aa0fbb284e70cdf1e57d6cca5cfd3c3f90e78701d47f"
+    },
+    "scripts/check-export-parity.py": {
+      "from": ".MD/scripts/check-export-parity.py",
+      "source_sha256": "477cf02d44b94ee8988d88706d94a6830fd82a86a23cc1db47528e282e57d514"
+    },
+    "scripts/translation-coverage.py": {
+      "from": ".MD/scripts/translation-coverage.py",
+      "source_sha256": "8a96e2283a6339d8c6d500cf16ea1ff7ad4d019606c58ce246a3d2ea36ce7dfa"
+    },
+    "scripts/install-test-build.py": {
+      "from": ".MD/scripts/install-test-build.py",
+      "source_sha256": "95128263d8ed6965b614b6ed3411934e04830c291407165318f0e6fe8c8481e6"
+    },
+    "scripts/plugins/make-fomod.py": {
+      "from": ".MD/scripts/plugins/make-fomod.py",
+      "source_sha256": "a8b123b5a765caa6ef061a3a2f3462dcffcf3c4dd9778c78e2cf31039b79c415"
+    },
+    "scripts/plugins/make-espfe.py": {
+      "from": ".MD/scripts/plugins/make-espfe.py",
+      "source_sha256": "b1e9a5e940663cd8a0ee049fbd8e868410c429f69e63bb79459de8ccddfe3dad"
+    },
+    "scripts/distro-names.ps1": {
+      "from": ".MD/scripts/distro-names.ps1",
+      "source_sha256": "755dc8c9b1d6accba459a713ec7bb46ff755fb203215cdee12e0af7165d72bc8"
+    },
+    "scripts/release/finalize-mod.ps1": {
+      "from": ".MD/scripts/release/finalize-mod.ps1",
+      "source_sha256": "d112a7bf457a12b3c36e38b9c6289a5b38bc52d35b97d24a7497922ada433a87"
+    },
+    "scripts/ops/attention-ping.ps1": {
+      "from": ".MD/scripts/ops/attention-ping.ps1",
+      "source_sha256": "be52fa991ddf313b7f91303945ca90f6b5e95d3db301711f05d189df42126906"
+    },
+    "scripts/gates/cpp-escape-gate.py": {
+      "from": ".MD/scripts/gates/cpp-escape-gate.py",
+      "source_sha256": "91665c31ad9aee0e7727a6389f7c79d8c4a1efcbacd7ca545727256ff0e50376"
+    },
+    "scripts/gates/main-thread-task-gate.py": {
+      "from": ".MD/scripts/gates/main-thread-task-gate.py",
+      "source_sha256": "cb3fac901ec6e42dfa5e69e3569842eab46a196b1e4241c6eccc2fc7437678cb"
+    },
+    "scripts/gates/xinput-import-gate.py": {
+      "from": ".MD/scripts/gates/xinput-import-gate.py",
+      "source_sha256": "d9ad7b6af6e6d82e4887e635806db92cb3d39b2c70400c376276cdb5d57a95f8"
+    },
+    "scripts/gates/licence-label-gate.py": {
+      "from": ".MD/scripts/gates/licence-label-gate.py",
+      "source_sha256": "21ae6107cc60c3d259e8ae523a330fe8377df74aada8578dd9a012c484ac8cd5"
+    },
+    "scripts/skill-scout.py": {
+      "from": ".MD/scripts/skill-scout.py",
+      "source_sha256": "332dafe66962b977e746998d708643a2db289b144421a4bf8e0b56d581fc3edf"
+    },
+    "scripts/ops/session-digest.py": {
+      "from": ".MD/scripts/ops/session-digest.py",
+      "source_sha256": "dc890c17c80e8b503469d35ad42ca795de457358914c3e225a074826233d8265"
+    },
+    "scripts/plugins/fomod-destinations.py": {
+      "from": ".MD/scripts/plugins/fomod-destinations.py",
+      "source_sha256": "155073ced0b64e62b7c3e1628776e63a6d2e762ff2abe8208ba0ebc2c4b32174"
+    },
+    "scripts/package_paths.py": {
+      "from": ".MD/scripts/package_paths.py",
+      "source_sha256": "45756a62608dfaa5288ef5a02ae227e8a36b2caa7676f7421190cb39778ad2ce"
+    },
+    "scripts/memory-index.py": {
+      "from": ".MD/scripts/memory-index.py",
+      "source_sha256": "42699ec364eb24680618b0897bdb7642e23b739e70891d1e713831049b25ad2a"
+    },
+    "scripts/gate-rules-index.py": {
+      "from": ".MD/scripts/gate-rules-index.py",
+      "source_sha256": "f01f2ed19506d929503d60a64dcb755810599b66b3b03d0814413c4dfee55ae5"
+    },
+    "scripts/find-stale-paths.py": {
+      "from": ".MD/scripts/find-stale-paths.py",
+      "source_sha256": "a8ac47ea5f42653b86755c06b5fc5983d2fa8f5409ceeb4fbc27b2e5d1741393"
+    },
+    "scripts/release/test-build-pick.ps1": {
+      "from": ".MD/scripts/release/test-build-pick.ps1",
+      "source_sha256": "e015a52c76d82235f07df4b8372029df6f3613cf6c41d9906e0a225f43753c2c"
+    },
+    "scripts/release/post-release-prune.ps1": {
+      "from": ".MD/scripts/release/post-release-prune.ps1",
+      "source_sha256": "1b8e419c06db1778a2277aab94bdaf7bffb18251f397d1f65b0e9488f8402a19"
+    },
+    "scripts/gates/banner-highlight-gate.py": {
+      "from": ".MD/scripts/gates/banner-highlight-gate.py",
+      "source_sha256": "07b5f911233c2d17871def05e6d44ff75dee50fae491eac9e3c740bb2a445e60"
+    },
+    "scripts/gates/theme-outline-gate.py": {
+      "from": ".MD/scripts/gates/theme-outline-gate.py",
+      "source_sha256": "d44cfa1d82ff699f46917429987b0440e57785ce7fb65088eb9791aa1a52e41c"
+    },
+    "scripts/gates/translation-script-gate.py": {
+      "from": ".MD/scripts/gates/translation-script-gate.py",
+      "source_sha256": "076426aac93b01f108a4dbcaecc5323d30f18932563a357fdcb6d770db9b4c86"
+    },
+    "scripts/release/package-render.py": {
+      "from": ".MD/scripts/release/package-render.py",
+      "source_sha256": "09c025efb34fe0a15b9b8d0062c0eda8c76b439f772a50d6ad2009e1053f2204"
+    },
+    "scripts/release/package_render_blender.py": {
+      "from": ".MD/scripts/release/package_render_blender.py",
+      "source_sha256": "d3ef978fbdf96c1ed0a729a592204f9bdee4fb9a80905cae680a4d9ed558c2d1"
+    },
+    "scripts/release/package_render_uv.py": {
+      "from": ".MD/scripts/release/package_render_uv.py",
+      "source_sha256": "958116dcfbce94fb5fef4759a99749e55867802984a1362a52a76f30eb4c6bcf"
+    },
+    "scripts/gates/package-render-gate.py": {
+      "from": ".MD/scripts/gates/package-render-gate.py",
+      "source_sha256": "c40989ba8c24a89d5d497f6e76000a31da05bd07087914cc5cb1e07ae58f88c5"
+    },
+    "scripts/gates/nif-uv-overlap-gate.py": {
+      "from": ".MD/scripts/gates/nif-uv-overlap-gate.py",
+      "source_sha256": "44fba9aa8fcc349bfdd6d026ca6c1763adb39a31e028d606ae5c87212a9811a2"
+    },
+    "scripts/gates/fomod-option-image-gate.py": {
+      "from": ".MD/scripts/gates/fomod-option-image-gate.py",
+      "source_sha256": "ef3b88e1b4c9e992ee54838cf2f7d8653e11069d786f885572f3d3232167a77a"
+    },
+    "scripts/gates/esp-obnd-gate.py": {
+      "from": ".MD/scripts/gates/esp-obnd-gate.py",
+      "source_sha256": "ef2349c316b6f64b82c6bbe4327bb731abd4ef127e2e451b8b9ef5c2fead2f7f"
+    },
+    "scripts/plugins/Inspect-NifShapes.py": {
+      "from": ".MD/scripts/plugins/Inspect-NifShapes.py",
+      "source_sha256": "5934fa5ac6096b223d05fd3b8d11ae238af5dbffd72247a0895acb630722bcb0"
+    },
+    "scripts/plugins/Repath-NifTextures.py": {
+      "from": ".MD/scripts/plugins/Repath-NifTextures.py",
+      "source_sha256": "62b8aba7715f228f9d1325450e0524ac795b1f62cd4bc7a161808112a6f1b31b"
+    },
+    "scripts/gates/pattern-gate.py": {
+      "from": ".MD/scripts/gates/pattern-gate.py",
+      "source_sha256": "d1b4ce6db01b4f28033178b16466540124bffe3cef5550a6244ab2cb4dd9b785"
+    },
+    "scripts/gates/engraving-layout-gate.py": {
+      "from": ".MD/scripts/gates/engraving-layout-gate.py",
+      "source_sha256": "fb8338939012d79a73877255c9078907b34f596841411c3f5460a89e0a5defeb"
+    },
+    "scripts/gates/surface-profile-gate.py": {
+      "from": ".MD/scripts/gates/surface-profile-gate.py",
+      "source_sha256": "ab25177869aea419303f91801bcbf2dc13eadf38d0f9bc1b3cb2a6a2dbeb6cf0"
+    },
+    "scripts/art/make-feature-banners.py": {
+      "from": ".MD/scripts/art/make-feature-banners.py",
+      "source_sha256": "a275c7b59e9923120dc098334139af75a8e41bb6e7693dad0c4804f1b043561a"
+    },
+    "scripts/render/niflib.py": {
+      "from": ".MD/scripts/render/niflib.py",
+      "source_sha256": "af82bead2605716fd5f0f3e38730711e9d951ba1fe6eab9e90ab2d12872675ed"
+    },
+    "scripts/render/winding.py": {
+      "from": ".MD/scripts/render/winding.py",
+      "source_sha256": "967411eb6e697ab10885b1b4200fb8cf7d618345f867736f242b1a37631243d6"
+    },
+    "scripts/render/nif-readback.py": {
+      "from": ".MD/scripts/render/nif-readback.py",
+      "source_sha256": "99a82b1f3e376f37972b2f6c3d4c35b56c121fff96eb436ff89034a7b243eb21"
+    },
+    "scripts/render/render_lib.py": {
+      "from": ".MD/scripts/render/render_lib.py",
+      "source_sha256": "70c9980914887472b393c886fb90c079fe6b81eced36f9e1e88e3db872d84077"
+    },
+    "scripts/render/before-after-sheet.py": {
+      "from": ".MD/scripts/render/before-after-sheet.py",
+      "source_sha256": "9168702e179ab3799874a23f45a37a53934fed6383bcad1efd17da76a88989b1"
+    },
+    "scripts/ops/agent-lock.py": {
+      "from": ".MD/scripts/ops/agent-lock.py",
+      "source_sha256": "4004260c3f50b370bc6d6ee85624463462e365a140f4a1320cf5952c80a29de5"
+    },
+    "scripts/ops/agent-msg.py": {
+      "from": ".MD/scripts/ops/agent-msg.py",
+      "source_sha256": "59a87747c8cb813a9b970171ed1df8c73e21d978611f4c918b74243ac682f087"
+    },
+    "scripts/ops/md-commit.py": {
+      "from": ".MD/scripts/ops/md-commit.py",
+      "source_sha256": "ac39f4db6571d78e8fce6ff4e1b9b279f2a2843b8aadf80ff750a9da7b350023"
+    },
+    "scripts/bash-backslash-guard.py": {
+      "from": ".MD/scripts/bash-backslash-guard.py",
+      "source_sha256": "3d69888776f15266a2b55d757e39ca786ed67b11c210a2cad107f76e01830de8"
+    },
+    "scripts/mo2-elevated-launch-guard.py": {
+      "from": ".MD/scripts/mo2-elevated-launch-guard.py",
+      "source_sha256": "85361f567a57558556896b7fdcecee6245c7c316402c8ebf0b0cd207db6f24a1"
+    },
+    "scripts/windowed-tool-while-game-guard.py": {
+      "from": ".MD/scripts/windowed-tool-while-game-guard.py",
+      "source_sha256": "38f7cd2fe704805ab6565273470aeb613bb6112a2f9a00211b03400c41ad487d"
+    },
+    "scripts/root-builder-live-write-guard.py": {
+      "from": ".MD/scripts/root-builder-live-write-guard.py",
+      "source_sha256": "db88b62c8cf0f61c1bcb3dca7cde0d3c4de341de2b3a13a0129fe363f89351b7"
+    },
+    "scripts/problem-card.py": {
+      "from": ".MD/scripts/problem-card.py",
+      "source_sha256": "a46564c646347556757daebca543465281ab6a9c6b240144dc39d841e09b4f21"
+    },
+    "scripts/repeated-lesson-scan.py": {
+      "from": ".MD/scripts/repeated-lesson-scan.py",
+      "source_sha256": "7f028c815e1679585a5c5542ab33ba4143b2da9303f4e5ca6240d6e822bc9c69"
+    },
+    "scripts/gate-catalogue.py": {
+      "from": ".MD/scripts/gate-catalogue.py",
+      "source_sha256": "f57e96ecaf0854fbb5592152620d12fa728b0d7cac226a77d94d89526bd82f0a"
+    },
+    "scripts/stage8-verdict-audit.py": {
+      "from": ".MD/scripts/stage8-verdict-audit.py",
+      "source_sha256": "3bc4a42376878fc2c2d54c4b00089b8ae8fd9450993547e182b09d50f2f7c2f5"
+    },
+    "scripts/events.py": {
+      "from": ".MD/scripts/events.py",
+      "source_sha256": "69835c533c16676a7baeb6fcda204e00627ab59ee5867ce7f90cd4ff2a1322f6"
+    },
+    "scripts/gates/behavior-patch-enum-gate.py": {
+      "from": ".MD/scripts/gates/behavior-patch-enum-gate.py",
+      "source_sha256": "e2c446da9d8f45a1d7331996c185d45295c801781663d848a5660aeac029d67d"
+    },
+    "scripts/gates/clip-motion-matches-motion-data-gate.py": {
+      "from": ".MD/scripts/gates/clip-motion-matches-motion-data-gate.py",
+      "source_sha256": "3566cc25734d9a9644b5de024eafd9a65ff8946a3ff1187a4d0cb3ca94aeb9d2"
+    },
+    "scripts/gates/compat-evidence-gate.py": {
+      "from": ".MD/scripts/gates/compat-evidence-gate.py",
+      "source_sha256": "e6937a3981f216dff87bc8828a158e77b91272c25a2316ffafc4302fbfce815c"
+    },
+    "scripts/gates/distro-banner-pill-gate.py": {
+      "from": ".MD/scripts/gates/distro-banner-pill-gate.py",
+      "source_sha256": "088b48dfa8c251d15656e36589b12f0b35626e1c1468b4a44cef73e4f2ee4922"
+    },
+    "scripts/gates/distro-licence-gate.py": {
+      "from": ".MD/scripts/gates/distro-licence-gate.py",
+      "source_sha256": "e9dae20906684f7fcef031c908d2779baa902c63466e16a56bedd97d4e30435d"
+    },
+    "scripts/gates/esp-shield-flag-gate.py": {
+      "from": ".MD/scripts/gates/esp-shield-flag-gate.py",
+      "source_sha256": "b14ec754c8e2844be24b24d0048b72879042ab53b100b592da75f364ba6955b0"
+    },
+    "scripts/gates/fomod-info-version-gate.py": {
+      "from": ".MD/scripts/gates/fomod-info-version-gate.py",
+      "source_sha256": "b52e3b74ef6d959ee344ac0ae2821a0778a4a86774c1aadf49cb839f7e95bb06"
+    },
+    "scripts/gates/fomod-repo-installer-shipped-gate.py": {
+      "from": ".MD/scripts/gates/fomod-repo-installer-shipped-gate.py",
+      "source_sha256": "06d23e183a598a8d723e4d46cacee9203ece77b04a50d7494e3eb72c6a3188ab"
+    },
+    "scripts/gates/line17-gate.py": {
+      "from": ".MD/scripts/gates/line17-gate.py",
+      "source_sha256": "d1ac38a86888d2b19c7f1f260632b2b338f36a58625fc9fb0fdb639117938745"
+    },
+    "scripts/gates/nemesis-patch-info-gate.py": {
+      "from": ".MD/scripts/gates/nemesis-patch-info-gate.py",
+      "source_sha256": "88b671207eb5cf2504fef65aca62715ccd979a612c52940728969860d1042e59"
+    },
+    "scripts/gates/nexus-ai-tags-gate.py": {
+      "from": ".MD/scripts/gates/nexus-ai-tags-gate.py",
+      "source_sha256": "cd82105c05db14a0b82197b0d529f71c44ce889602b117f56e5ca4a8d4af92be"
+    },
+    "scripts/gates/root-topology-gate.py": {
+      "from": ".MD/scripts/gates/root-topology-gate.py",
+      "source_sha256": "c97257c5b714e9a34bf874bbe2587545be446fd1b7cc530b82364d9f07df4f3a"
+    },
+    "scripts/gates/scaleform-ui-thread-gate.py": {
+      "from": ".MD/scripts/gates/scaleform-ui-thread-gate.py",
+      "source_sha256": "e2ea19617a644263cdcdfe773286271fdaafc0c2eab45c134f7f4ba05fa78000"
+    },
+    "scripts/gates/skse-runtime-declaration-gate.py": {
+      "from": ".MD/scripts/gates/skse-runtime-declaration-gate.py",
+      "source_sha256": "6c25d01f85c52dc25c380797b623a02f7cc68121bd929edca58ba3983ec76fef"
+    },
+    "scripts/gates/ue-cached-pointer-gate.py": {
+      "from": ".MD/scripts/gates/ue-cached-pointer-gate.py",
+      "source_sha256": "f3e2d8ec0abd5212a69c6dee5e04c2f4cf0fe36e2e9ecc73d0a2a3976d757a20"
+    },
+    "scripts/gates/pex-header-gate.py": {
+      "from": ".MD/scripts/gates/pex-header-gate.py",
+      "source_sha256": "06051496b8be30caa7801c5342ae907bfb7a915802a6b8894923b1be4f8416a3"
+    },
+    "scripts/gates/profile-list-write-gate.py": {
+      "from": ".MD/scripts/gates/profile-list-write-gate.py",
+      "source_sha256": "e346e93e69c0036d26291428121ec6e1376535df943d8c82c8698da452320ce4"
+    },
+    "scripts/gates/tr-keys-translated-gate.py": {
+      "from": ".MD/scripts/gates/tr-keys-translated-gate.py",
+      "source_sha256": "1a779fdd43b0e716244a4d29b06482af50fcc93febc05ab60650951e017d91e8"
+    },
+    "scripts/release/nexus_files.py": {
+      "from": ".MD/scripts/release/nexus_files.py",
+      "source_sha256": "42a3dba51a76ff6e08ef064042020b155d8b7dfb4de55964fb86891b927b80d8"
+    },
+    "scripts/release/package-mod.ps1": {
+      "from": ".MD/scripts/release/package-mod.ps1",
+      "source_sha256": "67a30d4b4d4e2f23aab76640489eb6413fdaa515548ce70f8384b43564c97a11"
+    },
+    "scripts/plugins/repack-fomod.ps1": {
+      "from": ".MD/scripts/plugins/repack-fomod.ps1",
+      "source_sha256": "97ca057f75a6ee87345e52a5062410977fb1e0a3be99145d91c7b02ab2f4d592"
+    },
+    "scripts/plugins/addrlib.py": {
+      "from": ".MD/scripts/plugins/addrlib.py",
+      "source_sha256": "9525624d0daaecabe9867e46cf11755b7a9735544d43a73c25d8c4107c119b35"
+    },
+    "scripts/plugins/esp-drop-cells.py": {
+      "from": ".MD/scripts/plugins/esp-drop-cells.py",
+      "source_sha256": "8d8e6235940b7d4e03d6476369a09a96b65bd9c7450a4fd2a03ec460a9112e2c"
+    },
+    "scripts/plugins/esp-form44.py": {
+      "from": ".MD/scripts/plugins/esp-form44.py",
+      "source_sha256": "a72374ee4cca0a2247df892066318a86261c6ade3448839b177771f55235c7e1"
+    },
+    "scripts/plugins/esp-regroup.py": {
+      "from": ".MD/scripts/plugins/esp-regroup.py",
+      "source_sha256": "0ab04ef3cde7bf8bf97f129437680fdf10b2bf8171dccb1ee3c4ff8df2978299"
+    },
+    "scripts/plugins/esp_groups.py": {
+      "from": ".MD/scripts/plugins/esp_groups.py",
+      "source_sha256": "712300036049e7a96602af474b7a9ffd858fee9cbe9a695c265adb3dac002e08"
+    },
+    "scripts/plugins/merge-to-espfe.py": {
+      "from": ".MD/scripts/plugins/merge-to-espfe.py",
+      "source_sha256": "5e81c1f768508ada0db17754e499821caf478fa5e4a0a8af322facab3e98a2f9"
+    },
+    "scripts/plugins/renumber-to-esl.py": {
+      "from": ".MD/scripts/plugins/renumber-to-esl.py",
+      "source_sha256": "d29afc3c234c6132c69108b9c7a0734f6ee36194b8edeb69c9cdecc10281b3f8"
+    },
+    "scripts/plugins/esp-overlap.py": {
+      "from": ".MD/scripts/plugins/esp-overlap.py",
+      "source_sha256": "0024fea0f4a9e94abe3c0bd6e37fbffb7da811cf654e9e9379655f600ed9755a"
+    },
+    "scripts/plugins/Get-PluginRecordTypes.ps1": {
+      "from": ".MD/scripts/plugins/Get-PluginRecordTypes.ps1",
+      "source_sha256": "b831eb43ae7871983654e9fad84797062f20f53ab33e781e32ebf04fd3b62328"
+    },
+    "scripts/plugins/compile-papyrus.ps1": {
+      "from": ".MD/scripts/plugins/compile-papyrus.ps1",
+      "source_sha256": "312bcdc62d53f1ee5603d1ef31202613206d62406347e67f58632e328dcd6983"
+    },
+    "scripts/plugins/pex-scrub.py": {
+      "from": ".MD/scripts/plugins/pex-scrub.py",
+      "source_sha256": "822940992fad9afe0850ab298c939b351969b12cd98ca5cb9b8c3befd3f0bf73"
+    },
+    "scripts/ini-edit.py": {
+      "from": ".MD/scripts/ini-edit.py",
+      "source_sha256": "a0b94fcdfc005c2bc93811e5a8e6a931daa09f2fb801c3b296fc946e6d13027c"
+    },
+    "scripts/home-index.py": {
+      "from": ".MD/scripts/home-index.py",
+      "source_sha256": "4ba2af05152c2da839de3b3c6867cfb4f8a9ddf5207b30001077884fd9feb4f5"
+    },
+    "scripts/touch-snapshot.ps1": {
+      "from": ".MD/scripts/touch-snapshot.ps1",
+      "source_sha256": "a8c95629e78835bd6eb22b4b4a90894d0926581718ba125f5edce7c8e53ebe67"
+    },
+    "scripts/package-path-guard.ps1": {
+      "from": ".MD/scripts/package-path-guard.ps1",
+      "source_sha256": "e41c6e1e18041930d8efa54e75c2d34dda20398ad119a14c24be74a316fc6286"
+    },
+    "scripts/pipeline-status.ps1": {
+      "from": ".MD/scripts/pipeline-status.ps1",
+      "source_sha256": "aa8fc9703323d4316f28f9dec4c17b9ef1ae83da02809348fb94a968907a1694"
+    },
+    "scripts/ops/session-checkpoint.ps1": {
+      "from": ".MD/scripts/ops/session-checkpoint.ps1",
+      "source_sha256": "0004cde3852449c1cbd9728b6782707c102cb4006ef9a5a791cbd26eb8639c1c"
+    },
+    "scripts/relicense-gpl3.py": {
+      "from": ".MD/scripts/relicense-gpl3.py",
+      "source_sha256": "9fd2c38cded09cd34d391881a2ad38c58f148feab253aa5d5a5348bd3ed58080"
+    },
+    "scripts/optimize-project.ps1": {
+      "from": ".MD/scripts/optimize-project.ps1",
+      "source_sha256": "01f26141e50d86ba7f40345fc079d85a92fc2b110d2befeacd1d81b6ca835b3a"
+    },
+    "scripts/art/patternlib/__init__.py": {
+      "from": ".MD/scripts/art/patternlib/__init__.py",
+      "source_sha256": "4486134ba9d8f7d859f94e2b6b39e20f0524f91fe7a577bcd3214eae05ba388b"
+    },
+    "scripts/art/patternlib/braid.py": {
+      "from": ".MD/scripts/art/patternlib/braid.py",
+      "source_sha256": "1077ead5f5817b3197d5a8a3456843fdd2c972934495a53504d7a214f9bb28bc"
+    },
+    "scripts/art/patternlib/catalogue.py": {
+      "from": ".MD/scripts/art/patternlib/catalogue.py",
+      "source_sha256": "4aabf57eac82b136ecdca658be8002101d6e350590cca4dec494e8fd6691d0ea"
+    },
+    "scripts/art/patternlib/cli.py": {
+      "from": ".MD/scripts/art/patternlib/cli.py",
+      "source_sha256": "db73514b01dfff3564dfe71a7f14bf75c36ee74692e122d788f46724a8c6f3cf"
+    },
+    "scripts/art/patternlib/crossings.py": {
+      "from": ".MD/scripts/art/patternlib/crossings.py",
+      "source_sha256": "a1e4905ab69935080cb841b2b36d0604003dc32df0bd2d38f365cf41b9f07d13"
+    },
+    "scripts/art/patternlib/damascus.py": {
+      "from": ".MD/scripts/art/patternlib/damascus.py",
+      "source_sha256": "dd8d89858fd8fd2a4dd3a3e51ccdea015f310ed571bded9a5904fb6c348f02c4"
+    },
+    "scripts/art/patternlib/fit.py": {
+      "from": ".MD/scripts/art/patternlib/fit.py",
+      "source_sha256": "de418c2e2a38518ffa8e50e2101a103f7281f5130981562d54fa0f094ca4f7ea"
+    },
+    "scripts/art/patternlib/geom.py": {
+      "from": ".MD/scripts/art/patternlib/geom.py",
+      "source_sha256": "bb086afedde7cdf73f8538986d99c04535a925cb752edc58456c4b329864126f"
+    },
+    "scripts/art/patternlib/knot.py": {
+      "from": ".MD/scripts/art/patternlib/knot.py",
+      "source_sha256": "36aeb4bc19b27d1422b85d482fb6359187c07c3c822e7458d51de32df9c1b93d"
+    },
+    "scripts/art/patternlib/make.py": {
+      "from": ".MD/scripts/art/patternlib/make.py",
+      "source_sha256": "880b88a96f062a39a1cb63dcb3b3af42374e6740f49e720dfc8aab757026c435"
+    },
+    "scripts/art/patternlib/measure.py": {
+      "from": ".MD/scripts/art/patternlib/measure.py",
+      "source_sha256": "073703bbe72ce2b4388039dd60d02607df3295be0f8994176460e48f249cace2"
+    },
+    "scripts/art/patternlib/model.py": {
+      "from": ".MD/scripts/art/patternlib/model.py",
+      "source_sha256": "24441f3c6be7e292c3952ecc8454520c86e60b64fc048990a9b9ccea75ff7ea7"
+    },
+    "scripts/art/patternlib/raster.py": {
+      "from": ".MD/scripts/art/patternlib/raster.py",
+      "source_sha256": "96fcab5cfc1dabb7541a9ddf503d491fca9c1abac0e0a4f4530c67f0f2cc6c28"
+    },
+    "scripts/art/patternlib/runes.py": {
+      "from": ".MD/scripts/art/patternlib/runes.py",
+      "source_sha256": "1aba56c6bd22b65114aac47ebc9b0de304d06d7e3785cdf85d7aaca05695ab47"
+    },
+    "scripts/art/patternlib/symbols.py": {
+      "from": ".MD/scripts/art/patternlib/symbols.py",
+      "source_sha256": "289d39693e9c9ae123114cb0f46decf9f01af0a5aebb753a60833b1664407010"
+    },
+    "scripts/art/patternlib/validate.py": {
+      "from": ".MD/scripts/art/patternlib/validate.py",
+      "source_sha256": "40853aeab345c55257eb61eb949265a3a0146caba01363de5c431daf479071a1"
+    },
+    "scripts/art/patternlib/weave.py": {
+      "from": ".MD/scripts/art/patternlib/weave.py",
+      "source_sha256": "96cd1ac73166d075ff731cc6c23f26f4a6568370c29d129091a43a7a6f4cc43e"
+    },
+    "scripts/gate-rules.json": {
+      "from": ".MD/scripts/gate-rules.json",
+      "source_sha256": "e66b2210906198d680fab52b53ca3c55bda6344e6209b7f3e95f61ca25b8df6d"
+    },
+    "resolvers/resolve.py": {
+      "from": ".MD/resolvers/resolve.py",
+      "source_sha256": "7a2d2a1e1af01cb5873b80b86aaf67143d5245c1da101241304a1edb447b7c01"
+    },
+    "resolvers/resolve.ps1": {
+      "from": ".MD/resolvers/resolve.ps1",
+      "source_sha256": "e850728e2a52afbc2c754d5a4d6e7aeb070e0bbeb73d93603994af6850fada25"
+    },
+    "resolvers/session-start.py": {
+      "from": ".MD/resolvers/session-start.py",
+      "source_sha256": "f59fbe4d32a319f55941af30f74ff69a9458670c9bb1ce78f028d9f4342bcd3a"
+    },
+    "resolvers/schema/gate-rules.json": {
+      "from": ".MD/resolvers/schema/gate-rules.json",
+      "source_sha256": "2a7eb5fd87a8bfd83d16132dc5327e5ff72eac4b53595ad302f628bb9e26b50b"
+    },
+    "resolvers/schema/roster.json": {
+      "from": ".MD/resolvers/schema/roster.json",
+      "source_sha256": "c35d9dce0921fdba886ed354ae00e100b1bd9ffbc7e2b78287ff0930d4fc654d"
+    },
+    "resolvers/schema/version-ledger.json": {
+      "from": ".MD/resolvers/schema/version-ledger.json",
+      "source_sha256": "2de44808acc4014a5841d899fae5717a9788d7a0a084cc3fa3cd0dcb9878aa4f"
+    },
+    "resolvers/schema/version-registry.json": {
+      "from": ".MD/resolvers/schema/version-registry.json",
+      "source_sha256": "8ccb6087ec8c471c1c854b1a74e4989c319ff55090022e26b730ca0c5801ef81"
+    },
+    "skills/amf-menu-port/SKILL.md": {
+      "from": ".MD/skills/amf-menu-port/SKILL.md",
+      "source_sha256": "4a77994b216f566444e06c99a6432dfc04a3ffb2162a88e7de9637b6ddb9512e"
+    },
+    "skills/amf-menu-port/references/precise-sliders.md": {
+      "from": ".MD/skills/amf-menu-port/references/precise-sliders.md",
+      "source_sha256": "440aecae50db96ff52f6115576b267acbab6afe467849dfa63567cd768e5af4b"
+    },
+    "skills/amf-menu-port/references/SMF-CONVERSION-PLAYBOOK.md": {
+      "from": ".MD/skills/amf-menu-port/references/SMF-CONVERSION-PLAYBOOK.md",
+      "source_sha256": "b134141dec68d8e9d141edbacc368e9ea6f9bd7e10ae9128b26d1abc7d78a49c"
+    },
+    "skills/in-game-test/SKILL.md": {
+      "from": ".MD/skills/in-game-test/SKILL.md",
+      "source_sha256": "89258e5ee38ac3a61a67d947a8d8850e6763c1b66aa394eed34e739225eb3cb6"
+    },
+    "skills/in-game-test/references/TESTING-PROTOCOL.md": {
+      "from": ".MD/skills/in-game-test/references/TESTING-PROTOCOL.md",
+      "source_sha256": "5952d14e6e89ef1c411c5bf5e9b3886e52a0416b65b27fb87692b6192e5eaf2f"
+    },
+    "skills/mod-release/SKILL.md": {
+      "from": ".MD/skills/mod-release/SKILL.md",
+      "source_sha256": "c96874168d0c236de0337e7a333c4d19985bb172c432d3cdc9563a45dd562a38"
+    },
+    "skills/modding-tools/SKILL.md": {
+      "from": ".MD/skills/modding-tools/SKILL.md",
+      "source_sha256": "fef1cb5f1356d9f7baac5ef377eb7d1e62bb81806dd95a5132bd0de0ecdd1483"
+    },
+    "skills/modding-tools/scripts/esm_lookup.py": {
+      "from": ".MD/skills/modding-tools/scripts/esm_lookup.py",
+      "source_sha256": "444b92fc533c4cce562d6d2ee26f700f93419373892dd00ae7acbaf2fcef3ee2"
+    },
+    "skills/named-commands/SKILL.md": {
+      "from": ".MD/skills/named-commands/SKILL.md",
+      "source_sha256": "1c0fc8c2873f13337183963eea5acd60e0e1ee0147f0e924bb29b23fe2f3791d"
+    },
+    "skills/nexus-page/SKILL.md": {
+      "from": ".MD/skills/nexus-page/SKILL.md",
+      "source_sha256": "3625a9e3cd76d103fe0816dc3fae49db4c6a03f9ad32528a00de6094a9a7efde"
+    },
+    "skills/session-records/SKILL.md": {
+      "from": ".MD/skills/session-records/SKILL.md",
+      "source_sha256": "68a00cbd37d9143ceccc1b8a777c71cf39c2b78024c2f8f4d2d268b848a0f934"
+    },
+    "skills/skill-scout/SKILL.md": {
+      "from": ".MD/skills/skill-scout/SKILL.md",
+      "source_sha256": "9ad1fb107766631dd6b01a3170b436538236a54581a18dffe133057de44fdd4b"
+    },
+    "skills/troubleshooting/SKILL.md": {
+      "from": ".MD/skills/troubleshooting/SKILL.md",
+      "source_sha256": "d4f3cc44c00fd0dd25cd179d6137a132d950af8c026acdf920b3b70cf087fa72"
+    },
+    "skills/troubleshooting/references/ADVERSARIAL-MODE.md": {
+      "from": ".MD/skills/troubleshooting/references/ADVERSARIAL-MODE.md",
+      "source_sha256": "53f9dada37297bf1a51b56d442d5c054e4607b94c3a0855d24546b5798323f17"
+    },
+    "skills/troubleshooting/references/FALSIFICATION-MODE.md": {
+      "from": ".MD/skills/troubleshooting/references/FALSIFICATION-MODE.md",
+      "source_sha256": "a32d5ade7491f44b146178aa35d8aea74fef5e6438a5610eb555624776bd8cd8"
+    },
+    "skills/troubleshooting/references/PROBLEM-CARD.md": {
+      "from": ".MD/skills/troubleshooting/references/PROBLEM-CARD.md",
+      "source_sha256": "3e05cbe97801c725d1cbec28e2b9af90f4964cc399e350e29ea3cb766945b412"
+    },
+    "skills/weapon-engraving/SKILL.md": {
+      "from": ".MD/skills/weapon-engraving/SKILL.md",
+      "source_sha256": "14a443a866f00744899cfca053f034b8fb1d23e38f551e83662b81241d301b1c"
+    },
+    "templates/nexus-page-template.txt": {
+      "from": "11. Nexus distro/_nexus-page-template.txt",
+      "source_sha256": "9631754bcdd930ced73a352526f10b46e32c844bc360e84b1d1358c6100f544f"
+    },
+    "templates/banner-design-rules.md": {
+      "from": "11. Nexus distro/_BANNER-DESIGN-RULES.md",
+      "source_sha256": "4932fcd42da98708a90e40b3798856b89574574aa584673e204f879079ab0d0d"
+    },
+    "templates/banner-template-1920x1080.html": {
+      "from": "11. Nexus distro/_banner-template-1920x1080.html",
+      "source_sha256": "9c1fce812e26e522069c005be484cbc1a585fbaaddd0be5677ff3b59f2f4751d"
+    },
+    "templates/banner-template-1300x372.html": {
+      "from": "11. Nexus distro/_banner-template-1300x372.html",
+      "source_sha256": "e78a8f9ca432647c761beced458f109362d3cfed7363fd5b418d9b368e46767e"
+    },
+    "templates/package-docs/README.txt": {
+      "from": "6. current wip mods/MO2KeywordTagger/README.txt",
+      "source_sha256": "334b0ae1a2a463e9765cec26d1afb1204c5fe9ea2b0a88523b3e64bbbb0a138d"
+    },
+    "templates/package-docs/NOTICE.md": {
+      "from": "6. current wip mods/MO2KeywordTagger/NOTICE.md",
+      "source_sha256": "621de120649475f94b837f63156972384c0dbdf7074068873a8c1e8b414994c2"
+    },
+    "templates/package-docs/THIRD_PARTY_NOTICES.md": {
+      "from": "6. current wip mods/MO2KeywordTagger/THIRD_PARTY_NOTICES.md",
+      "source_sha256": "6f3ed514c22ba706eafa9c291b96f38eeba5639cf2901eb1578af02d6aee0e15"
+    },
+    "templates/package-docs/CHANGELOG-example.md": {
+      "from": "6. current wip mods/MO2KeywordTagger/CHANGELOG.md",
+      "source_sha256": "ed0bebdee1a83457303ba67d2fbeefafa41be1aac9d7dae4e8988c57c4b4191a"
+    },
+    "resolvers/rosters/data.json": {
+      "from": ".MD/resolvers/rosters/data.json",
+      "source_sha256": "0cad4ba49f9d458489c34a6b63ce4e3c92b25c4d8913a90806f38426c604f262"
+    },
+    "resolvers/rosters/external.json": {
+      "from": ".MD/resolvers/rosters/external.json",
+      "source_sha256": "4fb462c33f3b798bfb56334175401c787c7ab19e1d3a395b155f8e3604c26753"
+    },
+    "resolvers/rosters/identity.json": {
+      "from": ".MD/resolvers/rosters/identity.json",
+      "source_sha256": "a8ebbd7b7363b734f422255cda0e986b15c850c08e35d59623b3bb47372cf94e"
+    },
+    "resolvers/rosters/policy.json": {
+      "from": ".MD/resolvers/rosters/policy.json",
+      "source_sha256": "4822a616dec8df483b3cc8270b44eead979b5d69fc4d997b30a8023314f7fd9b"
+    },
+    "resolvers/rosters/scripts.json": {
+      "from": ".MD/resolvers/rosters/scripts.json",
+      "source_sha256": "30d896029577e1a7f2a51c524e9811d3ed91e9fb6cbe9b6a33d8457880b0dbb1"
+    },
+    "resolvers/rosters/stages.json": {
+      "from": ".MD/resolvers/rosters/stages.json",
+      "source_sha256": "03299219b349c97944a2bd9878e26fffb80dd35fba98f238b2d24115559b6b11"
+    },
+    "resolvers/rosters/tools.json": {
+      "from": ".MD/resolvers/rosters/tools.json",
+      "source_sha256": "a900cfb16d63e2bb8a2aa51e7cff85628c40876b71b96f249d9388f53483fff9"
+    }
+  },
+  "_about": "files: the SHA-256 of every file in this kit as shipped - check your download against these. sources: the live file each kit file was built from and that file's hash BEFORE sanitising; it does not match the shipped file, by design.",
+  "files": {
+    "AGENTS.md": "20e32973fb797f73b3e4c0344865dbe0dd37cf14658331660e5d8aeaf6be5b12",
+    "BANNED-WORDS.md": "ca9a2e7454944a9bc709286b886b0e1d32c4a2acc0122eddc53db27bd5a1b4ed",
+    "CC-BY-SA-4.0.txt": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5",
+    "CHANGELOG.md": "d836ab3abbfa52ffacd0383058637f5345f548b9213c031b04961439bcb9ca98",
+    "CLAUDE.md": "72f0876648a3c22702391f54f0d2de3b34c14bb6d5ea6efa0e9e7d473c39efde",
+    "commands.md": "7912c0f37911858b7e929037cd6aeac16d383a8a6902744182c82c0902a20449",
+    "LICENSE-GPL-3.0.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "LOGIC-LIBRARY.md": "acb7f68c04e0388ab324809b296fdf7f9317e12810a94b5b250c5923a53a7db1",
+    "NOTICE.md": "1712d6ae428acfa3cb51d84cc20214755f25ccba93b0c60f80128e7fb95ca05f",
+    "OPTIONAL-SCRIPTS.md": "3a3fa66fe2fe5974a5fd4eba732f280da8fbb2d2fb3da51dcb04be759bc1eed6",
+    "PAST-MISTAKES-LIBRARY.md": "1d74107e3cfcccfa8e43622a5c774ca4eb96669be947d2b58ace3934ebcfcb33",
+    "pipeline-events.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pipeline.config.json": "7c0c91a7d6b2554b4afc9f5f1a7260d30c0d4796b71e07e44eabd6a09909d2bf",
+    "PREFLIGHT.md": "ac13bc201e6a547c829adeb7d7ca7d3e7d2e031497138035b2f73fd8eddfee12",
+    "README-FOR-AI.md": "aebed9fd8d1daece7bcbbb266b19e4c9f03562d529e65e10e98e24e1fe69ed2c",
+    "README.md": "c515d528ba20c33e25a8dce89889d389925610865eb8bfa07566d98f7f9d0cb0",
+    "RULES-DIGEST.md": "fc23aed5ac1e9e3d416c94fe90faa60980a946c722e7230bd81f88f6ab143e6d",
+    "sub-agent-routing.md": "a1a64f00ef30911fd3763c2f57d135a5c025e86e17b2df59d28d61ea4638ad2a",
+    "agent-bus/README.md": "f7a75fdeaac8e261615593d413c8c85f3118b1ce78b924e5613a36974d24a039",
+    "docs/AI-PIPELINE-REFERENCE.md": "63c666bf4447fd661ab55268a564c6bfe9658183ccb7fc7fb059036883c5d475",
+    "docs/ARCHIVE-SWEEP-INSTRUCTIONS.md": "6d25d83dd703c436daf2966f4e0e678f471e70c33bad17780f773e1d7568d2e5",
+    "docs/DEFAULT-KEYS.md": "5bf2caa76677e8329bd32869abd0ade7ffa2cd45be82f70db26bd9ab11746cab",
+    "docs/MACHINE-HEALTH.md": "6220cdc6e6a872a9d2a047d89b48375b6160deae184d7876496e4aef3936c46d",
+    "docs/TRIAGE-CATEGORIES.md": "34d9fda0e3ec29d3f9590a84b70bf7b2e52d99ec913377e899a03c1bb2a227ab",
+    "docs/VERSION-RECONCILIATION.md": "c860ad329cab9f7c8ba800d558947cb5983ed7fe2e2f4d10d5044319f0ea9b45",
+    "docs-archive/PIPELINE-RESEARCH.md": "9eed681540aa48c76671d7e6a961c15adae9a5137f9376a4d33e963a47e43671",
+    "example/expected-selftest-output.txt": "c0ff2d1559a7cd767789017f3b822bb36e670295371a660ea94c2e8b6795392d",
+    "example/ExampleMod/example_mod.py": "66b60553d8ed70d3756b80ce5f17f570474a99a1ff094c89b895a6d66eec49aa",
+    "example/ExampleMod/MO2-REFERENCE.md": "831536f088c2bd5e202129cd9561da06ca8c6160aa65aed14d16109136b398c5",
+    "example/ExampleMod/NOTICE.md": "c9ce58dc89c1a01d3beef2e8aef140024d0f6c23aced531b2405d08e29a102ac",
+    "example/ExampleMod/README.txt": "aeb5d41b7041f2f4b83969f05788a21ebfb681596071a7b623f6f342e185c1bc",
+    "example/hook-test/bash-heredoc-doubled-backslash.json": "005d9885b9263badfdf0a5d34ba8b814102e9cb5d0cec2a0550b85b2a10f777d",
+    "example/hook-test/bash-plain.json": "9a3917dba1875be21a9c7ad4078f74d363f046471955459c3e1ad8aca781a670",
+    "example/hook-test/mo2-start-process.json": "5b972beada8f40028c7330c19c887d6b5eae8fd7ecc6e5fb46f6d369a3ad9f77",
+    "example/hook-test/mo2-tasklist.json": "0864052e0fe4961c27606af80b86cba4b3a615cf530601cc21008af2aa51e72b",
+    "example/hook-test/problem-card-filled.md": "e6791ae121a69711c9ffd3f0dc60926a2c0582df5d046c34804246308a319933",
+    "example/render-test/blender-probe.py": "4289259240e993511f374717c170e1419f925e8272cd7ad78b444dbe04225764",
+    "example/render-test/triquetra-coarse.json": "9328d81d6f1d3549525321b41306df19d304b88037aeaff2691daaa643c34072",
+    "example/render-test/triquetra.json": "807d2f7ca1c6e73d57d293ff0d0358c816c932541bb6b346e7b4b6f977dad8d1",
+    "example/render-test/uv-strip-test.py": "09cd21ee4632bd5cba2cc2af35752c6e0cb9593c4341cd37bc7ec9ad72966ad0",
+    "problem-cards/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "resolvers/resolve.ps1": "7d3d17de7823c3986647db3cbda10de489964b5dd1ec2b8b27a137472d1fe34d",
+    "resolvers/resolve.py": "55e45107c79eb89f7e2f90f56abfa5e1c558ef7b85b939220d0321ce6dc6fea5",
+    "resolvers/session-start.py": "7b069acb53335ce956fd37b7204f16e9ef58901eeb2816722a825845618097eb",
+    "resolvers/rosters/data.json": "cb02c017499281f3dcc05ea14b72d39dd4932b4ee4165b4846e95cd5b62de29f",
+    "resolvers/rosters/external.json": "c551eb4bae56b8751c3993998c6e350e3adbde55e8509adaffd93fd0b60830a0",
+    "resolvers/rosters/identity.json": "598766f1a74bc49147d8d902208d7f5f5b53a83f7726f7051339a7c78a7559b9",
+    "resolvers/rosters/policy.json": "db7616c1bd12421ba3415b0e7acea68dcf1b601a73bb76b0510452bfb913d69a",
+    "resolvers/rosters/scripts.json": "ef3195ae7155731e96a01154ee53f3af346850380aa196e27927a152d8dae0d6",
+    "resolvers/rosters/stages.json": "47e56f0762db09f09f9d2607aceebaa8837a9c0baef85aff47e6397df10f1680",
+    "resolvers/rosters/tools.json": "bf7682ac3568476eca7c8054d57af7a69245d5f8a637f4e0bf20a4796484f6f5",
+    "resolvers/schema/gate-rules.json": "2a7eb5fd87a8bfd83d16132dc5327e5ff72eac4b53595ad302f628bb9e26b50b",
+    "resolvers/schema/roster.json": "c35d9dce0921fdba886ed354ae00e100b1bd9ffbc7e2b78287ff0930d4fc654d",
+    "resolvers/schema/version-ledger.json": "7baaacb63e7527e69ded0794fb2ae9a58f7c73ad89ae130cb296b91e0fd6ce4d",
+    "resolvers/schema/version-registry.json": "d6d79377e1302dcd7b1f6d009b34b3e83888a27942022fc34949fd22f1bd4a23",
+    "rules/01-pipeline-topology.md": "bb62dd85fad0be40c467ba0795604414ba5abf19a472b8362f8cc53e23eed78a",
+    "rules/02-build-toolchain.md": "0c10aceb1921299b14a39aec2021df4965b20065aba4000f0543121ed577f98c",
+    "rules/03-versioning-and-release.md": "19e939082fb370af31a71866fa65c96b12801b3103a1fff642dba6b21a94706c",
+    "rules/04-code-standards.md": "c4cfacc3c108f52eaa2599cb0ce32429adffb54cddf387caf6b674830500eaaa",
+    "rules/05-testing-and-mo2.md": "337555362ee88f35eaa34d86aa7cc45bec08d77ade12009a90f02d31cd3485e1",
+    "rules/06-reasoning-discipline.md": "46a970494de39c7743b917dd269862a27d50088dee595cc5562c853ade44de5b",
+    "rules/07-operations-and-machine-health.md": "f280f186a06b5df466f1356ba9aa4e8144f6cd9b90791b1b1b5ea8598cb78ee7",
+    "scripts/bash-backslash-guard.py": "3d69888776f15266a2b55d757e39ca786ed67b11c210a2cad107f76e01830de8",
+    "scripts/check-export-parity.py": "e6bad7c4e60122896147a36642d5ababe3701fb9c5086bdc0d93c0fa00079202",
+    "scripts/distro-names.ps1": "30193f5a0f455352bd30d47412b0e733ed0073d2ffcf4889a8a528b8e68c5ec8",
+    "scripts/docs-pipeline.ps1": "52ac082c16909e2404e5836907097bb1872af3604e48aaf211111f34fd7a5e28",
+    "scripts/events-keymap.json": "f34595c1e4227579c5b65192bff8a692da32ef4eacc3fb723b97358f95516de0",
+    "scripts/events.py": "1d7ef6ede872584184992f77a42f9c0985c7a3ec602be4bac4782e6ba0698efb",
+    "scripts/falsification-log.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "scripts/falsification-log.ps1": "c77c79d319b420a788a84caae732ecccaaefd89150fe962a09e2e9ef3769e3d6",
+    "scripts/find-stale-paths.py": "2fe4eb2b22ca56b0b58354825ce8d35c9e765da2162d0f2e53006151afa17707",
+    "scripts/GATE-CATALOGUE.md": "93206fddc51cf1e5de0b3e1a4173f7d63c9c2745c390b4622244b45b636326c3",
+    "scripts/gate-catalogue.py": "f57e96ecaf0854fbb5592152620d12fa728b0d7cac226a77d94d89526bd82f0a",
+    "scripts/gate-ledger.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "scripts/gate-ledger.ps1": "dbe001a49d7183ee84cc509c1d538afcfc871c2710e90c541f97b19437dceddc",
+    "scripts/gate-rules-INDEX.md": "1b9e43c8427fd86a580e36ccea9df374e3369130be596fc4689c8c040268beb0",
+    "scripts/gate-rules-index.py": "f01f2ed19506d929503d60a64dcb755810599b66b3b03d0814413c4dfee55ae5",
+    "scripts/gate-rules.json": "55b3ff4dee23e995ecd7cbfcf21f8c4a06b7dceb22ccf0e2da135cc6dd93b044",
+    "scripts/gate-sweep.ps1": "a8d8d3cbee62d4824b443405ff55dbf2e2334f5e6e92d2f9033b7cb3cc1f8487",
+    "scripts/home-index.py": "4ba2af05152c2da839de3b3c6867cfb4f8a9ddf5207b30001077884fd9feb4f5",
+    "scripts/ini-edit.py": "a0b94fcdfc005c2bc93811e5a8e6a931daa09f2fb801c3b296fc946e6d13027c",
+    "scripts/install-test-build.py": "d9a0f7c838f87aebff947975681ffb7de16212b435f2f254ee9e6cb199ec9f73",
+    "scripts/kit-hooks.py": "ba72c6566f4fe217faabda10d58f3c00be4ab799858262052886a0b08b837560",
+    "scripts/kit-install.ps1": "a6893e7f8530486224e5de38947451bde6e70fa450d88f8630fa30638b2ebd33",
+    "scripts/kit-selftest.ps1": "25d6cc6e70831613910da3f798db1e66a338aa04660802e21fc743c46b519e29",
+    "scripts/logic-index.py": "bfb6b20bbad619b0de4cb229c232380b662ee8c51edeec2ac792c9b97bb6fa8b",
+    "scripts/memory-index.py": "298f9515d565d4ad6891b37bf57640e329a68e52572af359ed3bcf12f8b0d7ab",
+    "scripts/mo2-elevated-launch-guard.py": "b0b1b6cabe6486bebdac669d7365c0eb2b65bb007bd4a80aae9c64a0dee12b18",
+    "scripts/optimize-project.ps1": "85f454353f3794311761aa149482c0e3dd10f5f0cb40174af85de50adcd8afbd",
+    "scripts/package-path-guard.ps1": "37237696874baafc99b39742a4a0f79834c7f976d39d5656fa153aea88c12c64",
+    "scripts/package_paths.py": "45756a62608dfaa5288ef5a02ae227e8a36b2caa7676f7421190cb39778ad2ce",
+    "scripts/pipeline-log.ps1": "e1aedac1022fabb2e924dbb9b014df2ead1669aa613b71a38ec1539339d538c6",
+    "scripts/pipeline-status.ps1": "fda4606eed4e7b23ca188a576805907bd063a0de79157a9cc5abca5c189591cf",
+    "scripts/problem-card.py": "a46564c646347556757daebca543465281ab6a9c6b240144dc39d841e09b4f21",
+    "scripts/prune-test-builds.ps1": "83436988afed23431612f0a8eaf44307ed18b77b6faf5d0ff447a37a745fdd46",
+    "scripts/relicense-gpl3.py": "fa84bc88f2f4d15b2799e6cc7c39b9d8ebd6b10be24c13da26c8db3ee58506a0",
+    "scripts/repeated-lesson-scan-ignore.txt": "6c6e21aa156ce344d8dbb01ba8b733a87b31224ed4f22a3952694fa42dc2635c",
+    "scripts/repeated-lesson-scan.py": "7f028c815e1679585a5c5542ab33ba4143b2da9303f4e5ca6240d6e822bc9c69",
+    "scripts/root-builder-live-write-guard.py": "85fea57b02599cd8c6fb8cb68c978097e82c90e19e0d85d8e2baa58fd661e242",
+    "scripts/rules-digest.py": "3d37bae5b01fcb5c1dfcf0a9629580af3225ca5933e9ae365c79806b7c2f9ace",
+    "scripts/rules-version.ps1": "8d23646fc8c95bb6e695067e10ba9d48e3d8ee79ca5f86cdbd59d3381203367a",
+    "scripts/skill-scout-ignore.txt": "3ed590a6c716c86f635a996d5feb7ba8ec18795e9928e220be61f39cf2f84d03",
+    "scripts/skill-scout.py": "c35dea9df105f3f648096be308228444a3e29550b7a49d9299c02e7ed9e17e8f",
+    "scripts/stage8-verdict-audit.py": "3bc4a42376878fc2c2d54c4b00089b8ae8fd9450993547e182b09d50f2f7c2f5",
+    "scripts/touch-snapshot.ps1": "22a6305b371b923854bf048672804db42dc740e95157ae4396135e0b69b33da8",
+    "scripts/translation-coverage.py": "4a84ae604fbfdcaa3da3ce96546b85950df106ccd8c99cbadf53c364544c0e30",
+    "scripts/version-ledger-prerelease.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "scripts/version-ledger.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "scripts/version-registry.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "scripts/windowed-tool-while-game-guard.py": "38f7cd2fe704805ab6565273470aeb613bb6112a2f9a00211b03400c41ad487d",
+    "scripts/art/make-feature-banners.py": "a275c7b59e9923120dc098334139af75a8e41bb6e7693dad0c4804f1b043561a",
+    "scripts/art/patternlib/braid.py": "1077ead5f5817b3197d5a8a3456843fdd2c972934495a53504d7a214f9bb28bc",
+    "scripts/art/patternlib/catalogue.py": "4aabf57eac82b136ecdca658be8002101d6e350590cca4dec494e8fd6691d0ea",
+    "scripts/art/patternlib/cli.py": "db73514b01dfff3564dfe71a7f14bf75c36ee74692e122d788f46724a8c6f3cf",
+    "scripts/art/patternlib/crossings.py": "a1e4905ab69935080cb841b2b36d0604003dc32df0bd2d38f365cf41b9f07d13",
+    "scripts/art/patternlib/damascus.py": "6d1bde21bf9d7f733ba364aa90394497e89b0fdeb168531e952bca12e11478f7",
+    "scripts/art/patternlib/fit.py": "de418c2e2a38518ffa8e50e2101a103f7281f5130981562d54fa0f094ca4f7ea",
+    "scripts/art/patternlib/geom.py": "bb086afedde7cdf73f8538986d99c04535a925cb752edc58456c4b329864126f",
+    "scripts/art/patternlib/knot.py": "36aeb4bc19b27d1422b85d482fb6359187c07c3c822e7458d51de32df9c1b93d",
+    "scripts/art/patternlib/make.py": "880b88a96f062a39a1cb63dcb3b3af42374e6740f49e720dfc8aab757026c435",
+    "scripts/art/patternlib/measure.py": "6939fc4d618d9e0b855a24e599bc6561b16ab5de6c951f45affd8979a0bc158d",
+    "scripts/art/patternlib/model.py": "24441f3c6be7e292c3952ecc8454520c86e60b64fc048990a9b9ccea75ff7ea7",
+    "scripts/art/patternlib/raster.py": "96fcab5cfc1dabb7541a9ddf503d491fca9c1abac0e0a4f4530c67f0f2cc6c28",
+    "scripts/art/patternlib/runes.py": "1aba56c6bd22b65114aac47ebc9b0de304d06d7e3785cdf85d7aaca05695ab47",
+    "scripts/art/patternlib/symbols.py": "289d39693e9c9ae123114cb0f46decf9f01af0a5aebb753a60833b1664407010",
+    "scripts/art/patternlib/validate.py": "40853aeab345c55257eb61eb949265a3a0146caba01363de5c431daf479071a1",
+    "scripts/art/patternlib/weave.py": "96cd1ac73166d075ff731cc6c23f26f4a6568370c29d129091a43a7a6f4cc43e",
+    "scripts/art/patternlib/__init__.py": "f2840a069567edd3adf5cbefba2a3d5c17ffd8f9224db7dbb660d61a375bd963",
+    "scripts/gates/banner-highlight-gate.py": "07b5f911233c2d17871def05e6d44ff75dee50fae491eac9e3c740bb2a445e60",
+    "scripts/gates/behavior-patch-enum-gate.py": "e2c446da9d8f45a1d7331996c185d45295c801781663d848a5660aeac029d67d",
+    "scripts/gates/clip-motion-matches-motion-data-gate.py": "3566cc25734d9a9644b5de024eafd9a65ff8946a3ff1187a4d0cb3ca94aeb9d2",
+    "scripts/gates/compat-evidence-gate.py": "e6937a3981f216dff87bc8828a158e77b91272c25a2316ffafc4302fbfce815c",
+    "scripts/gates/cpp-escape-gate.py": "91665c31ad9aee0e7727a6389f7c79d8c4a1efcbacd7ca545727256ff0e50376",
+    "scripts/gates/distro-banner-pill-gate.py": "088b48dfa8c251d15656e36589b12f0b35626e1c1468b4a44cef73e4f2ee4922",
+    "scripts/gates/distro-licence-gate.py": "e9dae20906684f7fcef031c908d2779baa902c63466e16a56bedd97d4e30435d",
+    "scripts/gates/engraving-layout-gate.py": "d31873e46689f6498fa9fdb6cfdca0a7f0fcfa5b06faa2ecb50e40fe25fbf402",
+    "scripts/gates/esp-obnd-gate.py": "ef2349c316b6f64b82c6bbe4327bb731abd4ef127e2e451b8b9ef5c2fead2f7f",
+    "scripts/gates/esp-shield-flag-gate.py": "b14ec754c8e2844be24b24d0048b72879042ab53b100b592da75f364ba6955b0",
+    "scripts/gates/fomod-info-version-gate.py": "b52e3b74ef6d959ee344ac0ae2821a0778a4a86774c1aadf49cb839f7e95bb06",
+    "scripts/gates/fomod-option-image-gate.py": "ef3b88e1b4c9e992ee54838cf2f7d8653e11069d786f885572f3d3232167a77a",
+    "scripts/gates/fomod-repo-installer-shipped-gate.py": "06d23e183a598a8d723e4d46cacee9203ece77b04a50d7494e3eb72c6a3188ab",
+    "scripts/gates/licence-label-gate.py": "21ae6107cc60c3d259e8ae523a330fe8377df74aada8578dd9a012c484ac8cd5",
+    "scripts/gates/line17-gate.py": "d1ac38a86888d2b19c7f1f260632b2b338f36a58625fc9fb0fdb639117938745",
+    "scripts/gates/main-thread-task-gate.py": "cb3fac901ec6e42dfa5e69e3569842eab46a196b1e4241c6eccc2fc7437678cb",
+    "scripts/gates/nemesis-patch-info-gate.py": "88b671207eb5cf2504fef65aca62715ccd979a612c52940728969860d1042e59",
+    "scripts/gates/nexus-ai-tags-gate.py": "cd82105c05db14a0b82197b0d529f71c44ce889602b117f56e5ca4a8d4af92be",
+    "scripts/gates/nif-uv-overlap-gate.py": "69fea539a059804fd2b23c9ac0095b2629d25ae4f61c3769864e95f3fdf79df1",
+    "scripts/gates/package-gate.ps1": "0ce69d19cfbc4162d721e9d7c488e2ffc6935013f13b640e048c4236ad7bc350",
+    "scripts/gates/package-render-gate.py": "c9761c7de8c98c16830edb2363b42f00cea7dfd00b95a3a372d05b6215ca11c3",
+    "scripts/gates/pattern-gate.py": "d1b4ce6db01b4f28033178b16466540124bffe3cef5550a6244ab2cb4dd9b785",
+    "scripts/gates/pex-header-gate.py": "06051496b8be30caa7801c5342ae907bfb7a915802a6b8894923b1be4f8416a3",
+    "scripts/gates/profile-list-write-gate.py": "e346e93e69c0036d26291428121ec6e1376535df943d8c82c8698da452320ce4",
+    "scripts/gates/root-topology-gate.py": "c97257c5b714e9a34bf874bbe2587545be446fd1b7cc530b82364d9f07df4f3a",
+    "scripts/gates/scaleform-ui-thread-gate.py": "e2ea19617a644263cdcdfe773286271fdaafc0c2eab45c134f7f4ba05fa78000",
+    "scripts/gates/skse-runtime-declaration-gate.py": "6c25d01f85c52dc25c380797b623a02f7cc68121bd929edca58ba3983ec76fef",
+    "scripts/gates/surface-profile-gate.py": "6f0a542beb32e39282bb59f820957ade4dc01854c0617f64264d2d004e30bbbe",
+    "scripts/gates/swf-colour-gate.py": "727983b51693df9c7630aa0fbb284e70cdf1e57d6cca5cfd3c3f90e78701d47f",
+    "scripts/gates/theme-outline-gate.py": "d44cfa1d82ff699f46917429987b0440e57785ce7fb65088eb9791aa1a52e41c",
+    "scripts/gates/tr-keys-translated-gate.py": "34b7adf824cca18953f8cc593d1a1e4560019a752b0aba4fd4a2df9f5ba2ff88",
+    "scripts/gates/translation-script-gate.py": "076426aac93b01f108a4dbcaecc5323d30f18932563a357fdcb6d770db9b4c86",
+    "scripts/gates/ue-cached-pointer-gate.py": "f3e2d8ec0abd5212a69c6dee5e04c2f4cf0fe36e2e9ecc73d0a2a3976d757a20",
+    "scripts/gates/version-gate.ps1": "f00f80555b8e4bbfa8b79d4d7aee4d51c3255c3b9792f323eddf163bb9264318",
+    "scripts/gates/xinput-import-gate.py": "4a8e0c1628d5444704266a19040603c5275a50861cc8eaddf37681efca3f08ca",
+    "scripts/git-hooks/pre-push": "4dbeea48aba9ec79e33052f666d43eed8d1e36b1c8e464041b656ed1ef43f134",
+    "scripts/ops/agent-lock.py": "4004260c3f50b370bc6d6ee85624463462e365a140f4a1320cf5952c80a29de5",
+    "scripts/ops/agent-msg.py": "59a87747c8cb813a9b970171ed1df8c73e21d978611f4c918b74243ac682f087",
+    "scripts/ops/attention-ping.ps1": "103eceb0c00be40cdcd01fc08f60ef05f0b9be035b8076d951d6aa60ce7ab2e5",
+    "scripts/ops/md-commit.py": "ac39f4db6571d78e8fce6ff4e1b9b279f2a2843b8aadf80ff750a9da7b350023",
+    "scripts/ops/prockill.ps1": "dd277cbe112743afc46dfaa1ab5907cfc92dea03217d5faecc4be6a2976dea65",
+    "scripts/ops/session-checkpoint.ps1": "ab51e6a8ffe5fba15d52ff0312878b22a7d4e1dab4094d8c4d64db572b3f868e",
+    "scripts/ops/session-digest.py": "83b0ead025ab3be54831d50bb25d89f197bbf5c4575e123efceedde9c90bf62e",
+    "scripts/plugins/addrlib.py": "9525624d0daaecabe9867e46cf11755b7a9735544d43a73c25d8c4107c119b35",
+    "scripts/plugins/compile-papyrus.ps1": "007e3358c5a878fe3c5ae4423a4bc80cb05007ffc733c38904624e99651d013a",
+    "scripts/plugins/esp-audit.py": "4440af5fb7ecdd7435d0d1b31196eda2e87f3de64533e18274bbbdb8946437ac",
+    "scripts/plugins/esp-drop-cells.py": "8d8e6235940b7d4e03d6476369a09a96b65bd9c7450a4fd2a03ec460a9112e2c",
+    "scripts/plugins/esp-form44.py": "a72374ee4cca0a2247df892066318a86261c6ade3448839b177771f55235c7e1",
+    "scripts/plugins/esp-overlap.py": "ab6169d4559880d84a2e2eb2a1e3dc3259d26bb23d89351e5f08cc5dd9eb1325",
+    "scripts/plugins/esp-regroup.py": "0ab04ef3cde7bf8bf97f129437680fdf10b2bf8171dccb1ee3c4ff8df2978299",
+    "scripts/plugins/esp_groups.py": "712300036049e7a96602af474b7a9ffd858fee9cbe9a695c265adb3dac002e08",
+    "scripts/plugins/fomod-destinations.py": "155073ced0b64e62b7c3e1628776e63a6d2e762ff2abe8208ba0ebc2c4b32174",
+    "scripts/plugins/Get-PluginRecordTypes.ps1": "06978df925ecb7e47101f2733bf7d979683746722a4f09da31a1d1594b6b3f70",
+    "scripts/plugins/Inspect-NifShapes.py": "5934fa5ac6096b223d05fd3b8d11ae238af5dbffd72247a0895acb630722bcb0",
+    "scripts/plugins/make-espfe.py": "b1e9a5e940663cd8a0ee049fbd8e868410c429f69e63bb79459de8ccddfe3dad",
+    "scripts/plugins/make-fomod.py": "9cba02cc26f0ab23ca11ca81a92ea554c11a8b38e79dfb675262cc0341952581",
+    "scripts/plugins/merge-to-espfe.py": "0742638c07fb52b1e82bb31e5d6f267e8d0076d35ee399753104fe4742d621a5",
+    "scripts/plugins/pex-scrub.py": "822940992fad9afe0850ab298c939b351969b12cd98ca5cb9b8c3befd3f0bf73",
+    "scripts/plugins/renumber-to-esl.py": "d29afc3c234c6132c69108b9c7a0734f6ee36194b8edeb69c9cdecc10281b3f8",
+    "scripts/plugins/repack-fomod.ps1": "dde430b8fea0d776ca1d20063440ab0690710c674aef55ede00e4d59a6823306",
+    "scripts/plugins/Repath-NifTextures.py": "62b8aba7715f228f9d1325450e0524ac795b1f62cd4bc7a161808112a6f1b31b",
+    "scripts/release/changelog.ps1": "148d0f36256dbef62905dff8ff0bbd30c98ea1768e26840a9f1bd513ad2a8bb8",
+    "scripts/release/finalize-mod.ps1": "b08184651176219494084d93f9b129e1bc67409d581c3d986dbd164627b97a56",
+    "scripts/release/nexus-distro-sweep.ps1": "941491332327fc4cbcc03707351cfd07b0e242d3060d9888ee0b6518d5c10b6c",
+    "scripts/release/nexus_files.py": "42a3dba51a76ff6e08ef064042020b155d8b7dfb4de55964fb86891b927b80d8",
+    "scripts/release/package-mod.ps1": "11c6afa64b89c5038a7ff3ba3435cba776a67ace80901d6ad0ba16fa8c12ae7b",
+    "scripts/release/package-render.py": "18c849adc35f956f40f48eb5bad5da707bf0bf6fa29dc70a7ecba9995ff3b082",
+    "scripts/release/package_render_blender.py": "d3ef978fbdf96c1ed0a729a592204f9bdee4fb9a80905cae680a4d9ed558c2d1",
+    "scripts/release/package_render_uv.py": "698ee525b966d6da996b5907ed232a0f9327ef5526eef709887cc4170af69dba",
+    "scripts/release/post-release-prune.ps1": "c7a1b05cd4fece2928ea3f0f1fd5ce5da5c016dd704f1d0ce92637ff853b3dfa",
+    "scripts/release/pre-finalize-check.ps1": "f7c53edd5078f9fb0458900eba9e9450177b3040fb3e0e27cc1f419a0d1ce603",
+    "scripts/release/sync-nexus-distro.ps1": "943a228845e477393712e24029e0c884fd272a3db37d474167027f91f1f088b5",
+    "scripts/release/test-build-pick.ps1": "2c668f0c9e0eda8b8d73e23bf185fa262723697a43a793b7cc6594b726179d22",
+    "scripts/render/before-after-sheet.py": "9168702e179ab3799874a23f45a37a53934fed6383bcad1efd17da76a88989b1",
+    "scripts/render/nif-readback.py": "99a82b1f3e376f37972b2f6c3d4c35b56c121fff96eb436ff89034a7b243eb21",
+    "scripts/render/niflib.py": "af82bead2605716fd5f0f3e38730711e9d951ba1fe6eab9e90ab2d12872675ed",
+    "scripts/render/render_lib.py": "70c9980914887472b393c886fb90c079fe6b81eced36f9e1e88e3db872d84077",
+    "scripts/render/winding.py": "967411eb6e697ab10885b1b4200fb8cf7d618345f867736f242b1a37631243d6",
+    "skills/amf-menu-port/SKILL.md": "498bee3cea9abba5d6c8452d8aa5df9c3922253f28f583e853fdb5943daa31e4",
+    "skills/amf-menu-port/references/precise-sliders.md": "440aecae50db96ff52f6115576b267acbab6afe467849dfa63567cd768e5af4b",
+    "skills/amf-menu-port/references/SMF-CONVERSION-PLAYBOOK.md": "2fc27ed138d1203c3c703af0897101051813a5fbaa691bc6d6072efcf20213ba",
+    "skills/in-game-test/SKILL.md": "80a5c72a80d031eb164865697a2f96d2fe4a0795f634c883d23c63367317b9a8",
+    "skills/in-game-test/references/TESTING-PROTOCOL.md": "783f786266e1f5621c2c945c655dbbe2eadf7edcd72ff3010a14e52dce2da3c1",
+    "skills/mod-release/SKILL.md": "1f0cf4825414fede82484093b444a077369a1e51a84cfee56af0ca48c0e5b673",
+    "skills/modding-tools/SKILL.md": "48b058d85d929f8a519cafef43b0f4bf2d89fa7e6305f7c5b4c322cadb042d54",
+    "skills/modding-tools/scripts/esm_lookup.py": "22ad1ae8b1420a56bad1a9a4ea40e83ea7473d9f99325d27e85da7263aaf06e1",
+    "skills/named-commands/SKILL.md": "ab928f7ffc4c5c367bb645257d622cbe38859149ad20339ddc52e31ff72e21c0",
+    "skills/nexus-page/SKILL.md": "ab200a265381d37d57686dd0eb3555e11d02fe5ae774be07ef18509e5e71e642",
+    "skills/session-records/SKILL.md": "81873cac76cf98af27b4c29956df784a4cc592e171b44daa6aaf8b98c3bc69b4",
+    "skills/skill-scout/SKILL.md": "e3af7a3adb8965c7550bcae18cecf35225a3e555f499f2ec115d08df6bc026aa",
+    "skills/troubleshooting/SKILL.md": "3fc196b1f633e3672733761dd6939b4d860faef73dc7989391eeb172b0354ec7",
+    "skills/troubleshooting/references/ADVERSARIAL-MODE.md": "45f27bf9b28342b167200c189dfb26fa9d095b753625e974b1d9ae4cd0005b96",
+    "skills/troubleshooting/references/FALSIFICATION-MODE.md": "d4bf2e5aa5c8f83d6b57b1afa6f0fbb6a0ff49556ef4438255f2691a5373eb4f",
+    "skills/troubleshooting/references/PROBLEM-CARD.md": "4cc800c25a489847d6ba018051fbf8cd6ca6fb495d805dc765dae3241100179d",
+    "skills/weapon-engraving/SKILL.md": "b90b4400ec5f4818bff64dc31374f6db8b67e0481cd40d9ee29b4a5f36d9d6f2",
+    "templates/banner-design-rules.md": "3d6bbbaccad64b40f5b7ddf4da7f569c08532b45007083ada31a9499564245d4",
+    "templates/banner-template-1300x372.html": "e78a8f9ca432647c761beced458f109362d3cfed7363fd5b418d9b368e46767e",
+    "templates/banner-template-1920x1080.html": "9c1fce812e26e522069c005be484cbc1a585fbaaddd0be5677ff3b59f2f4751d",
+    "templates/nexus-changelog-template.txt": "88aa0b36e4145bf6305a61af75bbbbcaa4661b8a6bf60d3cec3eb37ac2929d45",
+    "templates/nexus-page-template.txt": "a1215b160e88c5a81487f7f670228566b1bbf7ca0c37b00e31728a09012cb056",
+    "templates/package-docs/CHANGELOG-example.md": "ed0bebdee1a83457303ba67d2fbeefafa41be1aac9d7dae4e8988c57c4b4191a",
+    "templates/package-docs/NOTICE.md": "621de120649475f94b837f63156972384c0dbdf7074068873a8c1e8b414994c2",
+    "templates/package-docs/README.txt": "334b0ae1a2a463e9765cec26d1afb1204c5fe9ea2b0a88523b3e64bbbb0a138d",
+    "templates/package-docs/THIRD_PARTY_NOTICES.md": "6f3ed514c22ba706eafa9c291b96f38eeba5639cf2901eb1578af02d6aee0e15"
+  }
+}

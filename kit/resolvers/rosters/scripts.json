@@ -1,0 +1,128 @@
+{
+ "_version": "1.1.2",
+ "_revised": "2026-10-27",
+ "_about": "Roles of the scripts in the kind folders (game, mo2, plugins, art, ops), one role per file.",
+ "roles": {
+  "md-scripts-plugins": {
+   "kind": "dir",
+   "at": "{role:md-scripts}\\plugins"
+  },
+  "md-scripts-art": {
+   "kind": "dir",
+   "at": "{role:md-scripts}\\art"
+  },
+  "md-scripts-ops": {
+   "kind": "dir",
+   "at": "{role:md-scripts}\\ops"
+  },
+  "get-pluginrecordtypes": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\Get-PluginRecordTypes.ps1"
+  },
+  "inspect-nifshapes": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\Inspect-NifShapes.py"
+  },
+  "repath-niftextures": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\Repath-NifTextures.py"
+  },
+  "addrlib": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\addrlib.py"
+  },
+  "compile-papyrus": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\compile-papyrus.ps1"
+  },
+  "pex-scrub": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\pex-scrub.py"
+  },
+  "esp-drop-cells": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\esp-drop-cells.py"
+  },
+  "esp-form44": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\esp-form44.py"
+  },
+  "esp-overlap": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\esp-overlap.py"
+  },
+  "make-espfe": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\make-espfe.py"
+  },
+  "make-fomod": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\make-fomod.py"
+  },
+  "merge-to-espfe": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\merge-to-espfe.py"
+  },
+  "esp-regroup": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\esp-regroup.py"
+  },
+  "renumber-to-esl": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\renumber-to-esl.py"
+  },
+  "repack-fomod": {
+   "kind": "file",
+   "at": "{role:md-scripts-plugins}\\repack-fomod.ps1"
+  },
+  "make-feature-banners": {
+   "kind": "file",
+   "at": "{role:md-scripts-art}\\make-feature-banners.py"
+  },
+  "session-checkpoint": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\session-checkpoint.ps1"
+  },
+  "session-digest": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\session-digest.py"
+  },
+  "ini-edit": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\ini-edit.py",
+   "note": "change INI keys with the line ends, encoding and BOM kept - never sed -i (combined run 2026-10-23)"
+  },
+  "agent-lock": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\agent-lock.py"
+  },
+  "md-commit": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\md-commit.py",
+   "note": "commit given .MD paths without racing for index.lock: waits its turn, explicit pathspec, one retry on a lock race, push, prints the hash (item 17, 2026-10-24)"
+  },
+  "agent-msg": {
+   "kind": "file",
+   "at": "{role:md-scripts-ops}\\agent-msg.py"
+  },
+  "events": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\events.py"
+  },
+  "root-builder-live-write-guard": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\root-builder-live-write-guard.py",
+   "note": "PreToolUse hook (Bash, PowerShell, Write, Edit): refuses writes into <instance>\\mods\\*\\Root while that game runs or Root Builder's deploy record is present (2026-11-18)"
+  },
+  "ue-cached-pointer-gate": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\gates\\ue-cached-pointer-gate.py",
+   "note": "UE4SS C++ source gate: a g_* global holding a UObject-derived pointer needs an Alive/IndexOf check or a reviewed marker (key-only, lives-forever, owned, alive-checked); run by norse-deployed-build-check at every Norse launch and by package-gate (2026-11-18)"
+  },
+  "repeated-lesson-scan": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\repeated-lesson-scan.py",
+   "note": "lists subject terms the past-mistakes library holds in 3+ entry headings with no gate naming them - a review list (--strict exits 1); read each cluster for a lesson that repeats (2026-11-18)"
+  }
+ }
+}

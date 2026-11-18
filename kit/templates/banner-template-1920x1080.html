@@ -1,0 +1,125 @@
+<!doctype html>
+<!--
+  Standing banner template, LARGE format (1920x1080), for Nexus mod cards in this project.
+  Untarnished UI theme (CLAUDE.md rule 10): black background, white hairline frame, no
+  accent color. Every mod card ships both this size and the companion 1300x372 template.
+
+  TO REUSE: copy this file, edit the CONTENT block near the bottom, then rasterize:
+  "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless --disable-gpu
+    --window-size=1920,1080 --screenshot="out.png" "this-file.html"
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1920px; height: 1080px;
+    background: #050505;
+    overflow: hidden;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .stage {
+    position: relative;
+    width: 1920px; height: 1080px;
+    background: #050505;
+    border: 3px solid #f5f2e9;
+    outline: 1px solid rgba(245,242,233,0.35);
+    outline-offset: -16px;
+  }
+
+  .icon-slot {
+    position: absolute;
+    top: 120px; right: 140px;
+    width: 460px; height: 460px;
+  }
+  .icon-frame {
+    position: absolute; inset: 0;
+    background: rgba(10,10,11,0.55);
+    border: 1px solid #f5f2e9;
+  }
+  .icon-caption {
+    position: absolute;
+    top: 592px; right: 140px;
+    width: 460px;
+    text-align: center;
+    color: #f5f2e9;
+    font-size: 22px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .titleblock {
+    position: absolute;
+    left: 130px; top: 280px;
+    width: 980px;
+  }
+  .eyebrow {
+    font-family: 'Consolas', monospace;
+    font-size: 22px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #f5f2e9;
+    opacity: 0.7;
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 100px;
+    line-height: 1.08;
+    color: #f5f2e9;
+  }
+  .tagline {
+    margin-top: 40px;
+    max-width: 800px;
+    font-size: 30px;
+    line-height: 1.55;
+    color: #f5f2e9;
+    opacity: 0.65;
+  }
+  .pills {
+    margin-top: 52px;
+    display: flex;
+    gap: 18px;
+  }
+  .pill {
+    padding: 13px 26px;
+    border: 1px solid #f5f2e9;
+    color: #f5f2e9;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <!-- ===== CONTENT: edit everything below for each mod ===== -->
+
+    <div class="titleblock">
+      <div class="eyebrow">SKSE Menu Framework Edition</div>
+      <h1>Dragon's Eye<br>Minimap</h1>
+      <div class="tagline">A full in-game settings menu for your corner minimap &mdash;
+      every setting live, nothing to restart.</div>
+      <div class="pills">
+        <div class="pill">v1.1.7</div>
+        <div class="pill">SE / AE</div>
+        <div class="pill">SKSE Menu Framework 3+</div>
+      </div>
+    </div>
+
+    <div class="icon-slot">
+      <div class="icon-frame" id="icon-inner">
+        <div style="position:absolute;left:50%;top:50%;width:2px;height:166px;background:linear-gradient(to bottom,#f5f2e9 0%,#f5f2e9 48%,rgba(245,242,233,0) 100%);transform:translate(-50%,-100%) rotate(18deg);transform-origin:bottom center;"></div>
+        <div style="position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:#f5f2e9;box-shadow:0 0 16px 2px rgba(245,242,233,0.5);"></div>
+      </div>
+    </div>
+    <div class="icon-caption">Whiterun Hold</div>
+
+    <!-- ===== end CONTENT ===== -->
+
+  </div>
+</body>
+</html>

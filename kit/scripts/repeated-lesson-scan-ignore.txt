@@ -1,0 +1,2 @@
+# repeated-lesson-scan-ignore.txt - terms judged to need no gate, so repeated-lesson-scan.py never lists them again.
+# One per line: the term, then  # why, date.

@@ -1,0 +1,59 @@
+{
+ "_version": "1.0.1",
+ "_revised": "2026-10-09",
+ "_about": "One value per pipeline policy number: caps, ports, runtimes, health limits.",
+ "roles": {
+  "test-build-cap": {
+   "kind": "value",
+   "value": "one",
+   "pattern": "cap(?:ped)?\\s+at\\s+(\\w+)\\s+version"
+  },
+  "devbench-port": {
+   "kind": "value",
+   "value": "8920",
+   "pattern": "port\\s*(\\d{4})\\b.{0,40}DevBench|DevBench.{0,60}?port\\s*(\\d{4})"
+  },
+  "lhm-port": {
+   "kind": "value",
+   "value": "8085",
+   "pattern": "localhost:(\\d{4})",
+   "note": "LibreHardwareMonitor web server"
+  },
+  "se-runtime": {
+   "kind": "value",
+   "value": "1.5.97",
+   "pattern": "Special Edition\\s+(\\d+\\.\\d+\\.\\d+)"
+  },
+  "ae-runtime": {
+   "kind": "value",
+   "value": "1.6.1170",
+   "pattern": "Anniversary Edition\\s+(\\d+\\.\\d+\\.\\d+)",
+   "note": "the AE test runtime (a 1.7.104 instance also exists)"
+  },
+  "idle-watchdog-minutes": {
+   "kind": "value",
+   "value": "30",
+   "note": "game-relaunch.ps1 -IdleMinutes default"
+  },
+  "health-cooldown-minutes": {
+   "kind": "value",
+   "value": "90",
+   "note": "health-gate.ps1 -Cooldown"
+  },
+  "health-max-consecutive": {
+   "kind": "value",
+   "value": "6",
+   "note": "health-gate.ps1 -MaxConsecutive"
+  },
+  "health-rest-minutes": {
+   "kind": "value",
+   "value": "10",
+   "note": "health-gate.ps1 -RestMinutes"
+  },
+  "health-min-free-gb": {
+   "kind": "value",
+   "value": "25",
+   "note": "health-gate.ps1 -MinFreeGB"
+  }
+ }
+}

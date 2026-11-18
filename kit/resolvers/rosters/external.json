@@ -1,0 +1,16 @@
+{
+ "_version": "1.0.1",
+ "_revised": "2026-10-27",
+ "_about": "Where Windows, OneDrive, the games and Claude Code write.",
+ "roles": {
+  "claude-home": {
+   "kind": "dir",
+   "at": "{home}\\.claude"
+  },
+  "claude-projects": {
+   "kind": "dir",
+   "at": "{role:claude-home}\\projects",
+   "note": "session transcripts, one folder per start directory"
+  }
+ }
+}

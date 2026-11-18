@@ -1,0 +1,28 @@
+{
+ "_version": "1.1.0",
+ "_revised": "2026-11-16",
+ "_about": "One value per public fact: links, account, Nexus domains.",
+ "roles": {
+  "nexus-domain-skyrim": {
+   "kind": "value",
+   "value": "skyrimspecialedition"
+  },
+  "nexus-domain-oblivion-remastered": {
+   "kind": "value",
+   "value": "oblivionremastered"
+  },
+  "nexus-domain-witcher3": {
+   "kind": "value",
+   "value": "witcher3"
+  },
+  "nexus-domain-skyrim-legacy": {
+   "kind": "value",
+   "value": "skyrim",
+   "note": "Oldrim / LE pages only"
+  },
+  "nexus-domain-norse": {
+   "kind": "value",
+   "value": "norse"
+  }
+ }
+}

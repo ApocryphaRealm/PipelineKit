@@ -1,0 +1,131 @@
+{
+ "_version": "1.2.0",
+ "_revised": "2026-11-16",
+ "_about": "Data, state and governing documents the tools read and write.",
+ "roles": {
+  "version-ledger": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\version-ledger.json"
+  },
+  "version-ledger-prerelease": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\version-ledger-prerelease.json"
+  },
+  "version-registry": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\version-registry.json"
+  },
+  "gate-rules": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\gate-rules.json"
+  },
+  "gate-ledger": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\gate-ledger.json"
+  },
+  "falsification-log": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\falsification-log.json"
+  },
+  "session-start-rules": {
+   "kind": "file",
+   "retired": "session-start"
+  },
+  "pipeline-events": {
+   "kind": "file",
+   "at": "{role:md}\\pipeline-events.jsonl"
+  },
+  "events-keymap": {
+   "kind": "file",
+   "at": "{role:md-scripts}\\events-keymap.json"
+  },
+  "claude-md": {
+   "kind": "file",
+   "at": "{role:md}\\CLAUDE.md"
+  },
+  "rules-digest": {
+   "kind": "file",
+   "at": "{role:md}\\RULES-DIGEST.md"
+  },
+  "preflight": {
+   "kind": "file",
+   "at": "{role:md}\\PREFLIGHT.md"
+  },
+  "banned-words": {
+   "kind": "file",
+   "at": "{role:md}\\BANNED-WORDS.md"
+  },
+  "logic-library": {
+   "kind": "file",
+   "retired": "past-mistakes-library"
+  },
+  "past-mistakes-library": {
+   "kind": "file",
+   "at": "{role:md}\\PAST-MISTAKES-LIBRARY.md"
+  },
+  "pipeline-logics": {
+   "kind": "file",
+   "at": "{role:md}\\LOGIC-LIBRARY.md"
+  },
+  "progress": {
+   "kind": "file",
+   "at": "{role:md}\\PROGRESS.md"
+  },
+  "to-do-list": {
+   "kind": "file",
+   "at": "{role:stage-mod-types}\\to-do list\\to-do-list.md"
+  },
+  "testing-protocol": {
+   "kind": "file",
+   "at": "{role:md-skills}\\in-game-test\\references\\TESTING-PROTOCOL.md"
+  },
+  "falsification-mode": {
+   "kind": "file",
+   "at": "{role:md-skills}\\troubleshooting\\references\\FALSIFICATION-MODE.md"
+  },
+  "adversarial-mode": {
+   "kind": "file",
+   "at": "{role:md-skills}\\troubleshooting\\references\\ADVERSARIAL-MODE.md"
+  },
+  "sub-agent-routing": {
+   "kind": "file",
+   "at": "{role:md}\\sub-agent-routing.md"
+  },
+  "rule-parts": {
+   "kind": "set",
+   "find": "{role:md-rules}\\0*.md",
+   "note": "the seven rule parts"
+  },
+  "skills": {
+   "kind": "set",
+   "find": "{role:md-skills}\\*\\SKILL.md"
+  },
+  "memory-folder": {
+   "kind": "dir",
+   "at": "{role:claude-projects}\\@PROJECT@\\memory",
+   "note": "Claude Code's auto-memory folder of the project started at <ROOT>; kit-install fills in @PROJECT@"
+  },
+  "memory-index": {
+   "kind": "file",
+   "at": "{role:memory-folder}\\INDEX.md"
+  },
+  "memory-always": {
+   "kind": "file",
+   "at": "{role:memory-folder}\\MEMORY.md"
+  },
+  "memory-topics-vocabulary": {
+   "kind": "file",
+   "at": "{role:memory-folder}\\topics-vocabulary.txt"
+  },
+  "agent-bus": {
+   "kind": "dir",
+   "at": "{role:md}\\agent-bus",
+   "note": "the sessions' hand-offs, results and resource locks; its README.md is the contract (2026-10-12)"
+  },
+  "problem-cards": {
+   "kind": "dir",
+   "at": "{role:md}\\problem-cards",
+   "note": "one problem card per non-trivial fix, build or design task: <yyyy-mm-dd>-<slug>.md, written by role problem-card (rule 56, amended 2026-11-16)"
+  }
+ }
+}

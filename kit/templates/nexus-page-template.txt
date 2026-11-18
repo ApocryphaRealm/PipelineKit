@@ -1,0 +1,85 @@
+
+LAYOUT (2026-10-08): the description is built and posted per _NEXUS-DESCRIPTION-LAYOUT.md - header cards, feature cards
+with a [spoiler] each, and EVERY text block wrapped in [quote]...[/quote] (Nexus's grey quote panel with the orange bar;
+.MD\scripts\nexus-description\wrap-quotes.py does it as the last step). The sections below give the text, not the look.
+
+Short Description: (at most 350 characters, plain text, no BBCode - Nexus cuts the summary field at 350 and shows tags literally; package-gate rule page-summary-fits-nexus-field checks it)
+A build Fork of [Dragon's Eye Minimap] that adds a full in-game settings menu through [b]SKSE Menu Framework[/b]
+
+[size=5][b]Description[/b][/size]
+A build Fork of [Dragon's Eye Minimap]
+that adds a full in-game settings menu through [b]SKSE Menu Framework[/b], instead of only
+reading `DragonsEyeMinimap.ini` once at startup. Everything the INI could configure can now
+be changed while you're actually playing, and every change applies immediately - the minimap
+moves, resizes, and changes shape as you adjust the controls, with nothing to reload or
+restart.
+
+[b]Generative AI disclosure:[/b] this mod's code, its translations, this page's text and its banners were produced with generative AI (Claude), directed and tested in game by the author. The page is tagged accordingly.
+
+[size=5][b]Main features[/b][/size]
+- [b]A real settings menu.[/b] Corner, offset, scale, shape, zoom levels, hide/zoom keybinds,
+  camera rotation, and log level are all editable live from SKSE Menu Framework's Mod
+  Control Panel, with Save / Reload from INI / Restore defaults buttons.
+- [b]Anchor + pixel-offset positioning[/b], with its own remembered offset per corner. Pick a
+  screen corner and nudge it - at (0, 0) it sits flush with that corner at any screen
+  resolution, no per-resolution tuning needed.
+- [b]A dedicated hide key and a dedicated zoom-toggle key[/b], each bindable from the menu,
+  instead of the original's tap-to-hide / hold-to-pan-and-zoom control scheme.
+- [b]The location name repositions itself with the corner[/b] - below the map when anchored to
+  the top of the screen, above it when anchored to the bottom, so the title is never the
+  part pushed against the screen edge.
+- [b]Scale is capped automatically[/b] to a quarter of the screen, so it's not possible to size
+  the minimap into something absurd by accident.
+
+[size=5][b]Installation instructions[/b][/size]
+- If SKSE Menu Framework isn't installed, or an older version is, the mod falls back to
+reading the INI exactly like the original - it will not crash, you just won't get a menu.
+- This is a complete replacement for the original mod, not an add-on - install it in place of
+Dragon's Eye Minimap, not alongside it.
+- [b]Requirements[/b] (listed at the top of this page): only the details Nexus's Requirements box cannot show -
+  which version of each for which game (e.g. SKSE 2.0.20 for SE 1.5.97, 2.2.x for AE 1.6.1170, 2.3.x for 1.7.x;
+  Address Library's "All in One" file) and what is optional. The list itself goes in the page's Requirements step,
+  not in the description (the owner, 2026-10-08: anything Nexus already shows in its top drop-downs is redundant).
+
+[size=5][b]Minor feature updates[/b][/size]
+This project's SKSE Menu Framework settings pages - every one, current and future - ship with
+these built in, independent of whatever else changed in this particular build:
+- [b]On/off settings render as a sliding switch, not a tick-box[/b] - green when on, red when
+  off, so the state reads at a glance without needing to read the label.
+- [b]Sliders can be nudged with the keyboard[/b], not just dragged - click a slider to select it,
+  then any of the four arrow keys nudges its value (up/right increase, down/left decrease).
+
+[size=5][b]Debugging[/b][/size]
+  Send the debug log for any bugs you find in its functionality.
+  Documents\My Games\Skyrim Special Edition\SKSE\DragonsEyeMinimap.log
+
+[size=5][b]Compatibility notes[/b][/size]
+Every engine address this plugin uses resolves through Address Library at load time, so there is
+no hard-coded, version-specific address in the code itself. It is not version-agnostic, though -
+like any CommonLibSSE-NG plugin it only loads on the Skyrim runtimes this build supports. It is
+built for and tested on Skyrim Special Edition 1.5.97; Anniversary Edition 1.6.1170 is expected
+to work by the same address-resolution path with AE's own Address Library database installed
+[state whether this mod was actually verified on 1.6.1170 in practice]. The Skyrim update from
+28 August 2026 (1.7.99 / 1.7.104), which ships Address Library "v13", changed the Address Library
+file format to one this build cannot read, so the plugin does not load on 1.7.x - downgrade to
+1.5.97 or 1.6.1170 to use it. Not compatible with Skyrim VR (a different build target).
+
+
+[size=5][b]Credit[/b][/size]
+https://github.com/ApocryphaRealm/DragonsEyeMinimap
+Public fork of alexsylex/DragonsEyeMinimap (MIT), with every change on top of
+upstream 1.1.0 as a readable commit. Tagged at each version - this package is
+v1.1.7 (https://github.com/ApocryphaRealm/DragonsEyeMinimap/releases/tag/v1.1.7).
+
+alexsylex - original Dragon's Eye Minimap, MIT licensed.
+https://github.com/alexsylex/DragonsEyeMinimap
+https://www.nexusmods.com/skyrimspecialedition/mods/135489
+Thiago099 (original author) / QTR-Modding (current maintainer) - SKSE Menu
+Framework, the framework this build's settings menu is built on.
+https://github.com/QTR-Modding/SKSE-Menu-Framework-3
+https://www.nexusmods.com/skyrimspecialedition/mods/120352
+This build itself keeps Dragon's Eye Minimap's original MIT license.
+
+[size=5][b]Source[/b][/size]
+[url=https://github.com/ApocryphaRealm/<Repo>]ApocryphaRealm/<Repo> on GitHub[/url]
+This package is vX.Y.Z ([url=https://github.com/ApocryphaRealm/<Repo>/releases/tag/vX.Y.Z]release tag vX.Y.Z[/url]).

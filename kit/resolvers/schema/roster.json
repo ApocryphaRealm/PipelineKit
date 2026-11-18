@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "required": ["roles"],
+  "properties": {
+    "_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "_revised": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "_about": {"type": "string"},
+    "roles": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "kind": {"type": "string", "enum": ["file", "dir", "place", "set", "value"]},
+          "at": {"type": "string"},
+          "find": {"type": "string"},
+          "value": {"type": "string"},
+          "pattern": {"type": "string"},
+          "note": {"type": "string"},
+          "retired": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1523 @@
+{
+  "_version": "1.0.49",
+  "_revised": "2026-11-18",
+  "_about": "Dynamic package gate rules. package-gate.ps1 evaluates every rule here against a package folder (and, when given, its Nexus distro folder and the previous release) and exits non-zero on any hit. ADD A ROW WHEN A CLASS OF DEFECT SHIPS OR NEARLY SHIPS - the same day, beside the logic-library entry. The owner, 2026-09-16: 'come up with a way to dynamically add logic gates to close logic loops as needed when possible instead of just adding to the logic library'. Kinds: see package-gate.ps1's header - forbid-path-regex, forbid-extension, esp-must-be-light, no-doubled-segment, keep-file-classes-of-previous, archive-matches-folder, page-text-forbid-regex, page-text-require-regex, require-file-content-regex, changelog-top-version, distro-file-first-line, translations-complete, lines-match-build-tree, dll-newer-than-sources, page-summary-max-chars, forbid-file-content-regex, esp-record-integrity, json-parses, swf-colour-band, distro-images-are-sdr, launch-gate (a launch gate's row: the package gate only checks it is still wired into its launcher). 'exemptMods' matches the mod's display name or ledger key. 'kinds' limits a rule to the registry kinds listed (skse-mod, or-mod, w3-mod, mo2-plugin, mo2-theme, skyrim-asset, tool).",
+  "rules": [
+    {
+      "id": "or-package-carries-no-skyrim-installer",
+      "kind": "one-game-per-package",
+      "markerPattern": "^OblivionRemastered[\\\\/]",
+      "pattern": "^(fomod|Line-17|Line-SE-AE16|Common|SKSE|Data|Interface)([\\\\/]|$)",
+      "added": "2026-09-30",
+      "fix": "package the Oblivion Remastered mod without the Skyrim mod of the same name as its seed - package-mod.ps1 now seeds only from a package of the same game (an OblivionRemastered\\ tree or not); delete the mixed folder and package again with -Force",
+      "why": "HUD Position Manager 1.0.0 (Oblivion Remastered) was seeded from the Skyrim HUD Position Manager 1.0.1 because the packager chose its seed by display name alone, and came out with the Skyrim FOMOD (Common, Line-17, Line-SE-AE16, fomod) beside its own OblivionRemastered tree - caught by eye at the 2026-09-30 finalize. Rule 10: the two games' mods of one name are told apart by what the package contains."
+    },
+    {
+      "id": "no-apocrypha-prefix-on-shipped-files",
+      "kind": "forbid-path-regex",
+      "pattern": "(^|[\\\\/])Apocrypha[A-Z][A-Za-z]+[._-][^\\\\/]*\\.(dll|pdb|ini|esp|esl|txt|json)$",
+      "exemptMods": [
+        "Apocrypha Menu Framework",
+        "ApocryphaMenuFramework",
+        "AMF-MO2-Plugin",
+        "Apocrypha UI Overhaul",
+        "ApocryphaUIOverhaul",
+        "Apocrypha Menu Framework for Oblivion Remastered",
+        "Oblivion Remastered - Apocrypha Menu Framework",
+        "ApocryphaMenuFrameworkOR",
+        "Apocrypha Menu Framework (Witcher 3)",
+        "AMFWitcher3",
+        "ApocryphaMenuFrameworkW3",
+        "Witcher 3 - Apocrypha Menu Framework"
+      ],
+      "added": "2026-09-16",
+      "why": "[2026-10-05: the Witcher 3 framework is exempt too - the same framework, so it keeps the prefix.] [2026-09-26: the Oblivion Remastered framework is exempt too - a framework mod keeps the prefix.] Unbind Vanilla Controls 1.0.9 reached the Nexus distro with ApocryphaUnbindControls.dll/.ini and prefixed translation files after the unprefix pass had been declared done. Framework mods keep the prefix (the owner, 2026-09-16); every other mod ships plain names."
+    },
+    {
+      "id": "no-esl-files",
+      "kind": "forbid-extension",
+      "extension": ".esl",
+      "added": "2026-09-16",
+      "why": "The standing rule is an ESPFE - a .esp carrying the light flag - never a .esl file, which the game pins to the top of the load order. The AIO, Ulfric, Civil War Starts, LIO, PoC and StP were all converted tonight; a .esl in a package means the conversion was missed."
+    },
+    {
+      "id": "esp-carries-light-flag",
+      "kind": "esp-must-be-light",
+      "added": "2026-09-16",
+      "why": "Every plugin of ours is light. A .esp without flag [value removed] costs a load-order slot and is not what the page promises. Souls to Perks also once carried the ESM bit ([value removed]); the check reports that too.",
+      "amended": "2026-09-29: an Oblivion-format plugin (20-byte record headers, the HEDR tag at offset 20) has neither a light flag nor a form version; package-gate.ps1 skips such files for this rule (Simple Loadout System for Oblivion Remastered's storage .esp)"
+    },
+    {
+      "id": "no-doubled-path-segment",
+      "kind": "no-doubled-segment",
+      "added": "2026-09-16",
+      "why": "Unbind Vanilla Controls 1.0.9's zip held Interface\\Interface\\Translations beside the real folder - a packaging slip that installs junk paths."
+    },
+    {
+      "id": "keep-what-the-previous-release-shipped",
+      "kind": "keep-file-classes-of-previous",
+      "classes": [
+        "ini",
+        "esp",
+        "translations",
+        "line-17",
+        "line-se",
+        "swf",
+        "json"
+      ],
+      "added": "2026-09-16",
+      "why": "package-mod.ps1 flattened Item Explorer 1.0.6, LIO 1.0.4, PoC 1.1.1 and StP 1.0.5 to a bare DLL + PDB - no INI, no plugin, no translations, one build line - and the finalize gate passed them because it only checks the DLL. A release may add file classes; it may not silently lose one its predecessor shipped."
+    },
+    {
+      "id": "distro-archive-equals-finalized-folder",
+      "kind": "archive-matches-folder",
+      "added": "2026-09-16",
+      "why": "Nordic Dragonbone 1.0.1's 7z in the distro had NO plugin inside it although the page announced one. The archive the owner uploads must list exactly the files of the finalized folder.",
+      "amended": "2026-09-29: package-gate.ps1 now compares the archive named for the package itself ('<Package>.zip'), then any archive that is not an optional file ('<Package> - SDK.zip' and the like). The bare '*X.Y.Z*' pick sorted the AMF-OR SDK optional zip first, reported 32 false hits against it and never checked the main zip."
+    },
+    {
+      "id": "page-text-names-no-stale-files",
+      "kind": "page-text-forbid-regex",
+      "pattern": "Apocrypha[A-Z][A-Za-z]+\\.(dll|ini|log|esl|esp)|[A-Za-z0-9]\\.esl\\b",
+      "exemptMods": [
+        "Apocrypha Menu Framework",
+        "ApocryphaMenuFramework",
+        "AMF-MO2-Plugin",
+        "Apocrypha UI Overhaul",
+        "ApocryphaUIOverhaul",
+        "Apocrypha Menu Framework for Oblivion Remastered",
+        "Oblivion Remastered - Apocrypha Menu Framework",
+        "ApocryphaMenuFrameworkOR"
+      ],
+      "added": "2026-09-16",
+      "why": "[2026-09-26: the Oblivion Remastered framework is exempt too - its files carry the framework prefix by design.] Civil War Starts, LIO, PoC, StP and UVC pages all still told the player to enable a .esl or look for an Apocrypha-prefixed INI/log after the files had been renamed. A named .esl file (X.esl) is the defect; 'remove the old .esl' in an update note is allowed."
+    },
+    {
+      "id": "page-has-credit-with-link",
+      "kind": "page-text-require-regex",
+      "pattern": "\\[size=5\\]\\[b\\]Credits?\\[/b\\]\\[/size\\][\\s\\S]*?\\[url=",
+      "added": "2026-09-16",
+      "why": "The owner, 2026-09-16: mods built on other mods' resources need clickable links back in the Credit section. Custom Difficulty UI had no Credit section at all."
+    },
+    {
+      "id": "page-version-matches",
+      "kind": "page-text-require-regex",
+      "pattern": "This package is v{VERSION}",
+      "added": "2026-09-16",
+      "why": "Three pages carried 'This package is vX' beside a release link labelled with the previous version. The page must name the version being uploaded."
+    },
+    {
+      "id": "license-file-is-the-gpl-text",
+      "kind": "require-file-content-regex",
+      "pathPattern": "(^|[\\\\/])LICENSE(-[^\\\\/]*)?(\\.txt|\\.md)?$",
+      "contentPattern": "GNU GENERAL PUBLIC LICENSE",
+      "added": "2026-09-17",
+      "why": "Logic library 19 (a licence declared in a manifest is not evidence - only the LICENSE file is), 4283 (the LICENSE inside an archive may be the upstream's) and 4725 (Nexus took Lock Interaction Overhaul down for MIT beside CommonLibSSE-NG 7.2). Every mod of ours is GPL-3.0-or-later since 2026-09-13; the shipped LICENSE must be the GPL text."
+    },
+    {
+      "id": "notice-file-present",
+      "kind": "require-file-content-regex",
+      "pathPattern": "(^|[\\\\/])NOTICE\\.md$",
+      "contentPattern": "GPL|GNU General Public License",
+      "added": "2026-09-17",
+      "why": "The GPL relicense rule: LICENSE plus NOTICE.md (copyright and the GPL notice) ship in every download."
+    },
+    {
+      "id": "readme-carries-the-version",
+      "kind": "require-file-content-regex",
+      "pathPattern": "(^|[\\\\/])README\\.(txt|md)$",
+      "contentPattern": "{VERSION}",
+      "onlyIfDll": true,
+      "added": "2026-09-17",
+      "why": "Rule 6 (the citation said rule 8 until 2026-10-12): the README names the version at the top. package-mod.ps1 printed 'README.txt was NOT written - add one by hand' for Civil War Starts 1.0.3 and the package went on without one until it was noticed."
+    },
+    {
+      "id": "distro-changelog-starts-with-this-version",
+      "kind": "changelog-top-version",
+      "added": "2026-09-17",
+      "why": "The owner, 2026-09-16: 'dragonbone changelog isnt up to date' - the distro changelog.txt was oldest-first and its newest entry omitted the crash fix. The first non-blank line must be 'Version <this version>'."
+    },
+    {
+      "id": "distro-sticky-starts-with-this-version",
+      "kind": "distro-file-first-line",
+      "distroFile": "sticky.txt",
+      "pattern": "^\\s*\\[b\\]Recent changes - current version {VERSION}( \\(\\d+\\.\\d+\\.\\d+ is coming soon\\))?\\[/b\\]\\s*$",
+      "added": "2026-10-11",
+      "fix": "write or update the distro folder's sticky.txt from the _STICKY-TEMPLATE.txt in the distro root: its bold first line names this release and its sections list what changed; it is saved to the Posts tab's 'Recent changes' sticky when the release is posted",
+      "why": "The owner, 2026-10-11: 'let's extend the update nexus process to also update the sticky post to list everything in the same way that AMF's sticky post does.' Every update rewrites the Posts-tab sticky from the distro folder's sticky.txt, so its first line must be '[b]Recent changes - current version <this version>[/b]', with ' (<next> is coming soon)' before the [/b] only while the next build is staged. A mod with no sticky.txt yet gets one at its next release - this row is what makes that happen."
+    },
+    {
+      "id": "translations-carry-every-english-key",
+      "kind": "translations-complete",
+      "added": "2026-09-17",
+      "why": "Logic library 46 (routing a page's literals through a string table: three ways the tooling passes while strings stay English) and the eleven-languages rule: a language file that lacks a key english has falls back to English silently."
+    },
+    {
+      "id": "both-build-lines-match-the-build-tree",
+      "kind": "lines-match-build-tree",
+      "added": "2026-09-17",
+      "why": "Logic library 5364 (a mod with two build lines will happily package the WRONG one, and only the strictest mod complains) and section 13 of the 2026-09-16 handoff: package-mod.ps1 picks 'the newest DLL with a PDB' and shipped the 1.7 DLL where SE was needed. If the repo has both build trees, the package ships both, each byte-identical to its tree and stamped with the version."
+    },
+    {
+      "id": "dll-built-after-the-last-source-change",
+      "kind": "dll-newer-than-sources",
+      "added": "2026-09-17",
+      "why": "Logic library 2068 (a failed build followed by package-mod.ps1 ships the PREVIOUS DLL under the NEW version number), 1857 (build AFTER the version bump) and 2135 (stamp the version BEFORE the build that a gate uses). A packaged DLL older than any source file or CMakeLists.txt was not built from what the repo says it was.",
+      "amended": "2026-10-25 (Apocrypha Menu Framework 2.3.0): each DLL is compared with ITS OWN sources when the repo maps them in tools\\dll-sources.json ({\"dlls\": [{\"dll\": \"<file name>\", \"sources\": \"<regex over the repo-relative path, / separators>\"}]}); a DLL the map does not name, and every DLL of a repo without a map, is still compared with every source. Before, every DLL was compared with every source: AMF's SMF name stub (!ApocryphaMenuFramework-SMFName.dll) is not relinked when only the framework's sources change, so it tripped this row, and touching its source to relink it then made the framework's DLL look older. Regression test: scripts/tests/test_gate_dll_sources_and_harness_sliders.py. 2026-10-25, later: the off-game harnesses - top-level tools\\*_check.* files - never count as a source, in every repo, with or without a map. They are never shipped and build no DLL of the package; editing one made all three of AMF's DLLs look stale (control run of gate-rules 1.0.22)."
+    },
+    {
+      "id": "page-has-no-unresolved-media-placeholder",
+      "kind": "page-text-forbid-regex",
+      "pattern": "\\{\\{(img|video|gif):[^}]*\\}\\}",
+      "added": "2026-09-17",
+      "why": "The media-kit page format (4. plans/nexus-media-kit.md) writes {{img:name}} placeholders that render-page.ps1 replaces with [img]URL[/img] once the gallery URLs exist. A page still carrying a placeholder is not the page to paste."
+    },
+    {
+      "id": "esp-header-is-form-44-and-no-record-is-form-0",
+      "kind": "esp-form-version",
+      "added": "2026-09-17",
+      "why": "Ysgramor's Armor addon 1.0.0 reached the test install with form version 0 in its TES4 header and in every record its builder wrote - MO2 flagged it as a form-0 (pre-SE) plugin. The header of a plugin we ship is Skyrim SE's 44. Records are NOT required to be 44: a record copied from a master keeps the master's form version, and stamping 44 onto a record that carries a 12-byte BODT made the engine read it as an 8-byte BOD2 and crash before the menu (Nordic Dragonbone 1.0.1, 2026-09-16). No real record is form 0, so any form-0 record is a hand-written header and fails.",
+      "headerVersion": 44,
+      "amended": "2026-09-29: an Oblivion-format plugin (20-byte record headers, the HEDR tag at offset 20) has neither a light flag nor a form version; package-gate.ps1 skips such files for this rule (Simple Loadout System for Oblivion Remastered's storage .esp)"
+    },
+    {
+      "id": "armo-addon-links-are-one-subrecord-each",
+      "kind": "esp-armo-modl-4-bytes",
+      "added": "2026-09-17",
+      "why": "Nordic Skyforged 1.0.0's generator packed the helmet's four armour-addon FormIDs into ONE 16-byte MODL subrecord; the engine reads ARMO MODL as a single FormID, dropped the whole addon list, and the Skyforge Steel Helmet was invisible in game while Legacy of Ysgramor's helmet on otherwise identical records rendered. Every MODL in an ARMO is exactly 4 bytes, one per addon."
+    },
+    {
+      "id": "skse-plugin-carries-address-library-guard",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "AddressLibraryGuard::Guard\\(",
+      "fix": "copy src/bin/AddressLibraryGuard.h from Wheeler-Refined and call AddressLibraryGuard::Guard(<mod name>) in SKSEPlugin_Load before anything resolves an address; return true (inert) when it fails",
+      "added": "2026-09-17",
+      "why": "oproso (Fluorine on SteamOS): 'failed to open the address library file' from wheeler.dll AND our CNO patch. That is CommonLibSSE-NG's own report_and_fail and names neither the file, the folder nor the runtime it decided on, so two support replies went nowhere. Every mod of ours on CommonLibSSE-NG logs those facts before resolving anything and loads inert with a message that names them (Wheeler 1.2.9)."
+    },
+    {
+      "id": "playerbot-never-in-the-pipeline",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)(^|[\\/])(AutoCombat[^\\/]*|SkyTrek[^\\/]*|_pf_[^\\/]*\\.pex|EnhancedCombatAI[^\\/]*|CombatAI\\.(dll|toml)|PlayerBot[^\\/]*)$",
+      "exemptMods": [],
+      "added": "2026-09-17",
+      "why": "The player bot is a PRIVATE test tool assembled from downloaded mods (AutoCombat, SkyTrek, Enhanced Combat AI, Combat AI) with their credits stripped, per the owner (memory playerbot-private-test-tool-from-downloaded-mods). Nothing of it may ever sit in a package we finalize or post; this rule refuses any package carrying its files."
+    },
+    {
+      "id": "testbench-never-in-the-pipeline",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)(^|[\\/])(TestBench[^\\/]*|mapbench[^\\/]*|inputbench[^\\/]*)$",
+      "exemptMods": [],
+      "added": "2026-09-17",
+      "why": "TestBench is the ONE private all-in-one test mod (DevBench core + bench.input + mapbench.tween + playerbot in one DLL, TestBench.esp) per the owner (memory one-test-bench-mod-single-plugin). It is a fork of GPL DevBench carrying the player bot; it is never packaged, finalized or posted, and this rule refuses any package carrying its DLL, ESP, scripts or the old bench plugins it replaced."
+    },
+    {
+      "id": "root-holds-only-the-twelve-stages",
+      "kind": "package-script-passes",
+      "script": "gates\\root-topology-gate.py",
+      "added": "2026-10-27",
+      "fix": "move each named item by role into the stage or .MD folder it belongs to (resolve.py place / find): backups and set-aside copies to md-backups, captures to captures, tool sources to .tools; a folder tools need at the root (role root-tool-folders) only gets the Hidden attribute; then re-run gates\\root-topology-gate.py (OK)",
+      "why": "The owner, 2026-10-27: 'there's a lot of folders in the root of the Claude output that shouldn't be at the top level. There should just be the 12 pipeline folders.' Fourteen non-stage items had collected beside the stages - '8. backups', '9. quarantine', '9. bug reports', '12. playerbot-sources' and '13. testbench' even took stage numbers, so '8.' and '9.' each named two folders - because nothing refused a session that needed somewhere to put something. This row makes packaging fail while the visible root holds anything but the twelve stages (rule 39)."
+    },
+    {
+      "id": "compat-verdict-evidence-exists",
+      "kind": "package-script-passes",
+      "script": "gates\\compat-evidence-gate.py",
+      "added": "2026-10-27",
+      "fix": "record the mod's stage-8 verdict again on evidence that exists: gate-ledger.ps1 -Action record -Stage 8 -Subject <display name> -Verdict compatible|compatible-with-caveats -Evidence <why> -Guard <the condition it holds under> -EvidenceRef <batch id | test-request id | record file>",
+      "why": "102 stage-8 verdicts were never checked against reality and 60 of 64 'compatible' ones carried no condition - the compatibility stop passed on paper (pipeline assessment item 2b, 2026-10-27). gate-ledger.ps1 now refuses a compatible verdict without -Guard and an existing -EvidenceRef; this row checks, at package and finalize time, that the latest verdict's evidence still exists. Verdicts recorded before 2026-10-28 with no reference pass as LEGACY and are listed in 4. plans\\pipeline-assessment-2026-10-27\\STAGE8-AUDIT.md."
+    },
+    {
+      "id": "no-whole-list-restore-in-pipeline-tools",
+      "kind": "package-script-passes",
+      "script": "gates\\profile-list-write-gate.py",
+      "added": "2026-10-27",
+      "fix": "write back only the lines the test changed - combined-run finish merges modlist.txt / plugins.txt entry by entry; a tool of its own edits the lines as bytes (detect the newline, split, write back) - never copy a saved list over the live one; then re-run gates\\profile-list-write-gate.py --scan (PASS)",
+      "why": "2026-10-27: a helper copied back a whole modlist.txt taken before Item Explorer 1.2.0's folder existed; MO2 re-added the folder unticked at the top and posted builds sat inactive in the Test profile (past-mistakes library, 'Posted versions of our mods sat unticked'). The same gate refuses the shell form as a PreToolUse hook and runs on every staged tool in the .MD pre-commit hook (pipeline assessment item 2)."
+    },
+    {
+      "id": "no-restart-gated-installers",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "(?im)^[^/\n]*\"[^\"\n]*(turn it on and restart|restart to (attach|apply) it)",
+      "exemptMods": [],
+      "added": "2026-09-18",
+      "fix": "an engine patch must attach when its signature verifies and let the setting decide inside the hook; settings from a co-save (per-character presets) are applied AFTER the install point, so an installer that waits for a setting can never attach (Character Progression Control 1.1.8, Raosing's report)",
+      "why": "Seven CPC installers refused while their toggle was off and told the player to turn it on and restart; the toggles are applied at kPostLoadGame, after Patches::InstallAll at kDataLoaded, so none could ever attach. Library entry line 5882.",
+      "note": "matches the phrase inside a string literal only (a quote earlier on the line, no // before it), so a comment that quotes the old advice does not trip it"
+    },
+    {
+      "id": "page-summary-fits-nexus-field",
+      "kind": "page-summary-max-chars",
+      "maxChars": 350,
+      "forbidBBCode": true,
+      "added": "2026-09-18",
+      "why": "The owner, 2026-09-18: 'the nexus short description box has word limit so this was all that showed' - Apocrypha Menu Framework 1.8.9's Short Description was 419 characters and the live page cut it at 350, mid-word ('...themes, real font'). Lock Interaction Overhaul (363) and Perfected Wheeler (353) were over too, and Infinity UI's carried [b] tags the field shows literally. Nexus keeps exactly 350 characters of the summary; the page file must fit before it is pasted."
+    },
+    {
+      "id": "readme-header-names-this-version",
+      "kind": "require-file-content-regex",
+      "pathPattern": "(^|[\\\\/])README\\.(txt|md)$",
+      "contentPattern": "(?s)\\A.{0,240}(?<![0-9.]){VERSION}(?![0-9.])",
+      "onlyIfDll": true,
+      "added": "2026-09-18",
+      "why": "Apocrypha Menu Framework 1.8.9's README shipped with 'Version 1.8.7' as its header while a 'Version 1.8.9' line further down (the changelog block, itself carrying 1.8.8's text) satisfied readme-carries-the-version. The version at the TOP of the README is the one a player reads; it must be this release's. The head of the file may say 'Version X' or '<Mod name> X'; either way the number in the first 240 characters is this release's."
+    },
+    {
+      "id": "shipped-text-never-calls-the-mod-mit",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(^|[\\\\/])(README\\.(txt|md)|NOTICE\\.md|fomod[\\\\/]info\\.xml)$",
+      "contentPattern": "(?i)\\bMIT[- ]licen[cs]ed\\b|\\blicen[cs]ed under (the )?MIT\\b|(?-i:<Version>[^<]*\\bMIT\\b[^<]*</Version>)",
+      "added": "2026-09-18",
+      "note": "2026-10-25: the <Version> alternative was matched case-insensitively and with no word boundary, so a README placeholder '<version>' followed later by 'limit', 'submit' or 'commit' was flagged as an MIT licence label (MO2 Agent Control 1.0.0). It now matches only a real <Version>...</Version> tag (case-sensitive) whose value holds the standalone word MIT, and the two prose alternatives need word boundaries. Tested by scripts\\tests\\test_gate_mit_label.py.",
+      "why": "The GPL relicense (2026-09-13) fixed LICENSE, NOTICE and the manifests, and license-file-is-the-gpl-text checks the LICENSE file - but Apocrypha Menu Framework's README still opened with 'An original, MIT-licensed in-game menu framework' and closed with 'MIT licensed, original work' through 1.8.9. Nexus took Lock Interaction Overhaul down for exactly that label beside GPL code (logic library 4725). THIRD_PARTY_NOTICES may name MIT parts; the mod's own README, NOTICE and installer may not call the mod MIT."
+    },
+    {
+      "id": "amf-binaries-carry-no-xinput-polling",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "^(?!OblivionRemastered[\\\\/]).*(^|[\\\\/])!?ApocryphaMenuFramework\\.dll$",
+      "contentPattern": "XInputGetState|xinput1_4\\.dll",
+      "exemptMods": [
+        "Apocrypha Menu Framework for Oblivion Remastered",
+        "Oblivion Remastered - Apocrypha Menu Framework",
+        "ApocryphaMenuFrameworkOR"
+      ],
+      "added": "2026-09-18",
+      "why": "[2026-09-26: the Oblivion Remastered framework is exempt - Unreal has no input-event stream to hook, so it reads XInput itself once per frame while the menu is open, and gates the game's own reads through the same name; its ImGui backend is still built without the Win32 gamepad poll.] AMF 1.8.9 shipped with ImGui's Win32 backend polling XInput every frame beside the framework's own gamepad translation, so a real controller leaked out of the on-screen keyboard and X/Y fought shift and backspace (the owner, 2026-09-18). The define that removes the polling lives in the imgui overlay port, which build.bat does not rebuild on its own - this checks the shipped DLL for the strings the polling code carries, so a stale imgui.lib cannot ship again.",
+      "exemptNote": "2026-09-29: the Oblivion Remastered framework's exemption is by content now - a DLL under an OblivionRemastered\\ tree is never matched - because its package took the plain name 'Apocrypha Menu Framework' and the name-based exemptMods no longer matched it."
+    },
+    {
+      "id": "watchdog-stands-down-when-unfocused",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^Watchdog\\.cpp$",
+      "markerPattern": "no frame for",
+      "contentPattern": "GetForegroundWindow",
+      "added": "2026-09-18",
+      "why": "AMF 1.9.0's hang watchdog terminated a healthy game twice on 2026-09-18 because the owner had alt-tabbed away and Skyrim presents no frames while out of focus; there was no crash log, only 'watchdog: terminating the process - no frame for 120s' in the framework's own log. Any source that has a frame watchdog must consult the foreground window before calling a stall a hang."
+    },
+    {
+      "id": "address-library-guard-runs-before-skse-init",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "(?s)\\bSKSE::Init\\((?:(?!AddressLibraryGuard::Guard\\().)*AddressLibraryGuard::Guard\\(",
+      "exemptMods": [],
+      "added": "2026-09-18",
+      "fix": "call AddressLibraryGuard::Guard(<mod name>) BEFORE SKSE::Init(a_skse): CommonLibSSE-NG's Init opens the Address Library itself (REL::IDDatabase::get()), so a guard placed after it never runs when the file is missing",
+      "why": "oproso's wheeler.log for Perfected Wheeler 1.3.2 (2026-09-18): the banner, then CommonLib's bare 'failed to open address library file', and NO [AddressLibrary] line - the guard added in 1.2.9 for exactly this user sat after SKSE::Init, which is where the database is opened. A guard that runs after the thing it guards is not a guard."
+    },
+    {
+      "id": "address-library-guard-is-checked-once",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "AddressLibraryGuard::Check\\(",
+      "exemptMods": [],
+      "added": "2026-09-18",
+      "fix": "call AddressLibraryGuard::Guard(<mod name>) once, before SKSE::Init, and read AddressLibraryGuard::Last() if the report is wanted again after the mod's logger exists - never call Check() from a mod's own source",
+      "why": "Apocrypha Menu Framework 1.9.3 called Check() a second time after SKSE::Init so its logger could carry the Address Library line. The game then died about a second after launch, before SKSE wrote a line of its own log and with no message box, and every profile that build won in was unbootable (the owner, 2026-09-18: '1.9.2 boots but not 1.9.3'). The guard is a pre-flight that runs once; the report it made is kept in Last() for anyone who needs it later."
+    },
+    {
+      "id": "esp-counts-match-entries",
+      "kind": "esp-record-integrity",
+      "skipPattern": "group tree:|model hashes:",
+      "added": "2026-09-19",
+      "why": "Civil War Guard Armor Replacer shipped a Tullius container whose COCT still said five after two CNTO entries were removed. The engine trusts the count and read past the list, so the game crashed at data load inside SPID and the crash log named SPID, not us. The plugin parsed and opened cleanly in xEdit; only counting the entries catches it. The same check covers LLCT/LVLO on levelled lists, KSIZ/KWDA, one MODL per armature addon, and a reference to a record the file does not define.",
+      "amended": "2026-10-25: esp-audit's group-tree lines report under their own row, esp-records-sit-in-their-groups (skipPattern here, failPattern there)."
+    },
+    {
+      "id": "esp-cell-records-have-data",
+      "kind": "esp-record-integrity",
+      "failPattern": "a CELL with no DATA",
+      "added": "2026-11-05",
+      "fix": "copy the whole CELL record from the previous winner, or remove the record if nothing is placed under it",
+      "why": "Ysgramor's Armor addon 1.0.1 held an override of the vanilla interior YsgramorsTomb01 with an EDID and no DATA. No DATA reads as flags 0, so the CS Water patch built on it wrote the cell as exterior, and the game crashed on a null worldspace (2026-11-05). The whole load order's flips are cell-flag-gate.py's, run from plugin-gate.ps1."
+    },
+    {
+      "id": "esp-records-sit-in-their-groups",
+      "kind": "esp-record-integrity",
+      "failPattern": "group tree:",
+      "added": "2026-10-25",
+      "fix": "rebuild the plugin with merge-to-espfe.py (it now writes the group tree through esp_groups.py), or repair the file as it stands with esp-regroup.py <plugin> --out <fixed> --parents-from <the source mod or master that places each record> [--assign FID-FID=CELL] - it moves REFR/INFO into their CELL/DIAL children groups and proves every other record byte-identical",
+      "why": "Civil War Guard Armor Replacer 1.0.0's merged plugin carried top-level REFR and INFO groups and loose CELL records in its CELL group, because merge-to-espfe.py flattened its sources' group trees. A Mutagen patcher refused the file ('Read in data that was not a GRUP'), so any Synthesis patcher reading every group fails on it, and Mutagen's full import silently dropped every cell, reference and dialogue response (1238 of 1312 records). esp-audit.py checks the whole tree (no top-level child-type group, CELL block > sub-block > CELL + children > placed records, DIAL + topic children > INFO, a plain top group holds only its own type); 1996 Njordlinger plugins plus Skyrim.esm and Update.esm pass it and only this plugin failed. Regression test: scripts/tests/test_esp_group_tree.py. plugin-gate.ps1 now audits 'unpublished *' mod folders too: the plugin had been enabled through every launch while esp-audit's top-level-label check (added 2026-09-21) failed it, because the launch gate only looked at 'test *' folders."
+    },
+    {
+      "id": "esp-model-hashes-fit-their-form-version",
+      "kind": "esp-record-integrity",
+      "failPattern": "model hashes:",
+      "added": "2026-11-04",
+      "fix": "the record's model hashes came from a record below form 40: drop MODT/MO2T-MO5T/DMDT from it (they are optional) or carry the source record's own form version through; never stamp 44 over them",
+      "why": "Campfire Camp Addon 1.0.0 crashed the game while loading its plugin. Its build script copied MODT from Skyrim.esm's form-39 StockadeScaffoldTop0Sided01Planks into a form-44 STAT. Below form 40 MODT is flat 12-byte triples; from form 40 it starts with a header, and Skyrim 1.5.97's parser ([id removed], called by the STAT loader, [id removed]) read the first hash as the header count and went to a wild address. The plugin parsed and passed esp-audit, because nothing compared MODT's size with its own header. Every record at form 40 or later must now satisfy size == 4 + 4*H + 12*textures + 4*addons, which all 14727 such subrecords in Skyrim.esm and Update.esm and all 118582 in 2040 third-party plugins do."
+    },
+    {
+      "id": "shipped-json-parses",
+      "kind": "json-parses",
+      "added": "2026-09-19",
+      "why": "A Dynamic Interface Patcher descriptor written from PowerShell kept a single backslash in a Data-relative path, so the patcher reported invalid_escape and applied nothing - a patch that ships and does nothing looks exactly like a patch that was never made. Any .json we ship (DIP descriptors, SPID-adjacent configs, settings presets) must parse."
+    },
+    {
+      "id": "shipped-translations-are-the-repos",
+      "kind": "package-file-matches-repo",
+      "repoGlob": "dist\\Interface\\Translations",
+      "filePattern": "_(english|japanese|korean|chinese|russian|german|french|spanish|italian|polish|czech)\\.txt$",
+      "added": "2026-09-19",
+      "fix": "refresh every translation file in the package from the repo's dist\\Interface\\Translations, by file name, wherever it sits - a FOMOD carries each language under Languages\\<Lang>\\ AND Languages\\All\\, plus English under Common\\",
+      "why": "package-mod.ps1 seeds a package from the PREVIOUS release, so translation files travelled forward untouched. Apocrypha Menu Framework 1.9.5 adds a whole instruction manual; without this it would have shipped that manual missing in all ten non-English languages (rule 66) while the repo's own files were correct. Nothing about the package would have looked wrong."
+    },
+    {
+      "id": "shipped-ini-is-the-repos",
+      "kind": "package-file-matches-repo",
+      "repoGlob": "dist",
+      "filePattern": "\\.ini$",
+      "added": "2026-09-19",
+      "fix": "copy the INI from the repo's dist\\ tree rather than letting the seeded one through; the compiled defaults and the shipped INI are maintained together (rule 16)",
+      "why": "Item Explorer 1.1.1 changed the 3D preview pane's compiled defaults to the owner's own placement. The seeded package carried 1.1.0's INI, so the shipped file and the compiled defaults would have disagreed - the exact failure rule 16 exists for, and one that looks to a player like a setting that will not stick."
+    },
+    {
+      "id": "shipped-plugin-is-the-repos",
+      "kind": "package-file-matches-repo",
+      "repoGlob": "dist",
+      "filePattern": "\\.(esp|esm|esl)$",
+      "added": "2026-10-25",
+      "fix": "copy the plugin from the repo's dist\\ tree (regenerate it with the repo's generator first) over every copy in the package; package-mod seeds from the previous release and does not refresh plugins",
+      "why": "Souls to Perks 1.0.7 was cut to fix the plugin itself (the Tamriel worldspace copy lacked MHDT; page-claims audit 2026-10-25). package-mod.ps1 seeded the package from 1.0.6 and refreshed DLLs, INI, translations and changelogs, but Common\\SoulsToPerks.esp stayed the 1.0.6 file byte for byte - the package passed every other gate while shipping the defect it was built to fix."
+    },
+    {
+      "id": "repo-shipped-text-never-calls-the-mod-mit",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)GPL-3\\.0",
+      "contentPattern": "(?i)MIT[- ]licen[sc]ed|MIT licen[sc]e, original work",
+      "sourceExtensions": [
+        ".txt",
+        ".md"
+      ],
+      "exemptMods": [],
+      "added": "2026-09-19",
+      "fix": "say GPL-3.0-or-later. The package rule shipped-text-never-calls-the-mod-mit already catches this in a PACKAGE; this one catches it at its source, in the repo's own dist\\README.txt and docs, before it can be copied into one",
+      "why": "Apocrypha Menu Framework's repo dist\\README.txt had been stale at 1.8.7 and still said 'An original, MIT-licensed in-game menu framework' and 'MIT licensed, original work'. The shipped FOMOD README had been corrected, so the package rule passed for six releases while the repo copy stayed wrong - and the moment a package was assembled from the wrong seed, that text came back. Nexus took Lock Interaction Overhaul down for exactly this (logic library 4694). Narrowed the same day to the files that actually SHIP (dist\\, README, NOTICE, THIRD_PARTY_NOTICES): a CHANGELOG entry recording a relicensing, and PORT-NOTES describing an UPSTREAM mod's MIT licence, are correct history and were being reported as defects.",
+      "pathPattern": "^(dist[\\/]|README\\.(txt|md)$|NOTICE\\.md$|THIRD_PARTY_NOTICES\\.md$)",
+      "amended": "2026-09-30: xmake.lua added to the marker - every OBSE64 (xmake) plugin had been skipped since the rule was written"
+    },
+    {
+      "id": "package-keeps-the-previous-releases-installer",
+      "kind": "keep-file-classes-of-previous",
+      "classes": [
+        "fomod"
+      ],
+      "added": "2026-09-19",
+      "fix": "seed from the previous release of the SAME shape. package-mod.ps1's seed picker only recognises folders named '<Name> <X.Y.Z>', so a package called '<Name> <X.Y.Z> FOMOD' is invisible to it",
+      "why": "Apocrypha Menu Framework 1.9.5 was seeded from a flat 1.8.7 package instead of the 1.9.4 FOMOD: no fomod\\ModuleConfig.xml, no Languages\\ tree, and the 1.8.7 README that still claimed MIT. The package installed nothing a player could choose a build line from."
+    },
+    {
+      "id": "package-ships-everything-in-the-repos-dist",
+      "kind": "package-ships-repo-dist",
+      "added": "2026-09-19",
+      "why": "Loading Menu Overhaul Model Sync 1.0.3 absorbed Loading Menu Overhaul and so began shipping [asset path removed]. The packager seeds each build from the previous release and refreshes the file classes that release had, so the new file was simply absent from the package - a build that would have been installed and tested with the headline feature missing. Every file the repo keeps under dist\\ must reach the package; matched by file name so a FOMOD's own layout still passes."
+    },
+    {
+      "id": "cpc-every-patch-group-the-features-need-is-active",
+      "kind": "skse-log-forbid-regex",
+      "mods": [
+        "Character Progression Control"
+      ],
+      "logFile": "CharacterProgressionControl.log",
+      "contentPattern": "patch group \"(Skill caps|Skill experience rates|Static levelling|Skill-to-level income|Skill points|Perk points|Attribute gains at level up)\" is NOT active - (refused|this signature is not present)",
+      "added": "2026-09-20",
+      "fix": "the log of the last run refused a patch group a shipped feature depends on; find why the shape no longer matches (another plugin at the same entry, a changed executable) and fix the locator - never package past it",
+      "why": "xLenax's Nexus report of 2026-09-20: with skill points on, skills still levelled through use. CharacterProgressionControl.log had said so at every launch since at least 1.1.8 ('Skill experience rates ... NOT active - this signature is not present', 'the skill-improve site is not present in this build, so ordinary skill experience still banks alongside points') because Actor Value Generator's branch sat at the function entry, and the 1.1.8 evidence listed the groups that DID install without noticing which were missing. The log is read by this rule now, so a refused group fails the package instead of waiting to be read."
+    },
+    {
+      "id": "no-behaviour-engine-output-in-a-package",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)(^|[\\\\/])meshes[\\\\/](actors[\\\\/]character[\\\\/](_1stperson[\\\\/])?behaviors[\\\\/][^\\\\/]+\\.hkx|animationdatasinglefile\\.txt|animationsetdatasinglefile\\.txt|AnimationCheck[^\\\\/]*\\.txt)$",
+      "added": "2026-09-20",
+      "fix": "ship the Nemesis_Engine\\mod\\<code> patch and the animations only; behaviour .hkx files, animationdatasinglefile.txt and animationsetdatasinglefile.txt are the behaviour engine's OUTPUT and the player's Pandora/Nemesis run produces them",
+      "why": "TK Dodge AIO 1.0.0/1.0.1 carried TK Dodge RE's 2021 pre-generated behaviours; wherever the mod sat above the Pandora Output in the load order they won, and the magic graph in them had none of the current clips - 'tk dodge aio t poses when dodging while wielding magic' (the owner, 2026-09-20). A generator's output never ships in one of our packages.",
+      "exemptMods": []
+    },
+    {
+      "id": "no-test-scripts-in-packages",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)(^|[\\\\/])scripts[\\\\/][^\\\\/]*test[^\\\\/]*\\.(pex|psc)$",
+      "exemptMods": [],
+      "added": "2026-09-21",
+      "why": "AMF 1.9.6's first finalized zip carried [asset path removed], a leftover of the Papyrus scaffolding cut in 1.4.5, copied from the repo's dist folder by repack-fomod.ps1. A test script never ships to players."
+    },
+    {
+      "id": "no-dip-runtime-inputs",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)\\.prev$|(^|[\\\\/])Norden CPC LevelUp DIP[\\\\/]|(^|[\\\\/])SKSE[\\\\/]Plugins[\\\\/]AutomaticPatcher[\\\\/](?!DIP[\\\\/]Norden-Black-RaceMenu\\.json$)|^(?!(Extras[\\\\/]RaceMenu DIP[\\\\/])?Norden Black RaceMenu DIP[\\\\/]).*[\\\\/]Patch[\\\\/].*\\.bin$",
+      "added": "2026-09-22",
+      "why": "Norden UI - Black's working folder carried its Dynamic Interface Patcher delta (Norden Black RaceMenu DIP\\Patch\\...\\*.bin), the Automatic DIP Patcher descriptor (SKSE\\Plugins\\AutomaticPatcher\\DIP\\zz-Norden-Black-RaceMenu.json) and a tweenmenu.swf.prev backup. The owner, 2026-09-18: DIP is a build tool, not a run-time dependency - the finished SWF ships, the delta and json are build inputs. Any package carrying them either needs DIP at run time or ships a grey/black race to the output folder. AMENDED 2026-09-22: the RaceMenu part is the exception. borokoshow (Dragonborn UI) to the owner: \"racemenu team comes after everyone who distributes their files. Even UI patches. They took down Edge UI until the author removed his patches\"; the owner: \"ill have to change that then\". Norden UI - Black 1.0.1 ships RaceMenu's two menus as DIP deltas (Norden Black RaceMenu [asset path removed]\\...\\*.bin) plus SKSE\\Plugins\\AutomaticPatcher\\DIP\\Norden-Black-RaceMenu.json - Norden UI's own layout - and those paths are allowed. Every other DIP input (the CPC delta, any other descriptor, .prev backups) stays forbidden. AMENDED 2026-09-24: Norden UI - Black 1.0.3 is a FOMOD; its RaceMenu deltas sit at Extras\\RaceMenu DIP\\Norden Black RaceMenu DIP\\... in the archive and the installer puts them at Norden Black RaceMenu DIP\\... - the same allowed layout once installed. That source path is allowed too; nothing else changes.",
+      "amended": "2026-09-24"
+    },
+    {
+      "id": "norden-black-colour-band",
+      "kind": "swf-colour-band",
+      "lo": 41,
+      "hi": 102,
+      "mods": [
+        "Norden UI - Black",
+        "NordenUIBlack"
+      ],
+      "added": "2026-09-22",
+      "why": "2026-09-18 a consolidation put the patcher's GREY racesex_menu over the black one and nothing noticed (logic library 6175). On 2026-09-22 the flat colour gate (max 40) failed the correct black race menu because its labels are white by design, and passed the grey original's bottom bar - so the check that can tell them apart is the band of Norden's panel greys (51, 64, 77, 88, 102), which the recolour takes to 0-26. Built race menu: nothing in 41-102; RaceMenu's original: 51, 77, 102. Allowed: the tween menu's hand-tuned dividers and arrows (tweenmenu.swf shapes 32 and 83, 56 and 200 by design).",
+      "allowGrey": "tweenmenu.swf:32,83"
+    },
+    {
+      "id": "distro-images-are-sdr",
+      "kind": "distro-images-are-sdr",
+      "added": "2026-09-22",
+      "why": "The owner's Community Shaders screenshots are Windows HDR captures (PQ-encoded BT.2020 with an ICC profile). The first Norden UI - Black banner stripped the profile and showed washed-out tiles; the first Alternate Perspective Hjerim Addon start-menu banner kept it and rendered near-black. A distro image must be SDR: hdr-screenshot-to-sdr.py (PQ -> nits -> SDR white 80-100 -> BT.709 -> sRGB)."
+    },
+    {
+      "id": "norden-black-never-ships-the-removed-atelier-option",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)racemenu ?atelier|emberchain|rustyoldsword",
+      "mods": [
+        "Norden UI - Black",
+        "NordenUIBlack"
+      ],
+      "added": "2026-11-04",
+      "fix": "Take it out of tools/build-fomod.py and the package; the option stays out.",
+      "why": "The owner, 2026-11-04: the option and its DLL are removed for good from Norden UI - Black (Nexus ruling 2026-10-28). A regeneration must not bring them back."
+    },
+    {
+      "id": "norden-black-text-never-names-the-removed-atelier-option",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)(^|[\\\\/])(README\\.(txt|md)|NOTICE\\.md|ModuleConfig\\.xml|info\\.xml)$",
+      "contentPattern": "(?i)atelier|emberchain|rustyoldsword",
+      "mods": [
+        "Norden UI - Black",
+        "NordenUIBlack"
+      ],
+      "added": "2026-11-04",
+      "fix": "Remove the text from the build script or the repo file it came from.",
+      "why": "Same ruling as norden-black-never-ships-the-removed-atelier-option: no shipped text of this mod names that mod or its author."
+    },
+    {
+      "id": "racemenu-files-never-shipped",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)(^|[\\\\/])Interface[\\\\/](racesex_menu\\.swf|racemenu[\\\\/]bottombar\\.swf)$",
+      "added": "2026-09-22",
+      "why": "Norden UI - Black 1.0.0 shipped RaceMenu's race menu and bottom bar as finished (recoloured) SWFs. The RaceMenu team takes down any upload that distributes their files, patched or not (borokoshow to the owner, 2026-09-22, citing Edge UI). From 1.0.1 those two files are delivered as DIP deltas and must never appear finished in any package of ours."
+    },
+    {
+      "id": "runtime-data-members-through-the-accessor",
+      "kind": "repo-source-forbid-regex",
+      "added": "2026-09-22",
+      "why": "Back Pocket For Controller 1.0.1 crashed the moment a favourite was toggled: it read ControlMap::contextPriorityStack as a direct member. Those members live in CommonLibSSE-NG's RUNTIME_DATA, and a SE+AE build with VR off gets them laid out at AE's offsets, so on SE 1.5.97 the array's size was another field and the index ran off the end (crash-2026-09-22-20-36-43.log, [source reference removed]). Every RUNTIME_DATA member is reached through GetRuntimeData() / the generated accessor, which resolves per runtime. Amended the same day: the row was first written with a bare \"pattern\" field, which this kind does not read - every marker and content test then matched the empty string and the rule failed all 41 source files of the very package it was written for. Amended 2026-11-12: Perfected Wheeler 1.7.0 crashed a player's AE 1.6.1170 game (crash-2026-11-12-04-45-32.log, [offset removed], [source reference removed]) on exactly the read this row forbids - controlMap->contextPriorityStack - and the row never looked at it: Wheeler takes CommonLibSSE-NG from a pinned checkout named in CMakeLists.txt (CommonLibSSEPath_NG), not from vcpkg.json, so the vcpkg.json marker skipped the repo. The marker now accepts CommonLibSSE named in vcpkg.json, CMakeLists.txt or xmake.lua. Also corrected: in that pinned checkout (b93280e) a SE+AE build lays the members at SE's offsets (stack at [value removed]); Skyrim 1.6.1130+ moved them +8 (stack at [value removed]), so the direct read is wrong on AE 1.6.1130 and later, as Back Pocket's was on SE with its own checkout - either way the member's offset belongs to the header, not the game. Pattern gained ignoreKeyboardMouse and ignoreActivateDisabledEvents. Also 2026-11-12: the pathPattern's class was written [\\/], which in .NET regex is a slash only, and package-gate hands this kind Windows-relative paths (src\\bin\\...), so the row had matched no file since 2026-09-22; the class now takes both separators.",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "->\\s*(contextPriorityStack|enabledControls|linkedMappings|textEntryCount|ignoreKeyboardMouse|ignoreActivateDisabledEvents|gamePadMapType)\\b",
+      "pathPattern": "^(source|src|include)[\\\\/]",
+      "fix": "reach it through GetRuntimeData() (controlMap->GetRuntimeData().contextPriorityStack) on a CommonLibSSE-NG that has the versioned accessor; on one that has none, compute the offset from the running game version and check the array before indexing it (Perfected Wheeler ContextStackRead.h)",
+      "amended": "2026-11-12"
+    },
+    {
+      "id": "installed-build-is-the-package",
+      "kind": "mo2-install-matches-package",
+      "added": "2026-09-22",
+      "instances": [],
+      "filePattern": "\\.(dll|asi)$",
+      "fix": "python .MD\\scripts\\install-test-build.py \\\"<package>\\\" \\\"<mod folder>\\\" before the build is handed over for testing",
+      "why": "Back Pocket For Controller 1.0.1: the favourite/unfavourite crash was diagnosed, fixed, rebuilt and committed, but the new DLL was never installed into the Njordlinger mod folder. The owner was asked to test and hit the identical crash a second time - same faulting offset, [value removed] - which read as the fix having failed and sent the evening after a cause that had already been removed. The binary the game will load has to be this package's binary before anyone is asked to test it. 2026-09-28: a package is judged only in an instance of its own game (SKSE package -> Skyrim instance, OBSE -> Oblivion) - Apocrypha Menu Framework 1.9.9 failed against the Oblivion instance's 'test Apocrypha Menu Framework' (the OR port, same name); and an exact 'test <Display> <X.Y.Z>' folder wins over a versionless one. 2026-10-05: a Witcher 3 package (bin\\x64_dx12) is judged only in the Witcher 3 instance, and its .asi as well as its DLLs - AMF for Witcher 3 1.0.0 had failed against the Skyrim and Oblivion frameworks' folders of the same name. 2026-10-23: a file that only OPTIONAL FOMOD options place may be hidden in MO2 (<file>.mohidden) - its hidden copy is judged by hash; a file a required block places stays strict. Norden UI - Black 1.1.0 failed on SKSE/Plugins/RaceMenuAtelier.dll, which the test folder held as .mohidden, byte-identical to the package's."
+    },
+    {
+      "id": "mo2-plugin-no-saving-refresh-after-profile-write",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "(?m)^[ \\t]*(?:\\w+\\s*=\\s*)?(?:apply|apply_\\w+|write_\\w+|save_\\w+)\\(.*\\)[ \\t]*(?:#.*)?$\\n(?:.*\\n){0,3}?[ \\t]*\\S+\\.refresh\\(\\s*True\\s*\\)",
+      "exemptMods": [],
+      "added": "2026-09-22",
+      "incident": "MO2 Modlist Order Generator: Apply wrote plugingroups.txt then called organizer.refresh(True); MO2 saved its in-memory lists first and Bethesda Plugin Manager's stale groups overwrote the file (350 of 1,792 plugins back in old groups)",
+      "fix": "after writing a profile file (modlist/plugins/loadorder/plugingroups), refresh with organizer.refresh(False) so MO2 re-reads the files instead of saving over them; refresh(True) is only for BEFORE reading the pane state"
+    },
+    {
+      "id": "mo2-plugin-arms-faulthandler",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "faulthandler\\.enable\\(",
+      "exemptMods": [],
+      "added": "2026-09-23",
+      "incident": "three MO2 crash dumps in one night (rename a separator -> MO2 dies) named only modules: Qt -> Python -> mobase -> ModOrganizer.exe; no way to tell which plugin",
+      "fix": "the owner, 2026-09-23: 'logging and fault handling should be in all our mo2 mods we build' - append the standard _arm_faulthandler() block (arms faulthandler once per process into plugins\\data\\faults.log, all_threads=True) and keep a per-plugin _log()"
+    },
+    {
+      "id": "mo2-plugin-toolbar-icon-follows-the-theme",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "QToolBar",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "ColorRole\\.ButtonText",
+      "exemptMods": [],
+      "added": "2026-09-26",
+      "incident": "the MO2 plugins' toolbar buttons were fixed pale PNGs: under Paper Light every one of them (Custom Filters, File Explorer, Pin Plugins, the Modlist Manager) all but disappeared, while the stylesheet had changed everything else",
+      "fix": "the owner, 2026-09-26: 'make sure that the button that's included with the plugin responds to theme changes and style sheet changes' - use the PNG only as the shape and paint it in the colour the stylesheet resolves for the toolbar button (ensurePolished, palette ButtonText, else WindowText), re-checked on the plugin's toolbar timer so a theme switch, a .qss edit or a toolbar rebuild repaints it; the Modlist Manager's _themed_icon / _button_colour / _tint_button are the reference"
+    },
+    {
+      "id": "mo2-plugin-instance-folders-from-mo2",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "basePath\\(\\)[^\\n]{0,40}[\"'](profiles|mods|overwrite|downloads)[\"']",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "incident": "MO2 Modlist Manager 1.1.1 (Nexus report by Mordre): an instance whose profiles live in Mo2/SSE/profiles failed with 'No such file or directory: C:/Mo2/profiles/Test/modlist.txt' - every path was basePath()/profiles/<profile> and basePath()/mods. MO2 Keyword Tagger and MO2 Patch Tagger built basePath()/profiles the same way",
+      "fix": "ask MO2: organizer.profilePath() (the active profile's folder; its parent is the profiles folder), modsPath(), overwritePath(), downloadsPath(); categories.dat / nexuscatmap.dat / ModOrganizer.ini are in the data folder (QApplication.instance().property('dataPath')). ModOrganizer.ini's [Settings] base_directory / mod_directory / profiles_directory may point anywhere (PathSettings, src/settings.cpp at v2.5.2); an offline tool resolves them the way the Modlist Manager's instance_from_dir does"
+    },
+    {
+      "id": "mo2-plugin-no-getcontentsfor-filetree",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "getContentsFor\\(\\s*\\w+\\.fileTree\\(\\)",
+      "exemptMods": [],
+      "added": "2026-09-23",
+      "incident": "MO2 Custom Filters 1.0.4: getContentsFor(mod.fileTree()) from a timer slot -> access violation whenever a mod or separator was renamed (faults.log named the line)",
+      "fix": "read the mod folder's top level with os.scandir and map to MO2's content ids via getAllContents() names; never walk a ModInfo's file tree from a plugin slot"
+    },
+    {
+      "id": "mo2-plugin-no-work-inside-mo2-callbacks",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "\\.on(ModInstalled|ModRemoved|ModMoved|ModStateChanged|Refreshed|ProfileChanged|PluginMoved|PluginStateChanged)\\(\\s*lambda[^\\n]*self\\.(rebuild|_apply\\w*|_count\\w*|_mod_facts|compute|refresh)\\(",
+      "exemptMods": [],
+      "added": "2026-09-23",
+      "incident": "MO2 Custom Filters 1.0.4: onModStateChanged(lambda *a: self.rebuild()) - rebuild queried mobase for every mod while MO2 was inside ModList::setData; access violation on enabling a mod (faults.log named the lambda)",
+      "fix": "a mobase callback only starts a QTimer (single-shot, a few hundred ms); the timer slot does the mobase work on an empty stack, gated with organizer.onNextRefresh(fn, True)"
+    },
+    {
+      "id": "mo2-plugin-timers-not-parented-to-mo2-widgets",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "QTimer\\(\\s*(group|tb|toolbar|widget|btn|button|combo|view|tree|panel|box|dlg|dialog|parent)\\s*\\)",
+      "exemptMods": [],
+      "added": "2026-09-23",
+      "incident": "MO2 Custom Filters 1.0.5: three QTimers parented to MO2's categoriesGroup; MO2 rebuilt the pane, deleted the timers, and the next onModStateChanged callback started a dead timer - access violation on deactivating a mod",
+      "fix": "a plugin's QTimer is Python-owned (QTimer() with no parent, kept on self) or parented to the main window, never to an MO2 pane or widget MO2 may rebuild; guard start() with sip.isdeleted"
+    },
+    {
+      "id": "shipped-text-carries-no-private-identity",
+      "kind": "forbid-private-identity-patterns",
+      "pathPattern": "(?i)\\.(md|txt|ps1|py|json|html|ini|xml|toml|yaml|yml|csv|cfg|log|bat|cmd|sh|lua|psc|js|css)$",
+      "exemptMods": [],
+      "added": "2026-10-22",
+      "incident": "Pipeline Kit's build_kit.py carried the owner's email, first name, account, home path, project paths and chat server invite as literal sanitiser regexes - the repository that strips the identity leaked it, and the two rows above spell the name and account with a character class, which still spells them. The email had no package-gate row at all.",
+      "fix": "a shipped text file carries none of the owner's identity patterns (the private config at role identity-patterns: email, name, account, home path); write the owner / the author, a placeholder or an environment variable. This row names no pattern - it reads them - so the rules file itself carries nothing."
+    },
+    {
+      "id": "mo2-plugin-no-model-signal-subscriptions",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "\\.(dataChanged|rowsInserted|rowsRemoved|rowsAboutToBeRemoved|modelReset|modelAboutToBeReset|layoutChanged|layoutAboutToBeChanged)\\.connect\\(",
+      "exemptMods": [],
+      "added": "2026-09-23",
+      "incident": "MO2 Custom Filters 1.0.3-1.0.5: three crashes (deactivate a mod, rename, and one unprovoked when MO2's directory refresh finished) with the same faults.log signature - the main thread inside a plugin lambda with no line number, a Python slot being invoked from MO2's model signal mid-mutation; MO2 2.5.2 rebuilds its filter list with clear()+refill and filters through ModListSortProxy::invalidateFilter, and calls nothing outside itself during either",
+      "fix": "an MO2 plugin of ours never connects a Python slot to a signal of MO2's models (the mod list, its proxies, the filter tree's model); it polls a cheap signature from a Python-owned QTimer and takes only user-driven widget signals (clicks, text edits, toggles on persistent widgets)"
+    },
+    {
+      "id": "mo2-plugin-documents-mo2s-own-implementation",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".md"
+      ],
+      "contentPattern": "(?s)\\A# MO2 reference.*github\\.com/ModOrganizer2/modorganizer/(?:blob|tree)/(?:v\\d+\\.\\d+\\.\\d+[\\w.-]*|[0-9a-f]{7,40})/src/[\\w./-]+\\.(?:cpp|h)",
+      "exemptMods": [],
+      "added": "2026-09-23",
+      "incident": "MO2 Custom Filters 1.0.3-1.0.5: three crashes and two fixes built on the previous fix's hypothesis before anyone read how MO2's own FilterList and ModListSortProxy do the same job; reading them (v2.5.2 src/filterlist.cpp, modlistsortproxy.cpp, modlistview.cpp) gave the shape that held - the owner: 'why doesnt mo2 filter crash the game? we should learn from mo2s implementation' and 'add a gate for future mo2 plugins to always compare how mo2 implements a function before trying to add onto it or alter it'",
+      "fix": "before adding to or altering an MO2 feature, read MO2's own implementation at the release tag and write MO2-REFERENCE.md at the repo root: a '# MO2 reference' heading, the MO2 version, links to the source files read (github.com/ModOrganizer2/modorganizer/blob/v<tag>/src/<file>.cpp), a table of what MO2 does, a table of what ours does and how it follows MO2, and the departures to revisit. The gate requires the heading and at least one tagged source link; existing plugin repos get theirs at their next version"
+    },
+    {
+      "id": "shipped-changelog-is-the-repos",
+      "kind": "package-file-matches-repo",
+      "repoGlob": "CHANGELOG.md",
+      "filePattern": "^CHANGELOG\\.md$",
+      "added": "2026-09-23",
+      "fix": "refresh every CHANGELOG.md in the package (root and Common\\) from the repo's CHANGELOG.md; repack-fomod.ps1 does this since 2026-09-23",
+      "why": "Apocrypha Menu Framework 1.9.7 was repacked with the Theo's Render Pipeline fix while both of the package's CHANGELOG.md copies were the previous package's: repack-fomod.ps1 refreshed README, NOTICE and translations from the repo but never the changelog, so the release notes would have omitted the fix they were cut for."
+    },
+    {
+      "id": "page-release-link-label-matches-tag",
+      "kind": "page-text-forbid-regex",
+      "pattern": "releases/tag/v(\\d+\\.\\d+\\.\\d+)\\][^\\[\\]\\d]*(?!\\1\\b)\\d+\\.\\d+\\.\\d+",
+      "added": "2026-09-24",
+      "note": "2026-10-28: the pattern only looked at a label that STARTS with the version ('v1.7.0 on GitHub'), so RaceMenu Atelier 1.1.0's '[url=.../releases/tag/v1.1.0]release tag v1.0.1[/url]' passed the finalize gate. It now skips any words before the label's first version number. sync-nexus-distro.ps1's relabel (anchor 2b) was widened the same way.",
+      "why": "Dragon's Eye Minimap 1.7.3's Source line read '[url=.../releases/tag/v1.7.3]v1.7.0 on GitHub[/url]': sync-nexus-distro.ps1 moved the tag in the URL but never the link's label, and page-version-matches only checks 'This package is vX'. The sweep found the same stale label on Local Map Upgrade, Lock Interaction Overhaul and Potion of Clarity. A release link's label must name the version its URL points at."
+    },
+    {
+      "id": "fomod-delivers-every-file-of-previous",
+      "kind": "fomod-delivers-previous-files",
+      "added": "2026-09-24",
+      "retired": [
+        {
+          "mod": "Norden UI - Black",
+          "pattern": "(?i)^(skse\\\\plugins\\\\racemenuatelier(\\.dll|\\.pdb|\\\\theme\\.ini)|docs\\\\racemenu atelier - norden ui - black build\\.txt)$",
+          "since": "2.0.0",
+          "why": "The owner, 2026-11-04: remove the DLL so there is no permission or licence issue under Nexus policy. Its installer option came out for good."
+        },
+        {
+          "mod": "Apocrypha Menu Framework",
+          "pattern": "^skse\\\\plugins\\\\apocryphamenuframework\\\\themes\\\\(norden|oathvein|veldun)\\\\(frame|background|toggle)\\.png$",
+          "since": "2.1.6",
+          "why": "The owner, 2026-10-08: 'break down the themes into their art parts and put them into the subfolders for the theme to draw from'. The themes' art moved to the art library (assets\\frames, assets\\backgrounds, assets\\toggles) and the theme INIs name parts, so nothing reads themes\\<name>\\*.png any more."
+        },
+        {
+          "mod": "Ysgramor's Armor addon",
+          "pattern": "(?i)^(source\\\\)?scripts\\\\ysgramorsarmortombgate\\.(pex|psc)$",
+          "since": "1.1.0",
+          "why": "1.1.0 (repo CHANGELOG, 2026-11-09): the plugin no longer edits Ysgramor's Tomb; 1.0.1's gate marker (0x81B) and its script YsgramorsArmorTombGate are retired and replaced by the run-time quest (YsgramorsArmorTombQuest / YsgramorsArmorTombPlayer). Nothing in the plugin references the old script any more."
+        }
+      ],
+      "why": "Norden UI - Black 1.0.3's FOMOD passed every rule while its installer had no entry for Interface\racemenu\buttonart.swf, which 1.0.2 shipped: keep-file-classes-of-previous judges file CLASSES, and the package still had SWFs. Found only when the owner's choices were replayed against his installed 1.0.2. A FOMOD must be able to install every game file the previous release installed."
+    },
+    {
+      "id": "infinity-ui-page-states-takedown-on-official-update",
+      "kind": "page-text-require-regex",
+      "mods": [
+        "Infinity UI",
+        "InfinityUI"
+      ],
+      "pattern": "(?s)If alexsylex releases their own update for Skyrim 1\\.7\\.x, this page will be taken down at their\\s+request",
+      "added": "2026-09-24",
+      "why": "The owner, 2026-09-24: 'make sure the infinity ui page mentions that its page will be taken down at the request of the origional author alexsylex if they come out with their own update for 1.7x'. Our Infinity UI build stands in for an official 1.7.x update; the page must keep saying so through every regeneration."
+    },
+    {
+      "id": "tk-dodge-aio-page-credits-the-stack",
+      "kind": "page-text-require-regex",
+      "mods": [
+        "TK Dodge AIO",
+        "TK-Dodge-AIO"
+      ],
+      "pattern": "(?s)^(?=.*original TK Dodge, has been absent for years)(?=.*five separate mods to\\s+make one mod work is unacceptable)(?=.*taken down, or their files removed, at their request)(?=.*\\| Pandora Behaviour Engine Plus \\|)(?=.*\\btktk\\b)(?=.*\\bMaxsu\\b)(?=.*\\bFBplus\\b)(?=.*\\bLoop\\b)(?=.*\\bXing\\b)(?=.*\\bStyyx\\b)(?=.*\\bXingda666\\b)(?=.*\\bThorKirienko\\b)",
+      "added": "2026-09-24",
+      "why": "The owner, 2026-09-24: 'make sure that tk dodge aio credits all the mods in the stack of mods it came from and their authors and a take down at their request disclosure and list pandora as a requirement'. The page must name every author whose files or code ship (tktk; Maxsu, FBplus, Loop, Xing; Styyx; Xingda666; ThorKirienko), say it comes down or their files are removed at their request, and keep Pandora in the requirements table. Amended 2026-09-24, the owner: 'Also mention near the top that the original author of the original TK Dodge mod has been absent for years. And having to use five separate mods to make one mod work is unacceptable.'",
+      "amended": "2026-09-24"
+    },
+    {
+      "id": "localized-damage-states-accuracy-gpl-and-fork-stance",
+      "kind": "repo-source-require-regex",
+      "mods": [
+        "Apocrypha Localized Damage",
+        "LocalizedDamage",
+        "Localized Damage"
+      ],
+      "markerFile": "^README\\.md$",
+      "markerPattern": "(?i)Accuracy",
+      "sourceExtensions": [
+        ".md"
+      ],
+      "contentPattern": "(?s)Accuracy's code under the GNU General Public License v3\\.0.*does not\\s+endorse forks of it, but does not forbid them",
+      "added": "2026-09-24",
+      "why": "The owner, 2026-09-24: 'add to the accuracy localized damage mod page that the original author wrote the code in GPL 3.0 and does not endorse forks but does not forbid them as it is 3.0 GPL.' Localized Damage has no Nexus distro page yet, so its README is the page text; when the distro page is written it must carry the same statement."
+    },
+    {
+      "id": "distro-zip-entries-use-forward-slashes",
+      "kind": "archive-entries-forward-slash",
+      "added": "2026-09-25",
+      "why": "AMF 1.9.8's finalized zip was first built with Windows PowerShell 5.1 Compress-Archive, which wrote every entry as Common\\SKSE\\... with backslashes; 7-Zip's listing normalised them, so archive-matches-folder passed it. Some mod managers extract such an entry as one file named with backslashes. Build zips with Python zipfile (forward slashes)."
+    },
+    {
+      "id": "mo2-plugin-no-application-event-filter",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "(?:QApplication\\.instance\\(\\)|QCoreApplication\\.instance\\(\\)|\\bqApp\\b|\\bapp\\b)\\s*\\.installEventFilter\\(",
+      "exemptMods": [
+        "MO2FileExplorer",
+        "MO2 File Explorer"
+      ],
+      "added": "2026-09-26",
+      "incident": "2026-09-22 (logic library 6646): Install Multiple Mods' application-wide event filter was handed foreign widgets while another plugin tore them down and crashed MO2 twice; the lesson stayed a library entry with no gate until MO2 Njordlinger Theme needed to watch other plugins' windows (2026-09-26)",
+      "fix": "hook the narrowest object that sees the event - a widget's own signal, its menu, a QAction, or a filter on your OWN widgets; to follow windows other plugins open, poll QApplication.topLevelWidgets() from an unparented QTimer and filter only that window",
+      "exemptWhy": "MO2 File Explorer's filter only reads mouse presses to close its own popup when a click lands outside it (logic library 6646 names it the tolerated shape)"
+    },
+    {
+      "id": "no-byte-order-mark-inside-text-or-names",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)\\.(qss|txt|md|json|xml|ini|py|cfg|html|css|svg)$",
+      "contentPattern": "(?<!<\\?xpacket begin=\")\ufeff",
+      "added": "2026-09-26",
+      "why": "version-gate.ps1 wrote every stamped file with Set-Content -Encoding UTF8 (Windows PowerShell 5.1 adds a byte-order mark). The mark in front of VERSION went into five package folder names (Norden MO2 Theme \\ufeff1.0.0) and into Njordlinger MO2 Theme 1.0.0's built Njordlinger.qss header ('Version \\ufeff1.0.0'). The gate now keeps each file's own encoding; this rule refuses a package whose text carries U+FEFF anywhere but a leading BOM (the reader strips that one). 2026-10-07 (Norden UI - Black 1.0.4): Norden UI's Illustrator SVGs carry XMP metadata whose packet header is <?xpacket begin=\"U+FEFF\" ...?> - the XMP specification REQUIRES U+FEFF there, and the files are Nithog's own, byte for byte. A U+FEFF directly after <?xpacket begin=\" is exempt; anywhere else it is still a hit."
+    },
+    {
+      "id": "no-byte-order-mark-in-package-paths",
+      "kind": "forbid-path-regex",
+      "pattern": "\ufeff",
+      "exemptMods": [],
+      "added": "2026-09-26",
+      "why": "The same incident: a U+FEFF from a stamped VERSION file inside a file or folder name of a package."
+    },
+    {
+      "id": "oblivion-port-no-skyrim-data-paths",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "contentPattern": "(?m)^[^/\\n]*(path\\(\"Data\"\\)|\"Data\"\\s*/|\"Data[/\\\\\\\\](SKSE|Interface)|My Games[/\\\\\\\\]+Skyrim)",
+      "exemptMods": [],
+      "added": "2026-09-26",
+      "fix": "resolve relative to the game's working folder (OblivionRemastered\\Binaries\\Win64) - OBSE/Plugins/<Mod>/... - or under Documents\\My Games\\Oblivion Remastered",
+      "why": "AMF for Oblivion Remastered (M2, first run 2026-09-26): Skin::Resolve still prefixed Skyrim's Data folder, so the Norden theme's frame and background were looked for at Data\\OBSE\\Plugins\\... and never loaded, silently falling back to plain colours. Code carried over from a Skyrim mod keeps Skyrim's file roots unless something checks.",
+      "note": "only lines that are not // comments; applies to repositories built on CommonLibOB64"
+    },
+    {
+      "id": "oblivion-port-no-skyrim-paths-in-shipped-text",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "sourceExtensions": [
+        ".txt",
+        ".ini",
+        ".md"
+      ],
+      "pathPattern": "^dist[\\\\/]",
+      "contentPattern": "Data[/\\\\](SKSE|Interface)[/\\\\]|My Games[/\\\\]+Skyrim",
+      "exemptMods": [],
+      "added": "2026-09-26",
+      "fix": "name the Oblivion Remastered location: OBSE/Plugins/<Mod>/... beside the game executable, logs under Documents/My Games/Oblivion Remastered/OBSE/Logs",
+      "why": "AMF for Oblivion Remastered showed 'Drop a .ttf into Data/SKSE/Plugins/...' and a Data/Interface/Translations path on its Settings page after the code defaults were corrected: the text comes from the eleven translation files carried over from Skyrim, which the source-only rule oblivion-port-no-skyrim-data-paths does not read. Six Skyrim paths per language were corrected 2026-09-26.",
+      "note": "shipped text under dist\\ only (translations, INI, README); the repo's own notes may describe the Skyrim original"
+    },
+    {
+      "id": "oblivion-plugin-never-loads-xinput",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "contentPattern": "(?ism)\\A(?=.*?xinput).*?^(?![^\\n]*xinput-deferred)[^/\\n]*LoadLibrary[AW]?\\s*\\(",
+      "exemptMods": [],
+      "added": "2026-09-26",
+      "fix": "take the game's own copy with GetModuleHandleW(L\"xinput1_4.dll\") when the pad is first needed (after load, e.g. when a menu opens); load one only if the game has none, never at plugin load, and mark that line xinput-deferred",
+      "why": "AMF for Oblivion Remastered loaded xinput1_4.dll in its OBSE Load and the controller was dead in the game for the whole session, menu never opened. The owner's bisect (2026-09-26): OBSE64 alone - controller works; OBSE64 + AMF (TestBench off) - dead; AMF resolving XInput lazily from the game's own module - works. Steam Input answers XInput inside the process, and a copy loaded before the game and Steam's overlay set up their controller path breaks it.",
+      "note": "fails any LoadLibrary line in a source file that mentions xinput unless the line carries the marker xinput-deferred; the DLL name is usually in a variable, so the call itself cannot be matched by name; applies to repositories built on CommonLibOB64"
+    },
+    {
+      "id": "shipped-translations-are-the-repos-obse",
+      "kind": "package-file-matches-repo",
+      "repoGlob": "dist\\OblivionRemastered\\Binaries\\Win64\\OBSE\\Plugins\\ApocryphaMenuFramework\\Translations",
+      "filePattern": "_(english|japanese|korean|chinese|russian|german|french|spanish|italian|polish|czech)\\.txt$",
+      "added": "2026-09-26",
+      "fix": "refresh the package's translation files from the repo's dist folder (package-mod does, from any Translations folder under dist)",
+      "why": "The same defect class as shipped-translations-are-the-repos, for the Oblivion Remastered framework, whose eleven files live beside the plugin rather than under Interface\\Translations."
+    },
+    {
+      "id": "modlist-manager-page-never-names-apostasy",
+      "kind": "page-text-forbid-regex",
+      "pattern": "(?i)apostasy",
+      "mods": [
+        "MO2 Modlist Manager",
+        "MO2ModlistManager"
+      ],
+      "added": "2026-09-26",
+      "why": "The owner, 2026-09-26: \"dont mention apostasy anywhere in the discription or the included documents\". The Modlist Manager's ordering conventions were first read off the Apostasy modlist; the page credit, the README, the changelog and the third-party notices had said so, and the plugin's comments named it. All of it was removed the same day; this keeps it out of every later package and page."
+    },
+    {
+      "id": "modlist-manager-package-never-names-apostasy",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)\\.(txt|md|py|xml|json|ini)$",
+      "contentPattern": "(?i)apostasy",
+      "mods": [
+        "MO2 Modlist Manager",
+        "MO2ModlistManager"
+      ],
+      "added": "2026-09-26",
+      "why": "The owner, 2026-09-26: \"dont mention apostasy anywhere in the discription or the included documents\". The Modlist Manager's ordering conventions were first read off the Apostasy modlist; the page credit, the README, the changelog and the third-party notices had said so, and the plugin's comments named it. All of it was removed the same day; this keeps it out of every later package and page."
+    },
+    {
+      "id": "skse-plugin-never-links-xinput",
+      "kind": "package-script-passes",
+      "script": "gates\\xinput-import-gate.py",
+      "added": "2026-09-27",
+      "fix": "resolve XInputGetState on first use from the game's loaded module (GetModuleHandleW over xinput1_3/1_4/9_1_0) and never link or LoadLibrary an XInput DLL",
+      "why": "Outfit Wheeler 3.2 linked XINPUT1_4.dll in its import table; Windows loaded it with the plugin and the owner's Steam Input DualShock 4 was dead for the whole session, even on the main menu. A virtual DS4 proved it: 0 gamepad events with the released DLL, the pad back once the import named the game's XINPUT1_3. No SKSE package of ours may link any XInput DLL other than the game's."
+    },
+    {
+      "id": "no-extradatalist-reuse-after-removeitem",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "RemoveItem\\(\\s*[^,;()]+,\\s*[^,;()]+,\\s*[^,;()]+,\\s*([A-Za-z_][\\w.]*(?:->\\w+)?)\\s*,[^;]*\\)\\s*;[\\s\\S]{0,700}?(?:Un)?[Ee]quipObject\\(\\s*[^,;()]+,\\s*[^,;()]+,\\s*\\1\\s*,",
+      "exemptMods": [],
+      "added": "2026-09-27",
+      "fix": "note what identifies the item (enchantment, health, display name) BEFORE RemoveItem, then find its ExtraDataList again in the receiver's InventoryChanges and pass that - never the pointer given to RemoveItem",
+      "why": "Simple Loadout System for Controller 1.0.0 moved a piece out of a loadout container with RemoveItem(obj, n, reason, extra, player) and then called EquipObject(player, obj, extra, ...): the move can merge or free that ExtraDataList, and a later switch crashed executing freed memory (crash-2026-09-28-03-16-05.log, [source reference removed]). Fixed in 1.0.1."
+    },
+    {
+      "id": "cpp-no-unknown-escapes",
+      "kind": "package-script-passes",
+      "script": "gates\\cpp-escape-gate.py",
+      "added": "2026-09-27",
+      "fix": "write file paths in C++ with forward slashes (or doubled backslashes); never a single backslash before a letter",
+      "why": "Perfected Wheeler loaded its debug.ini from a path literal written with single backslashes - unknown escapes, so the name became DataSKSEPluginswheelerdebug.ini, the file was never found and the log ran at trace from 1.1.4 to 1.3.8 whatever uLogLevel said. The compiler only warned (C4129). Likely a shell heredoc that ate one level of backslashes (see bash-backslash-guard)."
+    },
+    {
+      "id": "queued-task-never-outlives-its-caller",
+      "kind": "package-script-passes",
+      "script": "gates\\main-thread-task-gate.py",
+      "added": "2026-09-28",
+      "fix": "in the helper that queues work to the game thread, run the function under the lock the caller takes on timeout and skip it once the caller has given up (a cancelled flag); never queue a [&] lambda nobody waits for",
+      "why": "Unbind Vanilla Controls 1.1.1's first boot crashed in std::string move-assignment inside its own DLL ([value removed]): a DevBench dump sent during data load timed out, the handler returned, and the game thread later ran RunOnMainThread([&]{ out = DumpJson(); }) into the dead frame. The same crash hit Loading Menu Overhaul - Model Sync on 2026-09-17 and was written into the logic library, which did not stop it shipping again."
+    },
+    {
+      "id": "xmake-d1trimfile-reaches-cl-intact",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "d1trimfile",
+      "sourceExtensions": [
+        ".lua"
+      ],
+      "pathPattern": "^xmake\\.lua$",
+      "contentPattern": "d1trimfile:\\\\\"|add_cxflags\\(\\s*\"/d1trimfile:",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "fix": "wrap the flag in a table so xmake passes it as ONE argument with no quotes inside the value: add_cxflags({\"/d1trimfile:$(projectdir)\"}, {force = true, expand = false}), set before includes() of the CommonLib so the library target gets it too; then count the project root in the built DLL (rule 45 point 1)",
+      "why": "rule 45 (2026-09-29): xmake splits a bare flag string on the path's spaces (cl then fails on 'output\\6.'), and when the value is quoted, /d1trimfile:\"<dir>\" reaches cl with the quote characters in the prefix, which then matches nothing - the flag compiled cleanly and trimmed nothing. Ultimate Combat Redux 1.0.0 and Apocrypha Menu Framework for Oblivion Remastered 1.0.1 shipped the project root in a std::source_location string from CommonLibOB64's OBSE/Interfaces.h; Wait Your Turn Redux and LocalizedDamage carry the same spelling."
+    },
+    {
+      "id": "or-menumode-gameplay-is-one",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "contentPattern": "(?m)^[^/\\n]*(!\\s*[\\w.>()-]*menuMode\\b|\\bmenuMode\\s*(\\)|&&|\\|\\||\\?|[!=]=\\s*0\\b))",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "fix": "Oblivion Remastered's InterfaceManager::menuMode is 1 in gameplay: test gameplay as menuMode == 1 and a menu as menuMode != 1, never for truth or against 0",
+      "why": "Better Third-Person Selection's first round never left 'a menu is open' because its tick returned at if (im->menuMode) every frame (logic library, 2026-09-29 menuMode entry). Tween Menu and Improved Wheel Menu already compared against 1."
+    },
+    {
+      "id": "or-equipobject-never-locks",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibob64",
+      "contentPattern": "(?<![A-Za-z])EquipObject\\(\\s*[^;]*,\\s*true\\s*\\)\\s*;",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "fix": "pass false as Actor::EquipObject's last argument (CommonLibOB64 names it a_force): it is the console's NoUnequip lock (player.equipitem <id> 1) and marks the piece ExtraCannotWear - permanent until a reload",
+      "why": "Simple Loadout System OR restored every piece with EquipObject(obj, n, extra, true, true) and nothing could be taken off again ('you cannot unequip this item', weapon swaps that did nothing, 2026-09-29). Logic library: Actor::EquipObject's last argument is the console's NoUnequip lock."
+    },
+    {
+      "id": "or-reflect-selfcheck-never-latches-not-found",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "contentPattern": "\"KeyIndex\"\\);\\r?\\n(?![\\s\\S]{0,240}keyIndex < 0)[\\s\\S]{0,240}?g_state\\.store\\(keyIndex == 0xD0",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "fix": "in the reflection self-check, a KeyIndex not found (-1) is 'not ready yet': return false and ask again later; latch a failure only on a property found at a wrong offset",
+      "why": "CCM's resumed build ran the self-check 2 s into a launch, read -1 (the class's property chain not linked yet), latched 'failed' and never ran (logic library, 2026-09-29 startup self-check entry). The same latch was copied into Tween Menu OR, Improved Wheel Menu and AMF OR 1.0.4."
+    },
+    {
+      "id": "ccm-settings-table-sound-at-start",
+      "kind": "skse-log-forbid-regex",
+      "mods": [
+        "Camera Configuration Menu",
+        "CCM - Camera Configuration Menu",
+        "Oblivion Remastered - Camera Configuration Menu",
+        "CameraConfigurationMenu"
+      ],
+      "logFolder": "Oblivion Remastered\\OBSE\\Logs",
+      "logFile": "CameraConfigurationMenu.log",
+      "contentPattern": "a build defect, report it|share memory|the table is unsound|points outside the settings block",
+      "added": "2026-09-29",
+      "fix": "a settings row points at the wrong member or its compiled default disagrees with the table: fix the row (never offsetof through std::array's operator[] - use a C array and static_assert the indexed offset), rebuild, run once, and package only when the log's start is clean",
+      "why": "CCM's per-context framing build used offsetof(Values, fmGroups[i].x) with a std::array; MSVC resolved every framing row to offsets 0-12, so the rows read and wrote bEnabled / iCameraStyle / the turn times and the INI carried 0.00 / 0.20 / 1.40 in every context. The start-up check logged thirty 'a build defect, report it' errors at the top of the first run's log and nothing read them (logic library, 2026-09-29 offsetof entry). The log of the run behind a package is read by this rule now."
+    },
+    {
+      "id": "sliders-are-precise",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(xmake\\.lua|CMakeLists\\.txt|SKSEMenuFramework\\.h)$",
+      "markerPattern": "(?i)imgui|SKSE-?Menu-?Framework",
+      "contentPattern": "(?m)^(?![ \\t]*//).*\\b(ImGui(MCP)?|im)::Slider(Float|Int)\\(",
+      "pathPattern": "^(?!.*(PreciseSlider\\.h|[\\\\/]cimgui[\\\\/]cimgui\\.cpp)$)(?!tools[\\\\/][^\\\\/]*_check\\.cpp$)",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "fix": "draw sliders through precise::SliderFloat / precise::SliderInt (include/PreciseSlider.h - copy it from Minimap Menu or CCM; an ImGuiMCP mod needs the same wrapper over ImGuiMCP) so a keyboard or D-pad nudge moves one unit of the shown digit (rule 68)",
+      "why": "The owner, 2026-09-29: \"all of our sliders are precise sliders and they don't jump more than one numerical unit per D-pad nudge\" - CCM's conversation over-the-shoulder slider (-150..150, %.0f) moved 3 cm per press because ImGui's SliderBehaviorT steps 1% of the range. Made a standing rule the same day, applied as each mod is next updated: this gate is what makes the next package of a mod the one that converts it. 2026-10-24 (Deep Snow 1.0.0): a CMake repo that vendors include\\SKSEMenuFramework.h without naming imgui or SKSEMenuFramework in CMakeLists.txt was skipped silently; the vendored header is now a marker file too. 2026-10-27 (RaceMenu Atelier 1.1.0, Main Agent order 3): the same blind spot checkbox-is-a-toggle had - Atelier's xmake.lua names lib/SKSE-Menu-Framework-3-API (hyphenated; the vendored header under lib\\ is outside the marker search) and it calls im::SliderFloat through `namespace im = ImGuiMCP`. The marker also matches SKSE-Menu-Framework and the content pattern also matches im::Slider.",
+      "exemptNote": "2026-09-30 (HUD Position Manager OR): a line that is a // comment no longer counts - an older copy of the framework's include/AMF.h carried the usage example ImGui::SliderFloat(...) in a comment, which is not a slider; changing the header would have rebuilt a binary already recorded working. 2026-09-29 (Apocrypha Menu Framework OR): src/cimgui/cimgui.cpp is the vendored cimgui C binding - igSliderFloat / igSliderInt ARE ImGui's own functions exported for other mods to call, so it must pass them through unchanged; the framework's own sliders and the SDK example use precise::. 2026-10-25 (Apocrypha Menu Framework 2.3.0): the off-game harnesses tools\\*_check.cpp (top-level tools folder of the repo) are exempt by pathPattern - they are never shipped, and some draw a RAW ImGui slider on purpose to test ImGui's own behaviour (nav_left_check.cpp draws what a mod with its own copy of ImGui puts on the page; null_selftest_check.cpp's unguarded control passes a null value pointer). AMF 84bff7f had worked around the row by spelling those calls as SliderScalar; that workaround is reverted. A raw slider anywhere else in the repo still fails. Regression test: scripts/tests/test_gate_dll_sources_and_harness_sliders.py.",
+      "exemptWhy": "2026-10-08 (Apocrypha Menu Framework 2.1.5, TEMPORARY): the Colours preview's sample slider (Renderer.cpp ##previewslider) is a plain ImGui::SliderFloat. The fix rebuilt the DLL after 2.1.5 was tested and tagged; the owner chose \"Skip the fix for now\", so 2.1.5 ships the binary recorded working. REMOVE this exemption in AMF's next version, which re-applies precise::SliderFloat (to-do list)."
+    },
+    {
+      "id": "precise-sliders-always-clamp",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(xmake\\.lua|CMakeLists\\.txt|SKSEMenuFramework\\.h|PreciseSlider\\.h)$",
+      "markerPattern": "(?i)imgui|SKSEMenuFramework",
+      "contentPattern": "\\bnamespace\\s+precise\\b[\\s\\S]*?(?m:^)(?![ \\t]*//)[^\\n]*?\\bImGui(?:MCP)?::(?:V?Slider|Drag)(?:Float|Int|Scalar|Angle)\\w*\\s*\\((?:(?!ImGuiSliderFlags_(?:AlwaysClamp|ClampOnInput|NoInput))[^;{])*[;{]",
+      "exemptMods": [],
+      "added": "2026-10-25",
+      "fix": "in the precise:: wrapper (include/PreciseSlider.h), pass ImGuiSliderFlags_AlwaysClamp in the flags of EVERY ImGui / ImGuiMCP Slider* / Drag* call it makes, and clamp the value to [min, max] again after the call returns true. Reference: Dragon's Eye Minimap's include/PreciseSlider.h at its commit 7c3ce18 (1.7.5) - copy it over the old one for an ImGuiMCP mod; an ImGui-direct copy (AMF, the OR / W3 mods) gets the same two changes. A wrapper whose slider takes no typed input at all (ImGuiSliderFlags_NoInput) passes as it is.",
+      "why": "Dragon's Eye Minimap 1.7.5 (test d844, 2026-10-25): typing a value above the Scale slider's runtime cap (Ctrl+click) crashed Skyrim. The wrapper drew the slider with flags 0, so ImGui 1.90.8 (in AMF) left the typed value unclamped and, while the text field stayed open, copied the typed text back over the value every frame the two differed; the mod clamped the value itself, so the slider reported 'changed' every frame and the minimap was re-applied at frame rate until Scaleform crashed. Fixed in DEM 7c3ce18. The same wrapper had been copied into about twenty repos (rule 68); this row makes each one's next package the one that converts it.",
+      "note": "Looks only after 'namespace precise' (the wrapper - include/PreciseSlider.h or any other file declaring the namespace); a direct slider outside it is sliders-are-precise's business. A call counts from 'ImGui::' / 'ImGuiMCP::' to the first ';' or '{', so a multi-line call is read whole; // comment lines are skipped. ImGuiSliderFlags_ClampOnInput (ImGui 1.91+) counts as clamping. Regression test: scripts/tests/test_gate_precise_sliders_always_clamp.py."
+    },
+    {
+      "id": "scaleform-calls-only-on-the-ui-thread",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(xmake\\.lua|CMakeLists\\.txt|vcpkg\\.json)$",
+      "markerPattern": "(?i)commonlib|skse",
+      "contentPattern": "(?m:^)(?![ \\t]*//)[^\\n]*?\\bAddTask\\s*\\(\\s*\\[[^\\]\\n]*\\]\\s*(?:\\([^)]*\\))?[^{;)]*\\{(?:(?>/\\*[\\s\\S]*?\\*/)|(?>//[^\\n]*)|(?>R\"\\((?:(?!\\)\")[\\s\\S])*\\)\")|(?>\"(?:[^\"\\\\\\n]|\\\\.)*\")|'(?:[^'\\\\\\n]|\\\\.)'|(?!R\"\\()[^{}/\"]|/(?![/*])|\\{(?<d>)|\\}(?<-d>))*?(?:\\.Invoke\\(|->Invoke\\(|\\bSetMember\\(|\\bGetMember\\(|\\bSetVariable\\(|\\bGetVariable\\(|\\bGotoAndPlay|\\bloadClip\\b|\\bGFx(?:Value|Movie\\w*)\\b|\\buiMovie->|\\bgetBounds\\b)",
+      "exemptMods": [],
+      "added": "2026-10-25",
+      "fix": "a Scaleform / GFx call (GFxValue Invoke/SetMember/GetMember, GFxMovie Invoke/SetVariable/GetVariable, loadClip, getBounds, anything on uiMovie) never runs inside an SKSE AddTask lambda: queue it with SKSE::GetTaskInterface()->AddUITask(...) (runs inside the UI's own message processing, the thread the movies advance on), or raise a flag the menu serves from its own AdvanceMovie / ProcessMessage. Reference: Dragon's Eye Minimap commit c23a199 (1.7.6) - RequestDisplayApply() only raises a flag, Minimap::Advance() applies it on the HUD thread at most once per 120 ms, and OnMainThread / the DevBench tasks use AddUITask.",
+      "why": "Dragon's Eye Minimap 1.7.5 (2026-10-25, crashes 17:02 inside the HUD movie's advance at SkyrimSE[offset removed] and 19:55 inside getBounds at SkyrimSE[offset removed], [source reference removed]): every settings change queued ApplyDisplaySettings through SKSE AddTask. On SE 1.5.97 AddTask's queue runs as its own BSJobs job beside the UI job that advances menu movies, so its SetMember / getBounds / InitMap calls raced the HUD movie's own Advance on another thread and crashed under repeated changes (a held slider). Fixed in DEM c23a199.",
+      "note": "Reads the BODY of each AddTask lambda only (.NET balancing groups track its braces; comments, string and raw-string literals are skipped, so a brace or a token inside them does not count), and only direct calls written there. AddUITask lambdas are not matched. A call one step away - the lambda calls a helper of the mod's that makes the calls, or the lambda goes through a wrapper that forwards to AddTask, as DEM 1.7.5's did - is row scaleform-helpers-only-on-the-ui-thread's business. Regression test: scripts/tests/test_gate_scaleform_calls_only_on_the_ui_thread.py (covers both rows)."
+    },
+    {
+      "id": "scaleform-helpers-only-on-the-ui-thread",
+      "kind": "package-script-passes",
+      "script": "gates\\scaleform-ui-thread-gate.py",
+      "added": "2026-10-25",
+      "fix": "the helper an AddTask lambda calls (or the wrapper that forwards a lambda to AddTask) makes Scaleform calls: queue that work with AddUITask instead, or raise a flag the menu serves from its own AdvanceMovie / ProcessMessage. Reference: Dragon's Eye Minimap commit c23a199 (1.7.6) - RequestDisplayApply + Minimap::Advance(), and OnMainThread switched to AddUITask.",
+      "why": "Dragon's Eye Minimap 1.7.5's crashing calls were one step away from the AddTask lambda: the settings page handed []{ minimap->ApplyDisplaySettings(); } to OnMainThread, which forwarded it to AddTask, and ApplyDisplaySettings made the SetMember / getBounds calls - so the direct regex row (scaleform-calls-only-on-the-ui-thread) would have passed it. This script refuses that shape: an AddTask lambda or AddTask(Function) reaching a same-repo function whose body makes Scaleform calls, or a lambda handed to a wrapper that forwards to AddTask making them itself or through such a function. Run against DEM's tree before c23a199 it names all seven sites the fix changed.",
+      "note": "One call deep. A helper counts only when every definition of its name in the repo makes Scaleform calls outside an AddUITask lambda and none is an override (Scaleform-called handlers are already on the UI thread); a name shared with an unrelated function is skipped rather than guessed, so it can miss (Compass Navigation Overhaul's compass->SetTextScale shares its name with UI::SetTextScale). Skips a repo with no CommonLib/SKSE build file and a package with no repo. Regression test: scripts/tests/test_gate_scaleform_calls_only_on_the_ui_thread.py."
+    },
+    {
+      "id": "or-player-actor-values-need-a-placed-player",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^.*\\.(cpp|h)$",
+      "markerPattern": "PlayerCharacter::GetSingleton\\(\\)[\\s\\S]{0,600}->\\s*GetActor(Float)?Value\\(",
+      "contentPattern": "parentCell|GetParentCell\\(\\)",
+      "exemptMods": [],
+      "added": "2026-09-29",
+      "amended": "2026-10-23: the content pattern also accepts GetParentCell() - CommonLibSSE-NG's accessor for the same field. HUD Position Manager 1.1.0 gates every widget read on player->GetParentCell() && player->Is3DLoaded() (Widgets.cpp, Positioner.cpp) and the literal 'parentCell' refused it.",
+      "fix": "read the player's actor values only in gameplay (menuMode == 1) and with the player placed (player->parentCell != nullptr); keep the last known value otherwise",
+      "why": "HUD Position Manager's 'Length follows the resource' asked RE::PlayerCharacter::GetSingleton()->GetActorFloatValue at the main menu, where the singleton exists with no character loaded (its skill-advance count read -1): an access violation reading [value removed] inside the game hung it (TestBench crash record 2026-09-29 23:08:54, Hud.cpp LinkedLength). Logic library entry of the same day."
+    },
+    {
+      "id": "or-world-context-calls-are-guarded",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "contentPattern": "\"WorldContextObject\",[^\\r\\n]*\\r?\\n(?:(?![^\\r\\n]*RunGuarded)[^\\r\\n]*\\r?\\n){0,8}?[^\\r\\n]*\\.Run\\(\\)",
+      "exemptMods": [],
+      "added": "2026-09-30",
+      "fix": "run a call that takes a WorldContextObject through a fault-guarded ProcessEvent (Call::RunGuarded: __try/__except around ProcessEvent - Minimap Menu's Ue.h / Ue.cpp), refuse a dying context object (ue::Dying: BeginDestroyed/FinishDestroyed/PendingKill/Garbage or internal Garbage/Unreachable/PendingKill), and keep per-tick ones to gameplay (menuMode == 1)",
+      "why": "Minimap Menu crashed on quitting to the main menu (2026-09-30 01:49:42, EXCEPTION_ACCESS_VIOLATION reading [value removed] in GetViewportSize): its layout ran every 500 ms behind menus with the cached player controller as the world context, and during a quit the controller outlives its world - the slot check that proves the object is alive says nothing about its world. Logic library entry of the same day."
+    },
+    {
+      "id": "or-linked-spdlog-keeps-its-notice",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)commonlibob64",
+      "sourceExtensions": [
+        ".md"
+      ],
+      "contentPattern": "Gabi Melman",
+      "fix": "the repo links spdlog (MIT, pulled in by CommonLibOB64): add its section, with its copyright line and licence text, to dist\\THIRD_PARTY_NOTICES.md (copy it from a mod that already carries it, e.g. Simple Loadout System or Minimap Menu)",
+      "why": "Licence audit of the Oblivion Remastered mods, 2026-09-30 (the owner: \"make sure they have the right liscencing and nothing erroneous\"): Ultimate Combat Redux 1.0.0 shipped without spdlog's MIT notice, Improved Wheel Menu linked MinHook and nlohmann/json without theirs, Camera Configuration Menu had no notices file. A permissive licence's one condition is that its notice travels with every copy.",
+      "added": "2026-09-30"
+    },
+    {
+      "id": "linked-minhook-keeps-its-notice",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "add_requires\\([^)]*\"minhook\"",
+      "sourceExtensions": [
+        ".md"
+      ],
+      "contentPattern": "Tsuda Kageyu",
+      "fix": "the repo links MinHook (BSD-2-Clause): add its section, with its copyright line and licence text, to dist\\THIRD_PARTY_NOTICES.md (copy it from a mod that already carries it, e.g. Simple Loadout System or Minimap Menu)",
+      "why": "Licence audit of the Oblivion Remastered mods, 2026-09-30 (the owner: \"make sure they have the right liscencing and nothing erroneous\"): Ultimate Combat Redux 1.0.0 shipped without spdlog's MIT notice, Improved Wheel Menu linked MinHook and nlohmann/json without theirs, Camera Configuration Menu had no notices file. A permissive licence's one condition is that its notice travels with every copy.",
+      "added": "2026-09-30"
+    },
+    {
+      "id": "linked-nlohmann-json-keeps-its-notice",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "add_requires\\([^)]*\"nlohmann_json\"",
+      "sourceExtensions": [
+        ".md"
+      ],
+      "contentPattern": "Niels Lohmann",
+      "fix": "the repo links nlohmann/json (MIT): add its section, with its copyright line and licence text, to dist\\THIRD_PARTY_NOTICES.md (copy it from a mod that already carries it, e.g. Simple Loadout System or Minimap Menu)",
+      "why": "Licence audit of the Oblivion Remastered mods, 2026-09-30 (the owner: \"make sure they have the right liscencing and nothing erroneous\"): Ultimate Combat Redux 1.0.0 shipped without spdlog's MIT notice, Improved Wheel Menu linked MinHook and nlohmann/json without theirs, Camera Configuration Menu had no notices file. A permissive licence's one condition is that its notice travels with every copy.",
+      "added": "2026-09-30"
+    },
+    {
+      "id": "linked-imgui-keeps-its-notice",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^xmake\\.lua$",
+      "markerPattern": "(?i)add_deps\\(\"imgui\"\\)|target\\(\"imgui\"\\)",
+      "sourceExtensions": [
+        ".md"
+      ],
+      "contentPattern": "Omar Cornut",
+      "fix": "the repo links Dear ImGui (MIT): add its section, with its copyright line and licence text, to dist\\THIRD_PARTY_NOTICES.md (copy it from a mod that already carries it, e.g. Simple Loadout System or Minimap Menu)",
+      "why": "Licence audit of the Oblivion Remastered mods, 2026-09-30 (the owner: \"make sure they have the right liscencing and nothing erroneous\"): Ultimate Combat Redux 1.0.0 shipped without spdlog's MIT notice, Improved Wheel Menu linked MinHook and nlohmann/json without theirs, Camera Configuration Menu had no notices file. A permissive licence's one condition is that its notice travels with every copy.",
+      "added": "2026-09-30"
+    },
+    {
+      "id": "no-isnoneobject-as-value-test",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "(?m)^[^/\\n]*IsObject\\(\\)\\s*&&\\s*![\\w>.\\-]*IsNoneObject\\(\\)",
+      "exemptMods": [],
+      "added": "2026-10-04",
+      "fix": "test the value: IsObject() && GetObject() (pointer non-null). IsNoneObject() is true only for a None TYPE; an object variable set to None keeps its object type",
+      "why": "AMF 2.0.8 took a SkyUI config's _configManager as registered via IsObject() && !IsNoneObject(), so an object-typed None read as a manager and a None-typed one was dropped - Soulsthat's 16 missing MCM menus. Library entry: 'Variable::IsNoneObject() tests for a None TYPE'."
+    },
+    {
+      "id": "translation-gate-reads-whole-keys",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "\\.py$",
+      "markerPattern": "(?i)_english\\.txt|LANGS\\s*=",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "pathPattern": "^tools[\\\\/]",
+      "contentPattern": "TR[^\\n]{0,40}\\((?:[A-Za-z]{1,8}_)?\\[A-Za-z\\]\\+\\)",
+      "exemptMods": [],
+      "added": "2026-10-04",
+      "fix": "read the key with [A-Za-z0-9_]+ (or (?:[^\"\\\\]|\\\\.)+): a key with a second underscore or a digit must be compared with the table too",
+      "why": "HUD Position Manager's gen-dist.py read TR keys as HPM_[A-Za-z]+, so every key with a second underscore (HPM_FT_*, HPM_PB_*, HPM_IB_*, HPM_BB_*, HPM_RL_*) was silently skipped: 34 of 150 keys never compared with the translation table (2026-10-04). A sweep of every wip repo's translation script found it only there."
+    },
+    {
+      "id": "no-player-data-files-in-packages",
+      "kind": "forbid-path-regex",
+      "pattern": "(^|[\\\\/])(User\\.ini|McmImport\\.txt|McmHiddenInSkyUI\\.txt|McmSortLearned\\.txt)$",
+      "exemptMods": [],
+      "added": "2026-10-05",
+      "fix": "never ship a file the player's own game writes: AMF's User.ini, McmImport.txt (which MCM menus come in), McmHiddenInSkyUI.txt (the SkyUI-list ledger) and McmSortLearned.txt (placements the sort learned) live only on the player's PC; build the package from dist\\ and the build output, never from a game's SKSE\\Plugins folder",
+      "why": "The owner, 2026-10-05, on AMF 2.1.0's learned sort placements: 'make sure that this MCM sort learned document isn't included in the update file ... so that they keep it when they update.' A package carrying any of these would overwrite the player's choices on install."
+    },
+    {
+      "id": "mo2-plugin-long-labels-wrap",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.py$",
+      "markerPattern": "(?m)^\\s*import mobase",
+      "sourceExtensions": [
+        ".py"
+      ],
+      "contentPattern": "QLabel\\(\\s*(?:f?\"[^\"\\n]{100,}\"|f?\"(?:[^\"\\\\\\n]|\\\\[^n]){20,}\"\\s*\\n\\s*f?\")",
+      "exemptMods": [],
+      "added": "2026-10-05",
+      "incident": "MO2 Modlist Manager 1.1.2/1.1.3: the dialog could not be made narrower than 1,591 px (2,041 px in 1.1.3) - four sentence-long QLabels without word wrap, each as wide as its whole text, held the dialog wider than MO2's own window. The owner: 'the mm plugins popup window is wider than mo2 and wont let me adjust its width'",
+      "fix": "a label holding a sentence wraps: build it with setWordWrap(True) (the Modlist Manager's _note(text) helper), or break the text into short lines with \\n; size a dialog no larger than its parent window and screen. tools/check_dialog_width.py in the Modlist Manager measures the narrowest width with Qt's Windows platform and real fonts"
+    },
+    {
+      "id": "amf-w3-shipped-ini-is-crlf",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)bin[\\\\/]x64_dx12[\\\\/]AMF[\\\\/]ApocryphaMenuFramework\\.ini$",
+      "contentPattern": "(?s)\\A(?=.*?(?<!\\r)\\n)",
+      "mods": [
+        "Apocrypha Menu Framework (Witcher 3)",
+        "Apocrypha Menu Framework",
+        "AMFWitcher3"
+      ],
+      "added": "2026-10-05",
+      "why": "AMF for The Witcher 3 restores its defaults INI with a text-mode ofstream (CRLF) when it moves settings to User.ini, so the shipped copy must be CRLF to be byte-identical (Main Agent's 1.0.3 run found 7653 vs 7491 bytes). The INI generator used by the porting sub-agents writes LF, and twice an LF file reached the package. A bare LF in the shipped INI is refused.",
+      "amended": "2026-10-06: also under the mod names finalize-mod.ps1 checks with (Apocrypha Menu Framework / AMFWitcher3) - limited to the (Witcher 3) name alone it never ran at finalize, and the LF INI shipped in 1.0.2 and 1.0.3. The path pattern (bind_dx12\\AMF\\) only exists in the Witcher 3 build, so the Skyrim and Oblivion AMF packages are untouched."
+    },
+    {
+      "id": "w3-no-reset-group-to-defaults",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)\\.ws$",
+      "contentPattern": "ResetGroupToDefaults\\(",
+      "mods": [],
+      "added": "2026-10-06",
+      "why": "Witcher 3: CInGameConfigWrapper.ResetGroupToDefaults on ANY input group (even a hidden group of three INPUTPAD rows) reset the player's ENTIRE input mapping to vanilla - about 300 lines of the owner's control edits reverted by UVC probe 3 (Main Agent restored them from his pre-probe copy). A script of ours that resets must restore only its own rows; no package ships a call to it."
+    },
+    {
+      "id": "root-folder-needs-fomod",
+      "kind": "root-folder-needs-fomod",
+      "added": "2026-10-06",
+      "why": "AMF Witcher 3 1.0.2 shipped its ASI loader only in Root\\bin\\x64_dx12 for Root Builder; Vortex deploys a Root folder as <game>\\Root\\..., so the loader never loaded and the page sent Vortex users to another mod's loader. A package with a top-level Root folder must be a FOMOD that puts those files where each manager needs them (logic library: 'A Root\\ folder meant for MO2's Root Builder deploys in Vortex')."
+    },
+    {
+      "id": "dll-licence-label-matches-repo-licence",
+      "kind": "package-script-passes",
+      "script": "gates\\licence-label-gate.py",
+      "added": "2026-10-08",
+      "fix": "set the LegalCopyright in the repo's version.rc.in to the LICENSE's family, e.g. \"Copyright (C) 2026 ApocryphaRealm. GPL-3.0-or-later\"",
+      "why": "Compass Navigation Overhaul, Dragon's Eye Minimap (SMF) and Local Map Upgrade were relicensed to GPL-3 on 2026-09-16, but only LICENSE changed: version.rc.in kept LegalCopyright \"MIT License\", so every DLL built since called itself MIT - the MIT-label-on-a-GPL-build mismatch that got Lock Interaction Overhaul taken down. Nothing compared the two until the 2026-10-08 archive sweep found it."
+    },
+    {
+      "id": "translation-in-its-own-script",
+      "kind": "package-script-passes",
+      "script": "gates\\translation-script-gate.py",
+      "added": "2026-10-12",
+      "why": "AMF Skyrim's Russian file carried the Black-screen option and its help in Latin transliteration since it was added; the 2026-10-11 page capture showed Latin lines under Cyrillic headings and the to-do read it as a font or wrapping fault. The font had every Cyrillic glyph (proven offline with the real ImGui code); the text was not Cyrillic. Nothing checked that a Russian, Japanese, Chinese or Korean value is written in that script. The first run also found the same two lines in AMF Oblivion 1.0.6 and two English lines in Perfected Wheeler 1.4.0's Chinese file.",
+      "fix": "write the value in the language's own script (translate it; never transliterate); the gate prints each key that fails"
+    },
+    {
+      "id": "shipped-files-carry-no-user-folder",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)\\.(dll|exe|pdb|ini|txt|json|md|xml|toml|ya?ml|cfg|csv|esp|esm|esl|swf|pex|psc|lua|py|ws|bat|ps1)$",
+      "contentPattern": "(?i)[A-Za-z]:[\\\\/]+Users[\\\\/]+[A-Za-z0-9._ -]{1,64}[\\\\/]",
+      "exemptMods": [],
+      "added": "2026-10-12",
+      "fix": "build with TEMP and TMP pointed outside the user profile (the linker writes the path of its lnk{GUID}.tmp file into every PDB) and xmake's package cache outside it too (XMAKE_GLOBALDIR / a project-local cache); rebuild, then count the user folder in the DLL and PDB (0)",
+      "why": "The owner, 2026-10-12, on the review's first gate defect: 'turn it into a gate'. The scan that day found no user folder in any shipped DLL - but in EVERY shipped PDB, 47 mods across Skyrim, Oblivion Remastered and Witcher 3: the linker's temp-file path in all of them (1,610 strings), xmake's temp and package-cache paths in 15 (about 4,500). The Windows user folder is the owner's first name, and PDBs ship with every release (rule 43). The pattern matches any Users\\<name>\\ path, so this file does not carry the name."
+    },
+    {
+      "id": "shipped-dll-carries-no-project-root",
+      "kind": "forbid-file-content-regex",
+      "pathPattern": "(?i)\\.(dll|exe)$",
+      "contentPattern": "C[l]aude output",
+      "exemptMods": [],
+      "added": "2026-10-12",
+      "fix": "rule 45: strip the build root from the binary - /d1trimfile:<root> on our own sources AND in the vcpkg triplet (VCPKG_CXX_FLAGS / VCPKG_C_FLAGS) so CommonLibSSE-NG's own sources compile trimmed, /PDBALTPATH:%_PDB% for the debug-directory path; for xmake mods the xmake-d1trimfile-reaches-cl-intact spelling; rebuild and count the project root in the DLL (0)",
+      "why": "Replaces oblivion-dll-carries-no-project-root (2026-09-29, Oblivion Remastered mods only), widened to every game by the owner, 2026-10-12: 'turn it into a gate'. The 2026-10-12 scan of the newest finalized Skyrim packages found the project root in 35 of 37 mods' DLLs: 318 strings in 33 mods are CommonLibSSE-NG's own source files compiled inside the repo's vcpkg tree, 18 in 4 mods are our own sources (__FILE__ / source_location), 4 are PDB paths. Every Skyrim mod's next package therefore fails here until its build is stripped - that is the conversion point, as with sliders-are-precise. The pattern spells the root with a character class so this file does not carry it."
+    },
+    {
+      "id": "shipped-pex-carries-no-build-identity",
+      "kind": "package-script-passes",
+      "script": "gates\\pex-header-gate.py",
+      "added": "2026-10-26",
+      "fix": "blank the three header strings after compiling - source name reduced to the bare file name, user and machine empty (or the neutral words author / build) - as NjordlingerCombatGameplayOverhaul\\tools\\build-papyrus.py scrub() does; rebuild or patch every shipped .pex, then run gates\\pex-header-gate.py --path <package> (0 hits)",
+      "why": "The Papyrus compiler writes the compiling account's user name and the machine name into every .pex header, beside the source file's full path. shipped-files-carry-no-user-folder cannot see it: the user field is the bare account name, not a Users\\<name>\\ path, and the Windows account name is the owner's first name - a severe privacy breach in anything that leaves the machine (rule 45, memory no-personal-name-in-commits-or-changelogs). Njordlinger Combat Gameplay Overhaul (2026-10-26) worked round it with a scrub in its own build script; nothing refused a .pex built any other way. The script parses the header (magic [value removed], big-endian for Skyrim, little-endian accepted; then source, user and machine as u16-length strings) and fails on a non-empty user or machine name, any field holding this machine's account or computer name, a source path through a user folder, or a header that does not parse. It never prints the name - only the field and its length.",
+      "note": "Loose .pex only - a script packed inside a .bsa is not opened. Regression test: scripts/tests/test_gate_pex_header.py."
+    },
+    {
+      "id": "every-dll-ships-its-pdb",
+      "kind": "dll-has-pdb",
+      "pathPattern": "(?i)^(?!(.*[\\\\/])?(dinput8|winmm|version|dsound|d3d11|dxgi|xinput1_3)\\.dll$).*\\.dll$",
+      "exemptMods": [],
+      "added": "2026-10-12",
+      "fix": "build with debug information (RelWithDebInfo, or /Zi plus /DEBUG at link) and let package-mod copy the PDB beside its DLL; a third-party proxy loader (dinput8.dll, winmm.dll ...) is excluded by name in this row's pathPattern",
+      "why": "Rule 43 made a gate - the owner, 2026-10-12: 'pdb is required'. package-mod logged a missing PDB as ABSENT and went on; keep-what-the-previous-release-shipped only caught a mod that had shipped one before. The 2026-10-12 scan found four Skyrim packages in 10. finalized mods with a DLL and no PDB (Apocrypha Framework Overhaul 1.4.4, Carry Weight Per Level 1.0.2, Dragon's Eye Pointers 0.1.0, Ish's Souls to Perks 1.0.2)."
+    },
+    {
+      "id": "checkbox-is-a-toggle",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(xmake\\.lua|CMakeLists\\.txt|SKSEMenuFramework\\.h)$",
+      "markerPattern": "(?i)imgui|SKSE-?Menu-?Framework",
+      "contentPattern": "(?m)^(?![ \\t]*//)(?!.*rule-32:\\s*ok).*\\b(ImGui(MCP)?|im)::Checkbox\\s*\\(",
+      "pathPattern": "^(?!(sdk|tools)[\\\\/])(?!(.*[\\\\/])?Toggle\\.h$)",
+      "exemptMods": [],
+      "added": "2026-10-12",
+      "fix": "draw every boolean setting with the toggle switch (widgets::Toggle / Toggle() from utils/Toggle.h); a deliberate sample of the tick-box ART (AMF's theme preview) carries the comment rule-32: ok on its own line; SDK examples for other authors (sdk\\) and developer tools that never ship (tools\\) are not scanned",
+      "why": "Rule 32 made a gate for every game - the owner, 2026-10-12: 'enforce the no checkbox rule regardless of game'. pre-finalize-check saw only ImGuiMCP::Checkbox( and ran only at finalize; AMF-direct, Oblivion Remastered and Witcher 3 pages call ImGui::Checkbox(. The 2026-10-12 scan found real calls in AMF Skyrim (the list's alphabetical-sort switch, and the theme preview's tick-box sample), AMF Witcher 3 (the same sort switch) and Wait Your Turn Redux's menu. This row runs at every package and inside pre-finalize-check, which no longer carries its own copy of the check. 2026-10-24 (Deep Snow 1.0.0): a CMake repo that vendors include\\SKSEMenuFramework.h without naming imgui or SKSEMenuFramework in CMakeLists.txt was skipped silently; the vendored header is now a marker file too. 2026-10-27 (RaceMenu Atelier 1.1.0, Main Agent order): the row skipped Atelier twice over - its xmake.lua names the API folder lib/SKSE-Menu-Framework-3-API (hyphenated, so the marker missed it; the vendored header sits under lib\\, which the marker search excludes), and it calls ImGuiMCP through the alias `namespace im = ImGuiMCP` (im::Checkbox), which the content pattern missed. The marker now also matches SKSE-Menu-Framework and the content pattern also matches im::Checkbox."
+    },
+    {
+      "id": "distro-sticky-fits-a-nexus-comment",
+      "kind": "distro-file-max-chars",
+      "distroFile": "sticky.txt",
+      "maxChars": 5000,
+      "exemptMods": [],
+      "added": "2026-10-12",
+      "fix": "shorten sticky.txt to 5,000 characters or fewer (line breaks count two each) - keep the current version's changes and trim the older versions' list",
+      "why": "Nexus caps a comment at 5,000 characters, counting each line break as CRLF. AMF 2.1.9's sticky.txt (the Posts tab's 'Recent changes' comment, rule 10) was 5,376 and Nexus refused it at the 2026-10-12 release. Starts with distro- so package-mod reports it and finalize fails on it, like the other distro rows."
+    },
+    {
+      "id": "theme-control-outline-visible",
+      "kind": "package-script-passes",
+      "script": "gates\\theme-outline-gate.py",
+      "added": "2026-10-12",
+      "fix": "give the theme INI a border (sBorder, else sFrame) that shows: contrast at least 4.5, alpha included, against the control face and the panel (sBackground) AND against the theme's background art (sBackgroundArt) over it at its darker tone (10th percentile); and fBorderThickness above 0",
+      "why": "The owner, 2026-10-12, on AMF Skyrim's Norden - Black: 'the button faces don't have any kind of outline at all, even a basic one. But everything should have a basic minimal outline so that it's at least visible.' A control's face is the panel colour at rest, so its outline is all that shows it. The Norden - Black case was in the drawing code (a box, button or tick box drawn with art skipped ImGui's border and no shipped part has an edge layer), fixed there for every theme; theme::Apply now also falls back to the text colour when a theme's border would not show. This row keeps a shipped AMF theme from ever needing that fallback: border 0, transparent, or under 2.0 contrast against the panel fails. Only AMF menu themes are read ([Theme] with sBackground). v4 (the owner, 2026-10-12: outlines 'faint' in Oblivion and Dear Diary; 'at least visible'): the floor is 4.5, not 2.0 - WCAG's 3:1 non-text floor assumes a boundary of normal weight, and this outline is a one-pixel hairline that does not grow with the display, so it is held to text's 4.5:1; at 3:1 both reported themes (Dear Diary 3.4, Oblivion 3.6 on its parchment) would still pass. The line is also measured against the theme's background art as drawn, since a grained background darkens under the line."
+    },
+    {
+      "id": "distro-banner-highlights-match-their-spec",
+      "kind": "distro-script-passes",
+      "script": "gates\\banner-highlight-gate.py",
+      "added": "2026-10-12",
+      "fix": "rebuild the banner with make-feature-banners.py (it now replaces the template's whole picture pane and removes every highlight box the template carried); never hand-edit boxes outside the pane",
+      "why": "make-feature-banners.py found a template's picture pane with a regex that stopped at the first </div> after the pane comment - the template's FIRST highlight box - so a template with two or more boxes left the others, and the old pane's closing tag, on the new banner as stray gold boxes. The workaround was a template with no boxes (fs-fonts). The tool now parses the pane (html.parser), strips every template box, stamps data-highlights=N on the pane and refuses its own output unless it holds exactly the spec's boxes. This row reads the banners already in the distro folder: a box outside the pane, or a pane holding a different count than it declares, fails; a leftover </div> that closes nothing is a WARN (it moves no box). Starts with distro- so package-mod reports it and finalize fails on it, like the other distro rows."
+    },
+    {
+      "id": "build-env-hook-present-in-find-msvc",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^find-msvc\\.bat$",
+      "markerPattern": "(?i)vcvars",
+      "contentPattern": "MODS_BUILD_ENV",
+      "sourceExtensions": [
+        ".bat"
+      ],
+      "added": "2026-10-19",
+      "fix": "the repo's find-msvc.bat lacks the shared build environment (it never calls MODS_BUILD_ENV): copy find-msvc.bat from a repo that has it (HjerimStart, LockInteractionOverhaul), delete the repo's build\\ folder (its CMake cache and CommonLib build are untrimmed), and rebuild; then count the project root and user folder in the DLL and PDB (0). Check this BEFORE building: a repo without the line builds with the profile's TEMP and an untrimmed CommonLibSSE-NG",
+      "why": "2026-10-18/19: the first packages of Local Map Upgrade, Local Map Item Markers, Dragon's Eye Minimap, Civil War Starts and Perfected Wheeler all failed shipped-dll-carries-no-project-root and shipped-files-carry-no-user-folder after a full build and package. Every time the cause was the same: find-msvc.bat did not call the shared build environment (MODS_BUILD_ENV). The sibling row build-env-hook-reads-the-saved-variable only checks the registry fallback of a hook already there and skips a file with none, so the build used an untrimmed cached CommonLib and baked the build machine's paths into the DLL and PDB. Skips repos with no find-msvc.bat (xmake, .asi, non-C++ mods)."
+    },
+    {
+      "id": "build-env-hook-reads-the-saved-variable",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^find-msvc\\.bat$",
+      "markerPattern": "MODS_BUILD_ENV",
+      "contentPattern": "(?i)reg query \"HKCU\\\\Environment\" /v MODS_BUILD_ENV",
+      "sourceExtensions": [
+        ".bat"
+      ],
+      "added": "2026-10-12",
+      "fix": "in find-msvc.bat, before the line that calls %MODS_BUILD_ENV%, read it from HKCU\\Environment when the process lacks it: if not defined MODS_BUILD_ENV for /f \"tokens=2,*\" %%A in ('reg query \"HKCU\\Environment\" /v MODS_BUILD_ENV 2^>nul ^| findstr /i /c:\"MODS_BUILD_ENV\"') do call set \"MODS_BUILD_ENV=%%B\"",
+      "why": "The build-path fix of 2026-10-12 (TEMP outside the user profile, so a PDB carries no user folder) is switched on by the user variable MODS_BUILD_ENV. A shell started before it was set lacks it, so its builds ran with the profile's TEMP: the Lock Interaction Overhaul rebuild leaked the user folder once (caught by shipped-files-carry-no-user-folder). Proved on AutoAudioOutputSwitch 2026-10-12 from a shell without the variable: with the fallback the DLL and PDB carry 0 user-folder strings; with the hook skipped the PDB carries 3."
+    },
+    {
+      "id": "page-is-in-the-standard-layout",
+      "kind": "page-layout",
+      "minQuotes": 3,
+      "minSpoilers": 1,
+      "minImages": 3,
+      "added": "2026-10-14",
+      "fix": "build the description in the standard layout (_NEXUS-DESCRIPTION-LAYOUT.md, _nexus-page-template.txt, nexus-page skill): header and feature cards, a [spoiler] per feature, every text block in [quote] (wrap-quotes.py last), saved as nexus-description-X.Y.Z.txt or nexus-page.txt; the owner reviews the preview before it goes live",
+      "why": "The owner, 2026-10-14: \"it looks like Simple Loadout System's description wasn't updated with the new template like it was supposed to have been.\" Simple Loadout System (Witcher 3) 1.0.1 was finalized and posted with its description still in the old plain-text format: nexus-upload posts only the file and changelog, sync-nexus-distro only rewrites version references, and every page row checked facts in the text, never the layout. Measured 2026-10-14: about 25 of 65 distro folders were still plain text."
+    },
+    {
+      "id": "distro-licence-claims-match-repo-licence",
+      "kind": "distro-repo-script-passes",
+      "script": "gates\\distro-licence-gate.py",
+      "added": "2026-10-22",
+      "fix": "make the banner pill / page text name the repo LICENSE's licence (every mod of ours: \"GPL-3.0, open source\" / GPL-3.0-or-later), re-render the PNG with headless Edge, upload it, set it as the thumbnail, hide the old picture and repoint any description [img] at the new URL",
+      "why": "Nexus took Lock Interaction Overhaul down on 2026-09-13 for an MIT label on a GPL build (past-mistakes library 5107). The repo, DLL, README and page text were relicensed - but banner-1920x1080.html kept a pill reading \"MIT, open source\", and that picture stayed the page's thumbnail and the first image in its description until the owner saw it on 2026-10-22 (\"Fix the banner\"). Nothing compared a banner's text with the LICENSE; the sweep that day found the same pill on Auto Draw, Character Progression Control and Infinity UI. Picture sources (banner/cover/post-image/card .html, _photos folders too) fail on ANY licence named in their visible text that differs from the LICENSE's; page text (nexus-page.txt, short-description.txt, the newest nexus-description-X.Y.Z.txt) only on a claim about the mod, so third-party credit lines pass."
+    },
+    {
+      "id": "no-address-resolved-at-static-init",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^(vcpkg\\.json|CMakeLists\\.txt|xmake\\.lua)$",
+      "markerPattern": "(?i)commonlibsse",
+      "contentPattern": "\\A(?>//[^\\n]*|/\\*[\\s\\S]*?\\*/|\"(?:\\\\.|[^\"\\\\\\n])*\"|\\)(?:\\s|//[^\\n]*|/\\*[\\s\\S]*?\\*/)*(?:(?:const|noexcept|override|final|mutable|volatile)\\b\\s*|&&?\\s*|->\\s*[\\w:<>,*&\\s]+?)*\\{(?>//[^\\n]*|/\\*[\\s\\S]*?\\*/|\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n]){1,4}'|[^{}/\"']+|[/\"']|\\{(?<d>)|\\}(?<-d>))*(?(d)(?!))\\}|[\\s\\S])*?(?:(?<![\\w:.<>,(])(?:(?:static|inline|const|thread_local)\\s+)*REL::Relocation\\s*<(?>[^<>;{}]+|<(?<a>)|>(?<-a>))*(?(a)(?!))>\\s*\\w+\\s*(?:\\{(?!\\s*\\})|=(?!=)|\\((?!\\s*\\)))(?!\\s*REL::(?:Offset|VariantOffset)\\b)|(?<![\\w:.<>,(])(?:(?:static|inline|const|constexpr|thread_local)\\s+)+[\\w:]+(?:\\s*<[^;{}()]*>)?\\s*[*&]?\\s+\\w+\\s*(?:=|\\{)[^;{}]*?(?:\\bREL::(?:ID|RelocationID|VariantID)|\\bRELOCATION_ID)\\s*[({][^;]*?\\.address\\(\\))",
+      "exemptMods": [],
+      "added": "2026-10-22",
+      "fix": "resolve the address when it is first needed, inside a function that runs after SKSEPluginLoad's checks: a function-local static (static REL::Relocation<T> f{ id }; inside the hook's install or thunk), a member set in Install() (static inline REL::Relocation<T> f; with no initialiser, assigned there), or an accessor such as Infinity UI's static std::uintptr_t LoadMovieAddress() { return LoadMovieId.address(); }. Keep the ID itself (REL::ID, REL::RelocationID, REL::VariantID) at static scope if wanted - constructing an ID resolves nothing; constructing a Relocation from it, or calling .address() on it, opens the Address Library",
+      "why": "Infinity UI 2.1.3 (fix 7af23a3, 2026-10-22): Hooks.h held static inline REL::Relocation<...> LoadMovie{ LoadMovieId }. A Relocation built from an Address Library ID resolves its address in its constructor, and a static-member or namespace-scope one is constructed by the C runtime while the DLL loads - before SKSEPluginLoad runs. On Skyrim 1.7.x the SE/AE DLL therefore died with CommonLibSSE-NG's bare 'REL/ID.h(223): failed to open address library file' before the build-line check and the Address Library guard (rows address-library-guard-runs-before-skse-init, skse-plugin-carries-address-library-guard) could run: no guard can run before static initialisation. The pattern walks the file from the top and skips whole function bodies (a ')' then a balanced {...}, comments and string literals honoured), so a function-local static REL::Relocation - resolved on first call - is never flagged; it refuses a REL::Relocation declared with an initialiser outside any function (static inline, namespace scope, class member) unless it is built from REL::Offset / REL::VariantOffset (no Address Library), and a static/inline/const variable outside a function whose initialiser calls .address() on a REL::ID, RelocationID, VariantID or RELOCATION_ID. Sweep of 2026-10-22: Compass Navigation Overhaul, Dragon's Eye Minimap SMF, HUD Position Manager, Inventory Reforged Diag and Local Map Upgrade still carry such statics (24 lines); Infinity UI is clean after 7af23a3."
+    },
+    {
+      "id": "distro-banner-names-a-licence",
+      "kind": "distro-repo-script-passes",
+      "script": "gates\\distro-banner-pill-gate.py",
+      "added": "2026-10-24",
+      "fix": "add a licence pill naming the repo LICENSE (\"GPL-3.0-or-later, open source\" for every GPL mod of ours) to each banner-1920x1080*.html in the distro folder, re-render the PNG with headless Edge, upload it, hide the superseded picture and repoint any description [img] at the new URL",
+      "why": "distro-licence-claims-match-repo-licence fails a banner whose pill names the WRONG licence (Lock Interaction Overhaul, taken down by Nexus 2026-09-13 for MIT beside CommonLibSSE-NG; past-mistakes library 5130), but a banner naming NO licence passed it. The 2026-10-24 settings-page banner audit (4. plans\\settings-page-banners\\AUDIT.md, finding 7) found most settings banners - Custom Difficulty UI, Potion of Clarity, Souls to Perks, Character Progression Control's settings banner, Carryweight on Level Up, Compass Navigation Overhaul, SkyHUD Settings Menu, Local Map Upgrade, Item Explorer - with a version pill and no licence at all, so the gallery never says the mod is GPL. The 1300x372 header is the empty-rim design and is not checked."
+    },
+    {
+      "id": "distro-nexus-page-carries-both-ai-tags",
+      "kind": "distro-script-passes",
+      "script": "gates\\nexus-ai-tags-gate.py",
+      "added": "2026-10-25",
+      "fix": "on the PUBLIC mod page open 'Tag this mod' and, as the author, click 'Add this tag to your mod' on each of 'AI-Generated Content' and 'AI Media' that is missing (never 'AI Assisted'); reload the page, read both in 'Tags for this mod' (open 'View more...' on long lists), then record the page's row in .MD\\scripts\\nexus-ai-tags.json (key '<domain>/<id>', tags, verified date)",
+      "why": "Nexus staff warned the account on 2026-10-25 for 'content classification and tag use failure': the File Submission Guidelines require 'AI-Generated Content' (AI code, UI, translations, in-game assets) AND 'AI Media' (AI page descriptions, banners, thumbnails, videos) on a page made with AI, and our checklist had only ever named the first, so 61 of 68 live pages lacked 'AI Media' (fixed the same day, 4. plans\\nexus-ai-tags-2026-10-25\\TAGS.md). Tags live on the page, not in a shipped file, so the gate reads the ledger of read-back live tags: a registry page of the mod with no ledger row, a missing required tag, or 'AI Assisted' fails. A mod with no page yet passes; first posting is held by the nexus-page skill's checklist. Starts with distro- so package-mod reports it and finalize fails on it."
+    },
+    {
+      "id": "amf-package-never-ships-smf-import-shim",
+      "kind": "forbid-path-regex",
+      "pattern": "(?i)(^|[\\\\/])(SKSEMenuFramework\\.(dll|pdb)$|SMF-Import([\\\\/]|$))",
+      "mods": [
+        "Apocrypha Menu Framework",
+        "ApocryphaMenuFramework"
+      ],
+      "added": "2026-11-01",
+      "fix": "Take the SMF import shim (a forwarding SKSEMenuFramework.dll, an SMF-Import folder) out of the AMF package; it lives only in the local-only mod AMF-SMFImportShim-local.",
+      "why": "The owner, 2026-11-01 (via Main Agent): the Scavenger Sense compatibility change - a code-free SKSEMenuFramework.dll forwarding every export to AMF, which AMF 2.4.0 briefly shipped in SKSE\\Plugins\\ApocryphaMenuFramework\\SMF-Import\\ - must NOT go into AMF's Nexus release; the owner asks Scavenger Sense's author for compatibility instead. The shim moved to the local-only mod '6. current wip mods\\AMF-SMFImportShim-local' (never posted). This row refuses any AMF package carrying a file named SKSEMenuFramework.dll (or its .pdb) or an SMF-Import folder, anywhere in the package."
+    },
+    {
+      "id": "engraving-layout-follows-the-rule",
+      "kind": "package-script-passes",
+      "script": "gates\\engraving-layout-gate.py",
+      "added": "2026-11-11",
+      "fix": "redesign the failing face per the weapon-engraving skill (braid only as a perimeter round a centerpiece or a straight run along a long narrow field; weave fills; a Norse symbol is the centerpiece; no centerpiece and no run -> outline + weave), repaint, and have the paint step write its 'layouts' record (tn_knot.layout / write_layouts) into engraving_check.json",
+      "why": "The owner (2026-11-11 23:39): 'i noticed the battleaxe broke a rule so do a check and see if the gate catches it in the design'. Battleaxe v12 fills its crescent and socket bar with braid bands and runs a knot inside the back spike's border braid, against the rule he set on 2026-11-10 20:07 - and nothing caught it, because the engraving checks recorded only margins and coverage. Every paint step now records each face's perimeter / field / centerpiece / run; this row reads the item table (tools\\items.py) of a model repo and fails a face where a braid fills an area, a braid frames nothing, or a face has no record. 2026-11-13 (Truly Nordic 1.3.0, the owner's black-and-gold Ebony look): the medallion check gained an EBONY MODE - a medallion_check.json with \"mode\": \"ebony\" (tools\\ebony.py measures the recoloured maps into <WORK>\\ebony\\) judges the disc by its own darkness (luminance <= 0.08) instead of disc / steel <= 0.25, because the steel round it is black (the ebony discs read 0.30-0.41 of the black steel while as dark as the Nordic ones, 0.04-0.056); the gold ring must still be >= 3 x the disc and 0.2 smoother. A repo with tools\\ebony.py fails this row without that measurement."
+    },
+    {
+      "id": "fomod-model-options-have-a-picture",
+      "kind": "package-script-passes",
+      "script": "gates\\fomod-option-image-gate.py",
+      "added": "2026-11-11",
+      "fix": "give every FOMOD option that installs a .nif (a <file> ending .nif, or a <folder> holding one) an <image path=\"fomod\\images\\...\"/> of exactly the model that option installs (a whole-item render, about 1000 px, a few hundred KB), and ship the image in the package. Options that install no .nif are not checked.",
+      "why": "The owner (2026-11-11 23:23, Truly Nordic Carved Weapons Replacer 1.1.0): pictures from the renders belong in the FOMOD 'so they know what they're installing at the point of installation'; narrowed at 23:25 to model mods only ('a lot of mods that have installers don't really have any pictures that we would really put in a FOMOD'). The rule is mechanical: an option needs a picture exactly when it installs a .nif, so DLL, INI, plugin and settings installers are never checked and no per-mod list is kept. Until then the model installers named their options in words only (the 1.0.0 mace step showed no picture of either mace)."
+    },
+    {
+      "id": "repo-fomod-installer-ships",
+      "kind": "package-script-passes",
+      "script": "gates\\fomod-repo-installer-shipped-gate.py",
+      "added": "2026-11-12",
+      "fix": "package with package-mod.ps1 (it copies the repo's fomod\\ModuleConfig.xml and every fomod-options\\<Option>\\ folder to the package root since 2026-11-12); never edit the installer or an option file in the package - change it in the repo and repackage",
+      "why": "Simple Dodge 1.2.0 added an installer step (Step distance: Normal / Shorter). The repo held the new fomod\\ModuleConfig.xml and the option's files in fomod-options\\Step-Shorter\\, but package-mod.ps1 seeded the package from 1.1.0 and took only fomod\\info.xml from the repo, so the package would have shipped 1.1.0's installer and no Step-Shorter folder while every other row passed. When a repo keeps fomod\\ModuleConfig.xml, the package must carry that file byte for byte, every fomod-options file at its option-folder path, and every folder or file the installer names. The 2026-11-12 sweep also found RaceMenu Mirrorwright 1.0.0: its repo has an installer and its package has none."
+    },
+    {
+      "id": "behavior-patch-enum-values-are-the-class-own",
+      "kind": "package-script-passes",
+      "script": "gates\\behavior-patch-enum-gate.py",
+      "added": "2026-11-12",
+      "fix": "give the node a value of its own class: hkbStateMachine selfTransitionMode NO_TRANSITION / TRANSITION_TO_START_STATE / FORCE_TRANSITION_TO_START_STATE (a self transition is allowed per transition with FLAG_ALLOW_SELF_TRANSITION_BY_TRANSITION_FROM_ANY_STATE); BLEND / CONTINUE / RESET belong to hkbBlendingTransitionEffect",
+      "why": "Simple Dodge 1.2.0 (batch B-20261112-200853-f998): the chain patch set six hkbStateMachine nodes' selfTransitionMode to SELF_TRANSITION_MODE_BLEND, a value only hkbBlendingTransitionEffect has. Nemesis built it and the offline check counted only EVENT names, which survived; Pandora logged 'Enum dose not contain SELF_TRANSITION_MODE_BLEND', dropped every new node of the patch (SimpleDodgeState, the clips, the modifiers) and still wrote the graphs, and the game crashed loading a save in MT_RootBehavior."
+    },
+    {
+      "id": "clip-motion-matches-motion-data",
+      "kind": "package-script-passes",
+      "script": "gates\\clip-motion-matches-motion-data-gate.py",
+      "added": "2026-11-13",
+      "fix": "make each shipped clip's own animmotion annotations reach the motion data its clip generator has in the patch's animationdatasinglefile (give a clip generator with different motion its own .hkx; ship scaled clips with an option that ships scaled motion data) - Simple Dodge's tools\\make_clip_motion.py does this by rewriting the annotation strings in place",
+      "why": "Simple Dodge 1.2.0 round 2 (batch B-20261113-031456-c03f): Animation Motion Revolution (in most combat lists) moves the character by a clip's own animmotion annotations and ignores animationdatasinglefile. The long roll had x1.5 motion data but played the standard roll's .hkx, and the Shorter installer option shipped only motion data, so in game the long roll went as far as the standard roll (470 / 470) and Shorter changed nothing; the offline checks read the motion data and passed. This row checks every install set (Common, and Common under each option) for a clip whose annotations and motion data disagree."
+    },
+    {
+      "id": "fomod-info-version-is-the-package-version",
+      "kind": "package-script-passes",
+      "script": "gates\\fomod-info-version-gate.py",
+      "added": "2026-11-07",
+      "fix": "make fomod\\info.xml's <Version> the package's version: register the repo's fomod\\info.xml as a version location in version-registry.json and let version-gate stamp it (bump), then package again with package-mod.ps1",
+      "why": "QuickLoot Container Merge 1.1.0 and Unbind Vanilla Controls 1.5.0 (2026-11-06) both packaged with the previous release's number in the FOMOD installer's info.xml, because package-mod.ps1 seeds the installer from the last package and nothing compared that file's <Version> with the package's. A mod manager shows that number to the player. This row refuses the package until they agree."
+    },
+    {
+      "id": "skse-dll-package-ships-line-17",
+      "kind": "package-script-passes",
+      "script": "gates\\line17-gate.py",
+      "exemptMods": [
+        "Loading Menu Overhaul Model Sync",
+        "RaceMenu Atelier",
+        "RaceMenu Atelier - Apprentice Patch",
+        "RaceMenu Atelier - Norden Black",
+        "World Map Render",
+        "Script Load Monitor",
+        "Sure of Stealing",
+        "Apocrypha Localized Damage",
+        "InputBench",
+        "AMF SMF Import Shim (local only)",
+        "Depth First Culling Experiment",
+        "Inventory Reforged Diag"
+      ],
+      "added": "2026-11-07",
+      "fix": "give the repo its second build line the AMF way (cmake/ports-17 + cmake/manifest-17 with CommonLibSSE-NG 7.2.0, RUNTIME_LINE 17, configure17.bat / build17.bat into build\\relwithdebinfo-17, the build-line check in AddressLibraryGuard.h), package both lines and run make-fomod.py; or move its vendored CommonLib to one that reads 1.7 (alandtse CommonLibVR 7.0+); or, for a mod deliberately left without one, add it to exemptMods with its reason added to this why",
+      "why": "The owner, 2026-11-07: 'Figure out which mods are lacking the 1.7 build and start building it.' A Nexus player on Perfected Wheeler (comment 179288397) had been told a 1.7.x build was coming soon; the inventory (4. plans\\line17-ports\\INVENTORY.md) found fourteen Skyrim DLL mods whose packages shipped only the SE/AE DLL, five of them with a Line-17 preset that was never built. Nothing stopped a package without a 1.7 build, so the gap grew one release at a time. Past-mistakes entry: 'DLL mods shipped without a Skyrim 1.7.x build' (2026-11-07). Exempt, deliberately (2026-11-07): Loading Menu Overhaul Model Sync - SE-only by design: eight engine addresses read from the 1.5.97 executable as SE ids (REL::ID), no AE / 1.7 equivalents (the README says it does nothing on AE); a 1.7 build needs that reverse-engineering first; RaceMenu Atelier - needs RaceMenu (skee64) for 1.7.x, which is not on this machine and could not be confirmed to exist; its CommonLibVR 4.39.2 cannot read format 5 - the port is a CommonLib bump to 7.0+ (one DLL), done when a 1.7 RaceMenu is found; RaceMenu Atelier - Apprentice Patch - packaging variant of the RaceMenu Atelier DLL; RaceMenu Atelier - Norden Black - packaging variant of the RaceMenu Atelier DLL; World Map Render - not posted; 1.0.0 untested on SE; its geometry code uses BSGeometry members CommonLibSSE-NG 7.2 renamed - ported after its SE build is proven; Script Load Monitor - not posted (a diagnostic tool); both build trees exist, package two lines at its next release; Sure of Stealing - not on Nexus; Apocrypha Localized Damage - not on Nexus; MIT (a 7.2 line would make it GPL); InputBench - test tool, not published; AMF SMF Import Shim (local only) - local only, never published; Depth First Culling Experiment - local experiment, never published; Inventory Reforged Diag - diagnostic build, not published."
+    },
+    {
+      "id": "cpp-line-comment-swallows-code",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.(cpp|h|hpp)$",
+      "markerPattern": "(?m)^",
+      "sourceExtensions": [
+        ".cpp",
+        ".h",
+        ".hpp"
+      ],
+      "contentPattern": "//[^\\n]*(?:nonnull|null-checked|null check)[^\\n]*(?:\\\"[^\\\"\\n]*\\\"\\s*,|[;{]\\s*$)",
+      "exemptMods": [],
+      "added": "2026-11-07",
+      "incident": "Apocrypha Menu Framework 2.3.0-2.4.0: the null-check annotation pass put '// nonnull: ...' at the end of a line BEFORE the first three entries of the kNames table, so they became comment text; the array held nullptr for Open Animation Replacer, Community Shaders and IED, and the ImGui settings section crashed in ImHashStr (player crash log 2026-11-07 21:46, AE 1.6.1170).",
+      "fix": "put the annotation on its own line above the declaration; a constexpr table of names gets a static_assert that no entry is nullptr."
+    },
+    {
+      "id": "skse-plugin-declares-address-library-not-a-runtime-list",
+      "kind": "package-script-passes",
+      "script": "gates\\skse-runtime-declaration-gate.py",
+      "added": "2026-11-08",
+      "fix": "declare .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary in SKSEPluginInfo (or SKSE::PluginVersionData::UsesAddressLibrary(), or add_commonlibsse_plugin without COMPATIBLE_RUNTIMES); a list of runtimes is right only for a plugin that really hard-codes per-runtime offsets. Re-run gates\\skse-runtime-declaration-gate.py --path <package> --report (OK)",
+      "why": "World Map Selector for Controller 1.1.0 and 1.2.0 shipped an SKSEPlugin_Version whose RuntimeCompatibility was an explicit list of runtimes ending at 1.6.1170 (src/PluginVersion.cpp), so the Address Library bit was clear; SKSE AE refused the DLL as 'incompatible' on GOG 1.6.1179 although every address it uses is an Address Library ID (Nexus report by btach, 2026-11-08). It compiled, passed every source gate and loaded on our SE 1.5.97 instance, which never reads SKSEPlugin_Version, so no test here could see it. This row reads the declaration out of every shipped DLL (a DLL with no SKSEPlugin_Version export is skipped)."
+    },
+    {
+      "id": "input-handler-vfunc-slot4-wrong-on-17",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^.*\\.(cpp|h|hpp)$",
+      "markerPattern": "(?m)^",
+      "sourceExtensions": [
+        ".cpp",
+        ".h",
+        ".hpp"
+      ],
+      "contentPattern": "VTABLE_(Sprint|Sneak|Jump|Run|ToggleRun|AutoMove|Movement|Look|ReadyWeapon|Activate|AttackBlock|Shout|TogglePOV)Handler\\[0\\][^;]*;[^;]{0,200}?write_vfunc\\(\\s*(0x)?0*4\\s*,",
+      "exemptMods": [],
+      "added": "2026-11-08",
+      "incident": "Walk or Run for Controller 1.2.0 (1.7 line): Skyrim 1.7 inserted two empty vfuncs at slots 4-5 of the player input handlers, moving ProcessButton from slot 4 to 6; CommonLibSSE-NG 7.2 still names slot 4, so the 1.7 build hooked a function the game never calls and sprint from walk never fired (himar14, Nexus 2026-11-08). SprintOrSneakForController and TK-Dodge-AIO carry the same hook.",
+      "fix": "hook slot 6 on the 1.7 line, slot 4 on SE/AE; check the vtable in the binary, not the header."
+    },
+    {
+      "id": "nemesis-patch-info-ini-complete",
+      "kind": "package-script-passes",
+      "script": "gates\\nemesis-patch-info-gate.py",
+      "added": "2026-11-12",
+      "fix": "fill name=, author= and site= (the mod's Nexus page URL) in every Nemesis_Engine\\mod\\<code>\\info.ini in the repo's dist, repackage, then re-run gates\\nemesis-patch-info-gate.py --path <package> (OK)",
+      "why": "Simple Dodge 1.0.0 shipped Nemesis_Engine\\mod\\sdge\\info.ini with site= empty. Nemesis 0.84 reads every patch's info.ini at start-up (connector.cpp readMod) and refuses one whose name, author or site is empty with TBT 1014 'Missing info in info.ini ... Mod: sdge' in a CRITITAL ERROR box, then closes - so a Nemesis user with the mod installed could not run Nemesis at all (Nexus bug 1171565, 2026-11-12). Pandora accepts the same file, and the mod had only been tested with Pandora. Tested by scripts\\tests\\test_nemesis_patch_info_gate.py."
+    },
+    {
+      "id": "settings-keys-in-every-translation-file",
+      "kind": "package-script-passes",
+      "script": "gates\\tr-keys-translated-gate.py",
+      "added": "2026-11-12",
+      "fix": "add every key the gate names to each Interface\\Translations\\<stem>_<language>.txt (all eleven, English included), translated; then re-run gates\\tr-keys-translated-gate.py --path <package> --repo <repo> (OK)",
+      "why": "Rule 66. Simple Dodge 1.0.0 shipped with 42 of its settings-page keys - every switch and slider label and help, passed to strings::TR through Switch()/Slider() helpers - in none of its eleven translation files, so those rows were English in every language; translations-complete compares the other languages with English only, so a key missing from all files was invisible. Found 2026-11-12 while adding 1.1.0's settings; TK Dodge AIO carries the same gap. Tested by scripts\\tests\\test_tr_keys_translated_gate.py."
+    },
+    {
+      "id": "dll-built-without-ltcg",
+      "kind": "repo-source-forbid-regex",
+      "markerFile": "^CMakeLists\\.txt$",
+      "markerPattern": "(?i)commonlibsse",
+      "sourceExtensions": [
+        ".txt",
+        ".json",
+        ".cmake"
+      ],
+      "contentPattern": "(?im)^\\s*set\\(\\s*CMAKE_INTERPROCEDURAL_OPTIMIZATION\\s+(ON|TRUE|1)\\s*\\)|\"CMAKE_INTERPROCEDURAL_OPTIMIZATION\"\\s*:\\s*\"?(ON|TRUE|1)",
+      "exemptMods": [],
+      "added": "2026-11-13",
+      "fix": "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF) in CMakeLists.txt (and no IPO ON in CMakePresets.json), reconfigure, check build.ninja carries no /GL or /LTCG, rebuild; scan the new DLL on VirusTotal before posting",
+      "why": "MSVC 14.52 (VS 18 auto-update 2026-11-12) output built with /GL + /LTCG is flagged Gen:Variant.Ulise.617802 by the Bitdefender engine family on VirusTotal (8/71), and Nexus quarantined Simple Dodge 1.2.0 and Knock 1.3.2 for it. The same sources with IPO off scan 0/71 (2x2 test: IPO alone decides). Past-mistakes entry 2026-11-13."
+    },
+    {
+      "id": "built-weapon-nifs-checked-for-light-through",
+      "kind": "repo-source-require-regex",
+      "markerFile": "^verify\\.py$",
+      "markerPattern": "ebonybowskinned\\.nif",
+      "contentPattern": "def see_through\\(",
+      "fix": "keep tools\\missing_weapons\\verify.py's see_through (rays at our shapes that meet a back face first and no front face after: share <= 0.004 on the bow and arrow files) and bow_checks (riser gaps, the arrow rest against vanilla's riser, string nocks), run from verify_all",
+      "added": "2026-11-14",
+      "why": "Nordic Ebony 1.1.0, the Ebony Wolf bow in game (owner 2026-11-14 07:15): light shone through the bow's handle and the arrow, the guard stood where the arrow rests, and the string met the bare metal at the tips. The pieces cut from the Wolf weapons left gaps between grip, guards and limbs and open shells (spurs, limb bases, the arrowhead's foot) that every design render drew solid; the winding check votes surfaces and never asks whether a ray can pass through. Vanilla's and Legacy of Ysgramor's weapons all measure 0.000 on the see-through check; the shipped bow had 32 riser heights with gaps, the arrow measured 0.0073 / 0.0287 (flight).",
+      "sourceExtensions": [
+        ".py"
+      ]
+    },
+    {
+      "id": "item-object-bounds-not-all-zero",
+      "kind": "package-script-passes",
+      "script": "gates\\esp-obnd-gate.py",
+      "added": "2026-11-16",
+      "fix": "write the item's OBND from its ground model as it ships (the Creation Kit's way: vertex extents of every shape in the root frame, rounded outward to int16) - for a generated plugin, in its build script (NordicSkyforgedArmorAndWeapons tools\\build-esp.py section 8 / ground_model_bounds is the reference), or open and save the record in the Creation Kit; then re-run gates\\esp-obnd-gate.py --path <package> (OK)",
+      "why": "Nordic Skyforged Armor and Weapons 1.1.0 (owner in game, 2026-11-16 04:43): with Immersive Equipment Displays the favourited, unequipped Skyforge Steel Shield did not show on his back while the vanilla-record Ebony Shield did. The two NIFs are structurally the same and keywords, slot and equip type match; the shield's OBND was 0,0,0 / 0,0,0 because build-esp.py copied Legacy of Ysgramor's NW_Wolf_Shield_Steel, whose own bounds are zero, and every other item had real bounds. esp-obnd-gate.py fails on any ARMO with a ground model (MOD2), or WEAP/AMMO with a model (MODL), that the plugin itself defines (not an override, not built on a template - TNAM/CNAM) and whose OBND is all zero. Its first sweep also found Civil War Final Battle Equipment, Civil War Guard Armor Replacer, Jarl Ulfric Armor Replacer and Truly Nordic Carved Weapons' standalone arrow."
+    },
+    {
+      "id": "shield-armour-carries-shield-flag",
+      "kind": "package-script-passes",
+      "script": "gates\\esp-shield-flag-gate.py",
+      "added": "2026-11-16",
+      "fix": "set ARMO record-header flag [value removed] (Shield) on the slot-39 armour - a generated plugin carries each template's header flags through (NordicSkyforgedArmorAndWeapons tools\\build-esp.py hdr(), compressed bit dropped) and refuses a slot-39 ARMO without [value removed]; then re-run gates\\esp-shield-flag-gate.py --path <package> (OK)",
+      "why": "Nordic Skyforged Armor and Weapons 1.1.0 (owner in game, 2026-11-16): with Simple Dual Sheath the equipped Skyforge Steel Shield stayed on the left arm when sheathed and only flashed onto the back during the draw, while the vanilla Ebony Shield stayed on the back. build-esp.py wrote header flags 0 for every record, so the shield lost the Shield flag ([value removed]) that ArmorEbonyShield and its template NW_Wolf_Shield_Steel carry; field views of the record looked right. The gate fails any playable ARMO on body slot 39 without [value removed] (non-playable FX pieces such as Skyrim.esm's FXDwarvenSphereCenturion are exempt). Its first sweep also found Civil War Final Battle Equipment (Dragon Blood and Ice Veins shields) and Nordic Dragonbone Armor Replacer's standalone plugin (Dragonplate and Dragonscale shields). Tested by scripts\\tests\\test_esp_shield_flag_gate.py."
+    },
+    {
+      "id": "nif-uv-pieces-do-not-share-texels",
+      "kind": "package-script-passes",
+      "script": "gates\\nif-uv-overlap-gate.py",
+      "added": "2026-11-16",
+      "fix": "move one of the two UV pieces to free atlas space and copy its texels with it, then rebuild (the reference fixes: 4. plans\\nordic-carved-redesign-20261110\\set2\\greatsword_v6_wallfix.py and battleaxe_v15_ringfix.py - integer pixel offsets of the piece's vertex UVs in the source NIF, the texel block copied in every map); then re-run gates\\nif-uv-overlap-gate.py --path <package> (OK)",
+      "why": "Truly Nordic Carved Weapons Replacer (found 2026-11-16 on the 1.4.0 package sheets): a dark notch across the greatsword's left bevel mid-blade, shipped 1.1.0-1.3.0 in both qualities - greatsword_v4_build.py placed the lower-guard boss's wall strip at a fixed atlas spot checked only against the shelf packer, on the blade's bevel texels, and the painter (last triangle wins) painted the wall's dark metal across the bevel. The gate's first package sweep also found the Ebony battle axe: two haft rings laid out on the head socket's texels, harmless in the Nordic atlas (same plain steel) but painted gold by ebony.py's ring pass, so the socket's lower rows went gold. The gate reads every BSTriShape's UV pieces (vertex-connected), finds texels two different pieces share (not mirrored or copied pieces), and fails only where the shared texels' paint (albedo and normal, decoded from the package's own DDS) differs from either piece's own texels beside them - the knurl teeth on the war axe and warhammer and the lathe rings' edges share uniform plain steel and pass as 'same paint'."
+    },
+    {
+      "id": "ue4ss-global-uobject-pointer-is-alive-checked",
+      "kind": "package-script-passes",
+      "script": "gates\\ue-cached-pointer-gate.py",
+      "added": "2026-11-18",
+      "fix": "keep the object-array slot beside the pointer (IndexOf at store, Alive before each use) - or, if it is true, mark the declaration key-only / lives-forever / owned / alive-checked via <companion>",
+      "why": "The stale-UObject crash class is in the past-mistakes library four times across two games (NorseRealtimeNative 0.2.1, the Norse UE4SS frameworks, an Oblivion Remastered menu widget, a runtime UMG widget). The first run of this gate on the 20 Norse repos found two real cases (NorseImpact's slow-motion context and asset cache) and NorseEncounters' point sets never cleared at map load. Also run at every Norse launch by norse-deployed-build-check. Tested by scripts\\tests\\test_ue_cached_pointer_gate.py."
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+ "_version": "1.2.0",
+ "_revised": "2026-10-27",
+ "_about": "The pipeline's numbered stage folders and the places a package goes inside them.",
+ "roles": {
+  "claude-output": {
+   "kind": "dir",
+   "at": "{root}"
+  },
+  "md": {
+   "kind": "dir",
+   "at": "{root}\\.MD"
+  },
+  "md-scripts": {
+   "kind": "dir",
+   "at": "{role:md}\\scripts"
+  },
+  "md-logs": {
+   "kind": "dir",
+   "at": "{role:md}\\logs"
+  },
+  "md-skills": {
+   "kind": "dir",
+   "at": "{role:md}\\skills"
+  },
+  "md-rules": {
+   "kind": "dir",
+   "at": "{role:md}\\rules"
+  },
+  "stage-mod-sorter": {
+   "kind": "dir",
+   "at": "{root}\\1. mod sorter"
+  },
+  "stage-mod-types": {
+   "kind": "dir",
+   "at": "{root}\\2. Mod Types"
+  },
+  "stage-analyze": {
+   "kind": "dir",
+   "at": "{root}\\3. analyze mods"
+  },
+  "stage-plans": {
+   "kind": "dir",
+   "at": "{root}\\4. plans"
+  },
+  "stage-current-project": {
+   "kind": "dir",
+   "at": "{root}\\5. current project mod"
+  },
+  "stage-wip": {
+   "kind": "dir",
+   "at": "{root}\\6. current wip mods",
+   "note": "one git repo per mod"
+  },
+  "stage-test-builds": {
+   "kind": "dir",
+   "at": "{root}\\7. current test builds"
+  },
+  "stage-compatibility": {
+   "kind": "dir",
+   "at": "{root}\\8. confirm compatibility"
+  },
+  "stage-patches-output": {
+   "kind": "dir",
+   "at": "{root}\\9. patches output"
+  },
+  "stage-finalized": {
+   "kind": "dir",
+   "at": "{root}\\10. finalized mods"
+  },
+  "stage-nexus-distro": {
+   "kind": "dir",
+   "at": "{root}\\11. Nexus distro"
+  },
+  "stage-needs-update": {
+   "kind": "dir",
+   "at": "{root}\\12. needs an update"
+  },
+  "root-tool-folders": {
+   "kind": "value",
+   "value": ".MD|.tools|.claude|.worktrees|.build-env|.build-temp|.build-tmp|_work|.gitignore|desktop.ini",
+   "note": "what tools need at the project root besides the twelve stages; each must be Hidden, so the visible root is exactly the twelve stages (root-topology-gate, 2026-10-27). _work is listed only until its hard-wired callers (repack-fomod, the mod repos' build tools) are moved off it"
+  },
+  "test-build-package": {
+   "kind": "place",
+   "at": "{role:stage-test-builds}\\{game} - {mod}\\{mod} {version}",
+   "note": "a test package folder; MO2 plugins use game 'MO2' and keep 'MO2 ' in the leaf"
+  },
+  "finalized-package": {
+   "kind": "place",
+   "at": "{role:stage-finalized}\\{game} - {mod}\\{mod} {version}"
+  },
+  "distro-folder": {
+   "kind": "place",
+   "at": "{role:stage-nexus-distro}\\{game} - {mod}"
+  },
+  "wip-repo": {
+   "kind": "place",
+   "at": "{role:stage-wip}\\{repo}"
+  }
+ }
+}

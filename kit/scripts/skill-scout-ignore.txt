@@ -1,0 +1,2 @@
+# skill-scout-ignore.txt - candidates judged NOT skill-worthy, so skill-scout.py never flags them again.
+# One per line: a script name, a doc path relative to <ROOT> (or "a.ps1 + b.py" for a chain), then  # why, date.

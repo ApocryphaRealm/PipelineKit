@@ -1,0 +1,290 @@
+r"""Generate (or check) the memory topic index and the always-on MEMORY.md.
+
+USAGE
+    py -3 memory-index.py [--dir <memory folder>] --build    # write INDEX.md and MEMORY.md
+    py -3 memory-index.py [--dir <memory folder>] --check    # list problems, exit 1 on any
+
+Reads every *.md in the folder except MEMORY.md and INDEX.md. Frontmatter fields used: name, description,
+type and topics (type/topics under `metadata:` or at top level; topics as an inline `[a, b]` list or as a
+YAML block list of `- a` lines). Lines of topics-vocabulary.txt / duplicates-ok.txt beginning with # are
+comments (the first is the DOC-VERSION marker).
+"""
+import datetime, io, json, os, re, shutil, sys
+
+DEFAULT_DIR = os.path.join(os.environ.get("USERPROFILE", ""), ".claude", "projects", re.sub(r"[^A-Za-z0-9]", "-", os.environ.get("PIPELINE_ROOT") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "memory")  # kit: the Claude Code project of <ROOT>
+SKIP = ("MEMORY.md", "INDEX.md")
+
+
+def read_text(path):
+    data = open(path, "rb").read()
+    if data.startswith(b"\xef\xbb\xbf"):
+        data = data[3:]
+    return data.decode("utf-8", errors="replace").replace("\r\n", "\n").replace("\r", "\n")
+
+
+def unquote(v):
+    v = v.strip()
+    if len(v) >= 2 and v[0] == '"' and v[-1] == '"':
+        try:
+            return json.loads(v)
+        except Exception:
+            return v[1:-1].replace('\\"', '"')
+    if len(v) >= 2 and v[0] == "'" and v[-1] == "'":
+        return v[1:-1].replace("''", "'")
+    return v
+
+
+def parse(path):
+    """-> dict(name, description, topics, has_fm)"""
+    text = read_text(path)
+    lines = text.split("\n")
+    out = {"name": None, "description": None, "topics": None, "has_fm": False, "modified": None}
+    if not lines or lines[0].strip() != "---":
+        return out
+    end = None
+    for i in range(1, len(lines)):
+        if lines[i].strip() == "---":
+            end = i
+            break
+    if end is None:
+        return out
+    out["has_fm"] = True
+    fm = lines[1:end]
+    i = 0
+    while i < len(fm):
+        line = fm[i]
+        m = re.match(r"^(\s*)([A-Za-z_][\w-]*):\s*(.*)$", line)
+        if not m:
+            i += 1
+            continue
+        indent, key, val = len(m.group(1)), m.group(2), m.group(3).strip()
+        if key == "name" and out["name"] is None and indent == 0:
+            out["name"] = unquote(val)
+        elif key == "description" and out["description"] is None and indent == 0:
+            parts = [val]
+            j = i + 1
+            while j < len(fm) and fm[j].startswith((" ", "\t")) and fm[j].strip() and not re.match(r"^\s*[\w-]+:\s", fm[j]):
+                parts.append(fm[j].strip())
+                j += 1
+            joined = " ".join(p for p in parts if p)
+            out["description"] = unquote(joined) if joined else ""
+        elif key == "modified" and out["modified"] is None:
+            out["modified"] = unquote(val)
+        elif key == "topics" and out["topics"] is None:
+            if val.startswith("["):
+                inner = val.strip()
+                inner = inner[1:inner.rfind("]")] if "]" in inner else inner[1:]
+                out["topics"] = [unquote(t) for t in (x.strip() for x in inner.split(",")) if t]
+            elif val == "":
+                items = []
+                j = i + 1
+                while j < len(fm):
+                    mm = re.match(r"^\s*-\s*(.+?)\s*$", fm[j])
+                    if mm:
+                        items.append(unquote(mm.group(1)))
+                        j += 1
+                    elif not fm[j].strip():
+                        j += 1
+                    else:
+                        break
+                out["topics"] = items
+            else:
+                # a quoted scalar list - topics: "git, process" - is unquoted first, then split (it was split first,
+                # which made the topics '"git' and 'process"', 2026-10-27)
+                out["topics"] = [unquote(t) for t in (x.strip() for x in unquote(val).split(",")) if t]
+        i += 1
+    return out
+
+
+def comment_lines(path):
+    if not os.path.exists(path):
+        return []
+    return [l.strip() for l in read_text(path).split("\n") if l.strip() and not l.strip().startswith("#")]
+
+
+def load(folder):
+    mems = []
+    for fn in sorted(os.listdir(folder), key=lambda f: f[:-3] if f.endswith(".md") else f):
+        if not fn.endswith(".md") or fn in SKIP:
+            continue
+        p = parse(os.path.join(folder, fn))
+        p["file"] = fn
+        if not p["name"]:
+            p["name"] = fn[:-3]
+        mems.append(p)
+    return mems
+
+
+def esc(s):
+    return (s or "").replace("\n", " ").replace("|", "\\|")
+
+
+def build_files(mems, today):
+    n = len(mems)
+    stamp = "<!-- GENERATED %s by memory-index.py from %d memories -->" % (today, n)
+    rows = sorted(mems, key=lambda m: ((m["topics"] or ["~"])[0], m["file"]))
+    idx = ["# Memory index (GENERATED by memory-index.py --build, do not edit by hand)", stamp, "",
+           "One line per memory: its topics, its name and its description. Before acting in an area, grep this file for the",
+           "area's topics (the mod key, the game, the stage, the tool) and read the memories it names - the same pre-emptive read",
+           "as the logic library's index. Vocabulary: topics-vocabulary.txt beside this file.", "",
+           "| topics | memory | description |", "|---|---|---|"]
+    for m in rows:
+        idx.append("| %s | [%s](%s) | %s |" % (", ".join(m["topics"]) if m["topics"] else "-", m["name"], m["file"], esc(m["description"])))
+    mem = ["# Memory - the always-on set (GENERATED by memory-index.py --build; a hand-added line survives only if its memory carries the `always` topic)",
+           stamp, "",
+           "These memories apply whatever the task is. Every other memory is in INDEX.md beside this file, one line per memory",
+           "with its topics: before acting in an area, grep INDEX.md for that area's topics and read the memories it names.",
+           "A new memory gets `topics:` in its frontmatter (vocabulary: topics-vocabulary.txt); then run",
+           '`py -3 "<ROOT>\\.MD\\scripts\\memory-index.py" --build`.', ""]
+    for m in sorted([m for m in mems if m["topics"] and "always" in m["topics"]], key=lambda m: m["name"]):
+        mem.append("- [%s](%s) \u2014 %s" % (m["name"], m["file"], (m["description"] or "").replace("\n", " ")))
+    return "\n".join(idx) + "\n", "\n".join(mem) + "\n"
+
+
+def write(path, text):
+    with io.open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
+def strip_stamp(text):
+    lines = text.replace("\r\n", "\n").split("\n")
+    if len(lines) > 1:
+        lines[1] = ""
+    return "\n".join(lines)
+
+
+def norm_desc(d):
+    return re.sub(r"[^a-z0-9]", "", (d or "").lower())
+
+
+def names_differ_by_one_word(a, b):
+    wa, wb = a.split("-"), b.split("-")
+    if len(wa) == len(wb):
+        return sum(1 for x, y in zip(wa, wb) if x != y) == 1
+    if abs(len(wa) - len(wb)) == 1:
+        lo, hi = (wa, wb) if len(wa) < len(wb) else (wb, wa)
+        return any(hi[:k] + hi[k + 1:] == lo for k in range(len(hi)))
+    return False
+
+
+GATE_SINCE = datetime.datetime(2026, 10, 28, 0, 35, tzinfo=datetime.timezone.utc)   # when the topic gate went in
+
+
+def modified_at(folder, m):
+    """A memory's `modified` time (UTC), else its file's last-write time."""
+    v = (m.get("modified") or "").strip()
+    if v:
+        try:
+            t = datetime.datetime.fromisoformat(v.replace("Z", "+00:00"))
+            return t if t.tzinfo else t.replace(tzinfo=datetime.timezone.utc)
+        except ValueError:
+            pass
+    try:
+        return datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(folder, m["file"])), datetime.timezone.utc)
+    except OSError:
+        return None
+
+
+def unknown_topics(folder, mems):
+    """[(topic, memory file)] for every topic outside topics-vocabulary.txt."""
+    vocab = set(comment_lines(os.path.join(folder, "topics-vocabulary.txt")))
+    return [(t, m["file"]) for m in mems if m["has_fm"] for t in (m["topics"] or []) if t not in vocab]
+
+
+def check(folder, mems):
+    problems = []
+    vocab = set(comment_lines(os.path.join(folder, "topics-vocabulary.txt")))
+    for m in mems:
+        if not m["has_fm"]:
+            problems.append("NO FRONTMATTER " + m["file"])
+            continue
+        if not m["description"]:
+            problems.append("NO DESCRIPTION " + m["file"])
+        if not m["topics"]:
+            problems.append("NO TOPICS " + m["file"])
+        else:
+            for t in m["topics"]:
+                if t not in vocab:
+                    problems.append("UNKNOWN TOPIC %s in %s" % (t, m["file"]))
+    today = datetime.date.today().isoformat()
+    want_idx, want_mem = build_files(mems, today)
+    for fn, want in (("INDEX.md", want_idx), ("MEMORY.md", want_mem)):
+        p = os.path.join(folder, fn)
+        if not os.path.exists(p) or strip_stamp(read_text(p)) != strip_stamp(want):
+            problems.append("STALE " + fn)
+    ok_pairs = set()
+    for l in comment_lines(os.path.join(folder, "duplicates-ok.txt")):
+        if "~" in l:
+            a, b = [x.strip() for x in l.split("~", 1)]
+            ok_pairs.add((a, b)); ok_pairs.add((b, a))
+    for i in range(len(mems)):
+        for j in range(i + 1, len(mems)):
+            a, b = mems[i], mems[j]
+            if (a["file"], b["file"]) in ok_pairs:
+                continue
+            da, db = norm_desc(a["description"]), norm_desc(b["description"])
+            if (da and db and da[:50] == db[:50]) or names_differ_by_one_word(a["name"], b["name"]):
+                problems.append("DUPLICATE? %s ~ %s" % (a["file"], b["file"]))
+    return problems
+
+
+def main(argv):
+    folder = DEFAULT_DIR
+    mode = None
+    i = 0
+    while i < len(argv):
+        if argv[i] == "--dir" and i + 1 < len(argv):
+            folder = argv[i + 1]; i += 2
+        elif argv[i] in ("--build", "--check"):
+            mode = argv[i]; i += 1
+        else:
+            print("usage: memory-index.py [--dir <folder>] (--build | --check)")
+            return 2
+    if mode is None:
+        print("usage: memory-index.py [--dir <folder>] (--build | --check)")
+        return 2
+    mems = load(folder)
+    if mode == "--build":
+        # TOPICS COME FROM THE VOCABULARY (pipeline assessment tier 2 item 19, 2026-10-27): a memory found only through
+        # INDEX.md's topics is lost behind a topic nobody greps for. --build refuses - writing nothing - while any
+        # memory carries a topic outside topics-vocabulary.txt; fix the memory's topics (or the owner adds the word).
+        # Main's order 6 (2026-10-27): the memories that already carried such topics when the gate went in are a
+        # WARNING and the build still writes; only a memory NEW or CHANGED since then (its `modified` date, else the
+        # file's time) is refused - so no new memory is blocked from the index by an old one.
+        unknown = unknown_topics(folder, mems)
+        if unknown:
+            mod = {m["file"]: modified_at(folder, m) for m in mems}
+            new = [(t, f) for t, f in unknown if mod.get(f) and mod[f] > GATE_SINCE]
+            old = [(t, f) for t, f in unknown if (t, f) not in new]
+            for t, f in old:
+                print("WARNING UNKNOWN TOPIC %s in %s (from before the topic gate)" % (t, f))
+            if new:
+                for t, f in new:
+                    print("UNKNOWN TOPIC %s in %s" % (t, f))
+                print("REFUSED - %d topic(s) in %d new or changed memor%s are not in topics-vocabulary.txt; nothing "
+                      "written. Use vocabulary words in those memories' topics (the vocabulary itself is the owner's)."
+                      % (len(new), len({f for _, f in new}), "y" if len({f for _, f in new}) == 1 else "ies"))
+                return 1
+        mp = os.path.join(folder, "MEMORY.md")
+        bak = os.path.join(folder, "MEMORY.md.bak-0.8")
+        if os.path.exists(mp) and not os.path.exists(bak):
+            shutil.copyfile(mp, bak)
+        idx, mem = build_files(mems, datetime.date.today().isoformat())
+        write(os.path.join(folder, "INDEX.md"), idx)
+        write(mp, mem)
+        k = sum(1 for m in mems if m["topics"] and "always" in m["topics"])
+        print("BUILT %d memories, %d always-on" % (len(mems), k))
+        return 0
+    problems = check(folder, mems)
+    if problems:
+        for p in problems:
+            print(p)
+        return 1
+    k = sum(1 for m in mems if m["topics"] and "always" in m["topics"])
+    t = len({t for m in mems for t in (m["topics"] or [])})
+    print("OK %d memories, %d always-on, %d topics" % (len(mems), k, t))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

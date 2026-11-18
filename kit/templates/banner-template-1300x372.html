@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  Standing banner template, COMPACT format (1300x372 - Nexus's own actual upload-dialog
+  stated dimensions, confirmed live by the author directly on the real upload page 2026-08-26.
+  A same-day detour to 1400x400, based on a wiki/forum search result
+  (wiki.nexusmods.com/index.php/Creating_a_mod_page), was WRONG - that secondary source
+  didn't match what the live site actually asks for. Lesson: for an exact numeric UI spec
+  like this, a live look at the real page beats a wiki/forum search result - don't repeat
+  that detour. Untarnished UI theme (CLAUDE.md rule 10): black background, white hairline
+  frame, no accent color. Every mod card ships both this size and the companion 1920x1080
+  template.
+
+  This banner is fully empty inside, per the author's standing direction (2026-08-26): no title,
+  no tagline, no pills, no icon box - just the dark background and the white outer rim.
+  Identical across every mod - there is no per-mod CONTENT block to edit for this size
+  any more.
+
+  TO REUSE: copy this file (nothing to edit), then rasterize:
+  "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless --disable-gpu
+    --window-size=1300,372 --screenshot="out.png" "this-file.html"
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1300px; height: 372px;
+    background: #050505;
+    overflow: hidden;
+  }
+  .stage {
+    width: 1300px; height: 372px;
+    background: #050505;
+    border: 2px solid #f5f2e9;
+  }
+</style>
+</head>
+<body>
+  <div class="stage"></div>
+</body>
+</html>

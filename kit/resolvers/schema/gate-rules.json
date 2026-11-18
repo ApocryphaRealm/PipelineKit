@@ -1,0 +1,85 @@
+{
+  "type": "object",
+  "required": ["rules"],
+  "properties": {
+    "_about": {"type": "string"},
+    "_version": {"type": "string"},
+    "_revised": {"type": "string"},
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "kind": {"type": "string", "enum": [
+            "forbid-path-regex", "one-game-per-package", "root-folder-needs-fomod", "forbid-extension",
+            "esp-must-be-light", "esp-form-version", "esp-armo-modl-4-bytes", "no-doubled-segment",
+            "package-file-matches-repo", "keep-file-classes-of-previous", "fomod-delivers-previous-files",
+            "package-ships-repo-dist", "archive-matches-folder", "archive-entries-forward-slash",
+            "page-text-forbid-regex", "page-text-require-regex", "page-summary-max-chars",
+            "esp-record-integrity", "swf-colour-band", "distro-images-are-sdr", "repo-script-passes",
+            "package-script-passes", "json-parses", "forbid-file-content-regex", "forbid-private-identity-patterns", "dll-has-pdb", "distro-file-max-chars", "page-layout", "skse-log-forbid-regex",
+            "require-file-content-regex", "changelog-top-version", "translations-complete",
+            "lines-match-build-tree", "repo-source-require-regex", "repo-source-forbid-regex",
+            "mo2-install-matches-package", "dll-newer-than-sources", "distro-file-first-line",
+            "distro-script-passes", "distro-repo-script-passes", "launch-gate"
+          ]},
+          "added": {"type": "string"},
+          "amended": {"type": "string"},
+          "why": {"type": "string"},
+          "fix": {"type": "string"},
+          "incident": {"type": "string"},
+          "note": {"type": "string"},
+          "pattern": {"type": "string"},
+          "markerPattern": {"type": "string"},
+          "markerFile": {"type": "string"},
+          "pathPattern": {"type": "string"},
+          "contentPattern": {"type": "string"},
+          "filePattern": {"type": "string"},
+          "distroFile": {"type": "string"},
+          "repoGlob": {"type": "string"},
+          "extension": {"type": "string"},
+          "script": {"type": "string"},
+          "role": {"type": "string"},
+          "launcher": {"type": "string"},
+          "logFile": {"type": "string"},
+          "logFolder": {"type": "string"},
+          "onlyWhenFile": {"type": "string"},
+          "onlyIfDll": {"type": "boolean"},
+          "forbidBBCode": {"type": "boolean"},
+          "headerVersion": {"type": "number"},
+          "maxChars": {"type": "number"},
+          "failPattern": {"type": "string"},
+          "skipPattern": {"type": "string"},
+          "minQuotes": {"type": "number"},
+          "minSpoilers": {"type": "number"},
+          "minImages": {"type": "number"},
+          "lo": {"type": "number"},
+          "hi": {"type": "number"},
+          "allowGrey": {"type": "string"},
+          "exemptMods": {"type": "array", "items": {"type": "string"}},
+          "exemptNote": {"type": "string"},
+          "exemptWhy": {"type": "string"},
+          "mods": {"type": "array", "items": {"type": "string"}},
+          "kinds": {"type": "array", "items": {"type": "string"}},
+          "classes": {"type": "array", "items": {"type": "string"}},
+          "sourceExtensions": {"type": "array", "items": {"type": "string"}},
+          "instances": {"type": "array", "items": {"type": "string"}},
+          "retired": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "mod": {"type": "string"},
+                "pattern": {"type": "string"},
+                "since": {"type": "string"},
+                "why": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

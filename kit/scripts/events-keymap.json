@@ -1,0 +1,4 @@
+{
+ "_about": "subject name -> version-registry key, applied by events.py on read; built by `events.py keymap --build` from the registry and the version ledger - edit by rebuilding, never by hand",
+ "names": {}
+}

@@ -1,0 +1,59 @@
+{
+  "type": "object",
+  "properties": {
+    "_version": {"type": "string"},
+    "_revised": {"type": "string"}
+  },
+  "additionalProperties": {
+    "type": "object",
+    "required": ["repo", "displayName", "locations"],
+    "properties": {
+      "repo": {"type": ["string", "null"]},
+      "displayName": {"type": "string"},
+      "aliases": {"type": "array", "items": {"type": "string"}},
+      "locations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["file", "label", "pattern", "replace"],
+          "properties": {
+            "file": {"type": "string"},
+            "label": {"type": "string"},
+            "pattern": {"type": "string"},
+            "replace": {"type": "string"}
+          }
+        }
+      },
+      "ignore": {"type": "array", "items": {"type": "string"}},
+      "registered": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}"},
+      "nexusModId": {"type": ["number", "null"]},
+      "nexusChecked": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}"},
+      "nexusVersion": {"type": "string"},
+      "nexusRemoved": {"type": "string"},
+      "foreignBinaries": {"type": "array", "items": {"type": "string"}},
+      "nexusDomain": {"type": "string"},
+      "publishChannel": {"type": "string", "enum": ["members", "mega", "local"]},
+      "game": {"type": "string"},
+      "pluginDir": {"type": "string"},
+      "instances": {"type": "array", "items": {"type": "string"}},
+      "installPrefix": {"type": "string"},
+      "kind": {"type": "string"},
+      "ignoreReasons": {"type": "object", "additionalProperties": {"type": "string"}},
+      "optionalFileOf": {"type": "string"},
+      "optionalChangelog": {"type": "string"},
+      "noRepo": {"type": "string"},
+      "nexusPages": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["nexusDomain", "nexusModId"],
+          "properties": {
+            "nexusDomain": {"type": "string"},
+            "nexusModId": {"type": "number"},
+            "linked": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}"}
+          }
+        }
+      }
+    }
+  }
+}
