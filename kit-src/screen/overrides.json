@@ -158,10 +158,6 @@
   ],
   "PREFLIGHT.md": [
     {
-      "rx": "reply line: the reply gate \\(role reply-gate\\) takes Discord threads too \\(snapshot --discord\\)",
-      "to": "reply line: the reply gate (role reply-gate)"
-    },
-    {
       "rx": ", or in a Discord thread",
       "to": ""
     },
@@ -176,7 +172,7 @@
       "to": "What a framework's licence requires in Credits and Requirements: read that framework's own licence file at the version you build against, before writing either section, and quote nothing you did not read."
     },
     {
-      "rx": "- Close the Description with the Generative AI disclosure line; end with \"Support my work\".*?The Pipeline Kit is never\\s+mentioned on Nexus\\.",
+      "rx": "- Close the Description with the Generative AI disclosure line; end with \"Support my work\".*?check memory `pipeline-kit-is-free-and-open` first\\.",
       "to": "- Close the Description with the Generative AI disclosure line. A donation link is optional; Nexus's anti-solicitation policy forbids a link to anything paid - a post, kit or service."
     },
     {

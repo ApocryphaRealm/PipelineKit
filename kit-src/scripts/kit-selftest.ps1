@@ -22,6 +22,8 @@ if (-not $Kit) { $Kit = Split-Path $PSScriptRoot -Parent }   # not a param defau
 $ps = (Get-Command powershell.exe).Source
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $tmp = Join-Path $env:TEMP "pipeline-kit-selftest-$stamp"
+# the profile the test points USERPROFILE at sits BESIDE the temp root: the root holds only the stages and .MD (rule 39)
+$tmpHome = "$tmp.home"
 $script:results = New-Object System.Collections.Generic.List[object]
 $script:log = New-Object System.Collections.Generic.List[string]
 
@@ -63,7 +65,7 @@ try {
     Say ''
     # the install seeds a Claude Code memory folder under USERPROFILE\.claude\projects, and the resolver's {home} is
     # USERPROFILE: point both at the temp folder, so the test never writes into the person's own .claude
-    $env:USERPROFILE = Join-Path $tmp 'home'
+    $env:USERPROFILE = $tmpHome
     New-Item -ItemType Directory -Force -Path $env:USERPROFILE | Out-Null
 
     # 1. install into the temp root
@@ -72,7 +74,7 @@ try {
     $env:PIPELINE_MO2_INSTANCES = ''
     $env:NEXUS_APIKEY = ''
     $s = Join-Path $tmp '.MD\scripts'
-    Check 'stage folders present' ((Get-ChildItem -LiteralPath $tmp -Directory | Where-Object { $_.Name -match '^\d+\. ' }).Count -eq 13)
+    Check 'stage folders present' ((Get-ChildItem -LiteralPath $tmp -Directory | Where-Object { $_.Name -match '^\d+\. ' }).Count -eq 12)
     Check 'ledgers are empty' (((Get-Content -LiteralPath (Join-Path $s 'version-ledger.json') -Raw).Trim() -eq '[]') -and ((Get-Content -LiteralPath (Join-Path $s 'version-registry.json') -Raw).Trim() -eq '{}'))
 
     # 1b. the layout and the role resolver (rule 70): every script sits in its kind folder, none is a retired-path
@@ -98,7 +100,7 @@ try {
 
     # 3. register, bump, current
     # a new mod needs a note of what already exists (the version gate asks for one); the example's is a line
-    $prior = Join-Path $tmp 'example-prior-art.txt'
+    $prior = Join-Path $tmp '4. plans\example-prior-art.txt'
     Set-Content -LiteralPath $prior -Value 'Self-test: the example is not for release, so nothing on Nexus or GitHub was searched.' -Encoding UTF8
     Run 'version-gate register' (Join-Path $s 'gates\version-gate.ps1') @('-Action', 'register', '-Mod', 'ExampleMod', '-Repo', 'ExampleMod', '-DisplayName', 'Example Mod', '-PriorArt', $prior) 0 'location: example_mod.py __version__' | Out-Null
     $bump = Run 'version-gate bump issues 1.0.0' (Join-Path $s 'gates\version-gate.ps1') @('-Action', 'bump', '-Mod', 'ExampleMod', '-Kind', 'patch') 0 '1\.0\.0'
@@ -180,7 +182,7 @@ try {
     # pattern here is made up by the test (example\render-test)
     if ($py) {
         $fx = Join-Path $Kit 'example\render-test'
-        $rt = Join-Path $tmp 'render-test'
+        $rt = Join-Path $tmp '4. plans\render-test'   # inside a stage: the root holds only the stages (root-topology-gate)
         New-Item -ItemType Directory -Force -Path $rt | Out-Null
         PyRun 'package-render: the example package ships no NIF, so it passes at once' @((Join-Path $s 'release\package-render.py'), '--mod', 'ExampleMod', '--version', $ver, '--package', $pkg) 0 'ships no \.nif' | Out-Null
         foreach ($g in @('gates\package-render-gate.py', 'gates\engraving-layout-gate.py', 'gates\fomod-option-image-gate.py', 'gates\surface-profile-gate.py', 'render\nif-readback.py', 'render\before-after-sheet.py')) {
@@ -197,13 +199,57 @@ try {
         # the background with factory settings and saves nothing - runs with the real USERPROFILE, not the temp one
         $env:USERPROFILE = $saved.USERPROFILE
         $probe = (& python (Join-Path $fx 'blender-probe.py') (Join-Path $s 'render') 2>&1 | ForEach-Object { "$_" }) -join ' '
-        $env:USERPROFILE = Join-Path $tmp 'home'
+        $env:USERPROFILE = $tmpHome
         if ($probe -match 'BLENDER-OK') {
             Check 'Blender with PyNifly found - the render steps can run' $true ($probe -replace '^.*BLENDER-OK ', '')
         } else {
             # no Blender (or no PyNifly in it): a render step must say SKIP and write nothing, not fail
             PyRun 'before-after-sheet render reports SKIP without Blender / PyNifly' @((Join-Path $s 'render\before-after-sheet.py'), 'render', '--out', (Join-Path $rt 'sheet'), '--before', 'none.nif', '--before-tex', $rt, '--after', 'none.nif', '--after-tex', $rt) @(3) 'SKIP' 1 | Out-Null
         }
+    }
+    # 12. 1.1.0: the tools brought in from the current pipeline - the hooks, the session tools, the learning loop
+    if ($py) {
+        $hx = Join-Path $Kit 'example\hook-test'
+        $ht = Join-Path $tmp '4. plans\hook-test'
+        New-Item -ItemType Directory -Force -Path $ht | Out-Null
+        function Hook([string]$name, [string]$guard, [string]$fixture, [int]$want) {
+            $out = Get-Content -LiteralPath (Join-Path $hx $fixture) -Raw | & python (Join-Path $s $guard) 2>&1 | ForEach-Object { "$_" }
+            $code = $LASTEXITCODE
+            Check "$name (exit $code, want $want)" ($code -eq $want) ((($out | Select-Object -First 1) -as [string]))
+        }
+        Hook 'bash-backslash-guard REFUSES a heredoc carrying a doubled backslash' 'bash-backslash-guard.py' 'bash-heredoc-doubled-backslash.json' 2
+        Hook 'bash-backslash-guard passes a plain command' 'bash-backslash-guard.py' 'bash-plain.json' 0
+        Hook 'mo2-elevated-launch-guard REFUSES starting ModOrganizer.exe from the shell' 'mo2-elevated-launch-guard.py' 'mo2-start-process.json' 2
+        Hook 'mo2-elevated-launch-guard passes a process listing' 'mo2-elevated-launch-guard.py' 'mo2-tasklist.json' 0
+        # kit-hooks registers them in a settings.json: a person's own hook is kept, a second apply changes nothing
+        $set = Join-Path $ht 'settings.json'
+        Set-Content -LiteralPath $set -Value '{"theme": "dark", "hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "py -3 my-own-hook.py"}]}]}}' -Encoding ASCII
+        PyRun 'kit-hooks --apply registers the pipeline hooks in a settings.json' @((Join-Path $s 'kit-hooks.py'), '--apply', '--settings', $set) 0 'registered' 1 | Out-Null
+        PyRun 'kit-hooks --apply a second time changes nothing' @((Join-Path $s 'kit-hooks.py'), '--apply', '--settings', $set) 0 'nothing changed' 1 | Out-Null
+        PyRun 'kit-hooks --check finds every hook' @((Join-Path $s 'kit-hooks.py'), '--check', '--settings', $set) 0 'every hook registered' 1 | Out-Null
+        $sj = Get-Content -LiteralPath $set -Raw
+        Check "kit-hooks kept the person's own hook and settings" (($sj -match 'my-own-hook\.py') -and ($sj -match '"theme"'))
+        # the problem card (rule 56): a skeleton is refused, a filled card passes
+        $pc = Join-Path $s 'problem-card.py'
+        $o = PyRun 'problem-card new writes a skeleton card' @($pc, 'new', '--task', 'example hello button', '--dir', $ht) 0 $null 1
+        $skel = @(Get-ChildItem -LiteralPath $ht -Filter '*example-hello-button*.md' | Select-Object -First 1)
+        if ($skel.Count -eq 1) { PyRun 'problem-card check REFUSES the unfilled skeleton' @($pc, 'check', $skel[0].FullName) @(3) 'REFUSED' 1 | Out-Null }
+        else { Check 'problem-card new wrote a card' $false $o }
+        PyRun 'problem-card check passes a filled card' @($pc, 'check', (Join-Path $hx 'problem-card-filled.md')) 0 $null 1 | Out-Null
+        # the sessions' message bus: a message sent is in the receiver's inbox
+        $am = Join-Path $s 'ops\agent-msg.py'
+        PyRun 'agent-msg send puts a message in a session inbox' @($am, 'send', '--to', 'Selftest Session', '--subject', 'kit self-test hello', '--body', 'one line', '--from', 'Kit Selftest', '--new-name', 'yes') 0 $null 1 | Out-Null
+        PyRun 'agent-msg inbox lists it' @($am, 'inbox', '--for', 'Selftest Session') 0 'kit self-test hello' 1 | Out-Null
+        # ini-edit changes one key and nothing else
+        $ini = Join-Path $ht 'example.ini'
+        Set-Content -LiteralPath $ini -Value @('; a comment that must survive', '[General]', 'iHotkey = 37', 'bEnabled = 1') -Encoding ASCII
+        PyRun 'ini-edit sets one key' @((Join-Path $s 'ini-edit.py'), $ini, '--set', 'General:iHotkey=38') 0 $null 1 | Out-Null
+        $iniT = Get-Content -LiteralPath $ini -Raw
+        Check 'ini-edit changed that key and kept the rest' (($iniT -match 'iHotkey = 38') -and ($iniT -match 'a comment that must survive') -and ($iniT -match 'bEnabled = 1'))
+        PyRun 'fomod-repo-installer-shipped-gate.py --self-test' @((Join-Path $s 'gates\fomod-repo-installer-shipped-gate.py'), '--self-test') 0 'PASS' 1 | Out-Null
+        PyRun 'root-topology-gate: the installed root is the twelve stages and the hidden .MD' @((Join-Path $s 'gates\root-topology-gate.py')) 0 $null 2 | Out-Null
+        PyRun 'repeated-lesson-scan reads the library' @((Join-Path $s 'repeated-lesson-scan.py')) 0 $null 1 | Out-Null
+        PyRun 'gate-catalogue --build writes the catalogue of every gate' @((Join-Path $s 'gate-catalogue.py'), '--build') 0 $null 1 | Out-Null
     }
 }
 finally {
@@ -219,6 +265,6 @@ if ($fails.Count -eq 0) { Say ("PASS  ({0} checks)" -f $script:results.Count) } 
 $outFile = Join-Path $env:TEMP "pipeline-kit-selftest-$stamp.txt"
 $script:log | Set-Content -LiteralPath $outFile -Encoding UTF8
 Say "output saved: $outFile"
-if ($fails.Count -eq 0 -and -not $KeepTemp) { Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue }
+if ($fails.Count -eq 0 -and -not $KeepTemp) { Remove-Item -LiteralPath $tmp, $tmpHome -Recurse -Force -ErrorAction SilentlyContinue }
 elseif ($KeepTemp -or $fails.Count -gt 0) { Say "temp pipeline kept: $tmp" }
 exit $(if ($fails.Count -eq 0) { 0 } else { 1 })

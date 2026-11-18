@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
     Installs the Pipeline Kit at a root: the stage folders, <ROOT>\.MD with every kit file, the empty ledgers,
-    pipeline.config.json, and (optionally) the PIPELINE_ROOT environment variable and the global git hook.
+    pipeline.config.json (in .MD), and (optionally) the PIPELINE_ROOT environment variable and the global git hook.
 .DESCRIPTION
     Step 3 of README-FOR-AI.md. Run it from the unzipped kit; it copies the kit INTO <ROOT>\.MD so that every path
     the scripts and rosters expect is real: the scripts in their kind folders (<ROOT>\.MD\scripts\gates\version-gate.ps1,
@@ -46,7 +46,7 @@ $STAGES = @(
     '1. mod sorter', '2. Mod Types', '2. Mod Types\to-do list', '2. Mod Types\bug reports',
     '2. Mod Types\Framework or Utility', '3. analyze mods', '4. plans', '5. current project mod',
     '6. current wip mods', '7. current test builds', '8. confirm compatibility', '9. patches output',
-    '10. finalized mods', '11. Nexus distro', '12. needs an update', '13. testbench'
+    '10. finalized mods', '11. Nexus distro', '12. needs an update'
 )
 foreach ($s in $STAGES) { New-Item -ItemType Directory -Force -Path (Join-Path $Root $s) | Out-Null }
 Write-Output ("  ok  {0} stage folders under {1}" -f ($STAGES | Where-Object { $_ -notmatch '\\' }).Count, $Root)
@@ -82,6 +82,10 @@ if ((Get-Item -LiteralPath $kit).FullName -ieq $md) {
     Write-Output "  ok  $n kit files copied into $md"
 }
 New-Item -ItemType Directory -Force -Path (Join-Path $md 'docs-archive') | Out-Null
+# rule 39 and the root-topology gate: the visible root is the twelve stages and nothing else - .MD is a tool folder,
+# so it is Hidden (a person sees the stages in Explorer; the gate refuses a visible non-stage entry at the root)
+$mdItem = Get-Item -LiteralPath $md -Force
+if (-not ($mdItem.Attributes -band [IO.FileAttributes]::Hidden)) { $mdItem.Attributes = $mdItem.Attributes -bor [IO.FileAttributes]::Hidden }
 New-Item -ItemType Directory -Force -Path (Join-Path $md 'logs') | Out-Null
 
 # the Claude Code memory folder of this root: Claude Code names a project's folder after the directory it was started
@@ -120,8 +124,8 @@ $seeds = @{
 }
 foreach ($k in $seeds.Keys) { if (-not (Test-Path -LiteralPath $k)) { Set-Content -LiteralPath $k -Value $seeds[$k] -Encoding UTF8 } }
 
-# pipeline.config.json at the root (and the .MD copy kept identical)
-$cfgPath = Join-Path $Root 'pipeline.config.json'
+# pipeline.config.json in .MD (1.1.0: no longer at the root, which holds only the twelve stages)
+$cfgPath = Join-Path $md 'pipeline.config.json'
 $kitVer = ''
 try { $kitVer = (Get-Content -LiteralPath (Join-Path $md 'MANIFEST.json') -Raw | ConvertFrom-Json).version } catch { }
 $cfg = [ordered]@{
@@ -132,7 +136,6 @@ $cfg = [ordered]@{
     installed    = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
 }
 ($cfg | ConvertTo-Json -Depth 3) | Set-Content -LiteralPath $cfgPath -Encoding UTF8
-Copy-Item -LiteralPath $cfgPath -Destination (Join-Path $md 'pipeline.config.json') -Force
 Write-Output "  ok  $cfgPath"
 
 # the resolver, once every file it names exists: its INDEX.md (every role and what it resolves to on this machine),
@@ -165,5 +168,6 @@ if ($SetGitHooks) {
 }
 
 Write-Output ''
+Write-Output "      Claude Code hooks not registered: run  py -3 `"$md\scripts\kit-hooks.py`" --apply  (it changes your settings.json - README-FOR-AI 3c)"
 Write-Output "installed. Next: powershell -NoProfile -ExecutionPolicy Bypass -File `"$md\scripts\kit-selftest.ps1`""
 exit 0

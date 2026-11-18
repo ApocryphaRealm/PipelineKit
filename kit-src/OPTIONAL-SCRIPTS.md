@@ -115,3 +115,34 @@ The kit's build refuses to ship a network call, so these scripts live only in th
   and the `nexus-page` skill describe the steps.
 - **Service:** your Nexus pages. **You supply:** nothing to read; posting stays in your account.
 - **Without it:** reread the whole comment on the page immediately before you draft.
+
+# Held out for other reasons - tied to one machine, one game or one person's schedule (1.1.0)
+
+These connect to nothing, but they were built around the original author's own setup: his test instances and launchers,
+his daily schedule, or one game's files. The rules that describe them ship; the tools do not, because a copy would
+carry his machine with it. Rebuild them from the rule against your own setup when you want them.
+
+## 10. The combined test run and the test queue (`combined-run.py`, `test-request.py` in the original)
+
+- **Why:** rule 69 - one session launches the game and runs every queued build's test in one batch; every other session
+  queues a request (steps, each with its EXPECTED result) and reads the result back. It stops two sessions launching at
+  once and puts every launch behind the same gates.
+- **Why it is held out:** the original checks the person's presence schedule before a launch, keeps one game's script
+  log, and calls launchers and profile tools written for his MO2 instances. A copy without those parts would be a
+  different tool.
+- **To rebuild:** the batch (`start` locks the instance and backs up the profile, `launch` sets a ticket the launchers
+  check, `result` refuses a verdict without its reason line, `finish` restores the profile and refuses while a request
+  has no result), the queue (`submit` refuses a step with no expected result), and `agent-lock.py` (which ships) for the
+  lock.
+
+## 11. The presence check (`owner-presence.py` in the original)
+
+- **Why:** a prompt hook that tells every session whether the person is at the machine, at work or asleep, so nothing is
+  launched over a game he is playing. It carries his working hours, so it is his alone. Write your own from your schedule.
+
+## 12. Game-specific gates and launch checks
+
+- The original has launch and source gates for single games and instances (the Norse build-matches-MO2 launch check,
+  Njordlinger list audits, Witcher 3 and Oblivion Remastered launchers, the DevBench loops). The generic ones ship
+  (`gates\ue-cached-pointer-gate.py` for any UE4SS C++ mod among them); the rest are listed in the gate rows the build
+  drops, printed by `build_kit.py --check`.

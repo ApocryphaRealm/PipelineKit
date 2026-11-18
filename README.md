@@ -16,6 +16,7 @@ call or direct evidence survived.
 | `kit-src\` | the kit's own hand-written files - the member README, the rebuild recipe (`README-FOR-AI.md`), the install and self-test scripts, the example mod, the licences |
 | `CHANGELOG.md` | every kit version, with its ledger status |
 | `dist\` | build output - never committed |
+| `kit\` | **the kit itself, as built**: the screened, identity-free kit, regenerated from the live pipeline once a day and committed by the maintainer's daily job (it builds, refuses on a leak or screen failure, and skips a day while this repository has uncommitted work). Never edited by hand - change the live pipeline or the build. Download it from here, or as the release zip |
 
 ## Building
 

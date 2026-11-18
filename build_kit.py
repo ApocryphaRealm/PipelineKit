@@ -83,6 +83,8 @@ DOCS = [
     ("docs-archive/AI-PIPELINE-REFERENCE.md", "docs/AI-PIPELINE-REFERENCE.md"),
     # 1.0.2: how a checking agent judges an archived session's digest (the archive sweep, README-FOR-AI 8b)
     ("logs/archive-sweep/INSTRUCTIONS.md", "docs/ARCHIVE-SWEEP-INSTRUCTIONS.md"),
+    # 1.1.0: the contract of the sessions' shared folder (agent-lock, agent-msg); the folder ships with it
+    ("agent-bus/README.md", "agent-bus/README.md"),
 ]
 
 # the gate scripts and their helpers: the REAL file's path relative to live .MD\scripts, which is also its path under
@@ -121,6 +123,31 @@ SCRIPTS = [
     "gates/pattern-gate.py", "gates/engraving-layout-gate.py", "gates/surface-profile-gate.py",
     "art/make-feature-banners.py",
     "render/niflib.py", "render/winding.py", "render/nif-readback.py", "render/render_lib.py", "render/before-after-sheet.py",
+    # 1.1.0, brought up to date with the live pipeline of 2026-11-18 (OPTIONAL-SCRIPTS.md says what stays out and why):
+    # sessions working side by side - one writer per resource, the message bus, a race-free .MD commit
+    "ops/agent-lock.py", "ops/agent-msg.py", "ops/md-commit.py",
+    # the Claude Code PreToolUse guards (kit-hooks.py registers them, README-FOR-AI 3c)
+    "bash-backslash-guard.py", "mo2-elevated-launch-guard.py", "windowed-tool-while-game-guard.py", "root-builder-live-write-guard.py",
+    # the learning loop: the problem card falsification-log.ps1 requires (rule 56), the repeated-lesson scan, the gate
+    # catalogue, the stage-8 verdict audit, and the one event log pipeline-log.ps1 delegates to
+    "problem-card.py", "repeated-lesson-scan.py", "gate-catalogue.py", "stage8-verdict-audit.py", "events.py",
+    # package gates whose gate-rules rows now ship with them
+    "gates/behavior-patch-enum-gate.py", "gates/clip-motion-matches-motion-data-gate.py", "gates/compat-evidence-gate.py",
+    "gates/distro-banner-pill-gate.py", "gates/distro-licence-gate.py", "gates/esp-shield-flag-gate.py",
+    "gates/fomod-info-version-gate.py", "gates/fomod-repo-installer-shipped-gate.py", "gates/line17-gate.py",
+    "gates/nemesis-patch-info-gate.py", "gates/nexus-ai-tags-gate.py", "gates/root-topology-gate.py",
+    "gates/scaleform-ui-thread-gate.py", "gates/skse-runtime-declaration-gate.py", "gates/ue-cached-pointer-gate.py",
+    "gates/pex-header-gate.py", "gates/profile-list-write-gate.py", "gates/tr-keys-translated-gate.py",
+    # release: several downloads per release (finalize-mod and the distro sweep read it), the packager, the FOMOD repacker
+    "release/nexus_files.py", "release/package-mod.ps1", "plugins/repack-fomod.ps1",
+    # plugin tools (our own record readers and writers), the Papyrus compiler wrapper and its header scrub
+    "plugins/addrlib.py", "plugins/esp-drop-cells.py", "plugins/esp-form44.py", "plugins/esp-regroup.py", "plugins/esp_groups.py",
+    "plugins/merge-to-espfe.py", "plugins/renumber-to-esl.py", "plugins/esp-overlap.py", "plugins/Get-PluginRecordTypes.ps1",
+    "plugins/compile-papyrus.ps1", "plugins/pex-scrub.py",
+    # housekeeping: INI edits that change nothing else, folder indexes, what a step touched, the package path guard,
+    # the pipeline's state from its folders, the session checkpoint (rule 65), a relicense, the optimisation sweep
+    "ini-edit.py", "home-index.py", "touch-snapshot.ps1", "package-path-guard.ps1", "pipeline-status.ps1",
+    "ops/session-checkpoint.ps1", "relicense-gpl3.py", "optimize-project.ps1",
 ]
 # 1.1.0: folders that ship WHOLE (every .py in them, __pycache__ left out), so a module added to one is never missed;
 # an empty or missing folder stops the build like a missing listed script
@@ -151,7 +178,7 @@ INSTALL_CREATES = {".MD/PROGRESS.md", ".MD/docs-archive", "2. Mod Types/to-do li
                    # the stage folders (kit-install.ps1 $STAGES; the owner's extra folders - quarantine, playerbot sources - are not)
                    "1. mod sorter", "2. Mod Types", "3. analyze mods", "4. plans", "5. current project mod", "6. current wip mods",
                    "7. current test builds", "8. confirm compatibility", "9. patches output", "10. finalized mods", "11. Nexus distro",
-                   "12. needs an update", "13. testbench"}
+                   "12. needs an update"}
 # a role note that names the owner's machine or people is dropped (the role itself ships)
 # (the owner's MO2 instance names are added from the private identity config - ownerNotePattern)
 OWNER_NOTE_RE = re.compile(r"(?i)onedrive|this pc|owner|memory [a-z-]+-[a-z-]+|step \d|phase \d|[A-Z]:\\")
@@ -162,7 +189,15 @@ DATA_EMPTY = {"version-registry.json": "{}\n", "version-ledger.json": "[]\n", "g
               "version-ledger-prerelease.json": "[]\n",
               # 1.0.2: the skill scout's decided non-candidates start empty - the person's decisions, not the owner's
               "skill-scout-ignore.txt": "# skill-scout-ignore.txt - candidates judged NOT skill-worthy, so skill-scout.py never flags them again.\n"
-                                        "# One per line: a script name, a doc path relative to <ROOT> (or \"a.ps1 + b.py\" for a chain), then  # why, date.\n"}
+                                        "# One per line: a script name, a doc path relative to <ROOT> (or \"a.ps1 + b.py\" for a chain), then  # why, date.\n",
+              # 1.1.0: the repeated-lesson scan's decided terms and the event log's key map start empty too
+              "repeated-lesson-scan-ignore.txt": "# repeated-lesson-scan-ignore.txt - terms judged to need no gate, so repeated-lesson-scan.py never lists them again.\n"
+                                                 "# One per line: the term, then  # why, date.\n",
+              "events-keymap.json": json.dumps({"_about": "subject name -> version-registry key, applied by events.py on read; "
+                                                "built by `events.py keymap --build` from the registry and the version ledger - "
+                                                "edit by rebuilding, never by hand", "names": {}}, indent=1) + "\n"}
+# 1.1.0: files and folders under .MD that the tools write into, shipped empty (path under dist: content)
+MD_EMPTY = {"pipeline-events.jsonl": "", "problem-cards/.gitkeep": ""}
 
 # 1.0.2: the Claude Code skills (.MD\skills\<name>\, junctioned into ~\.claude\skills by the person - README-FOR-AI 7c)
 SKILLS_DIR = "skills"
@@ -417,6 +452,26 @@ def rewrite_script(rel: str, text: str) -> str:
         # without texconv no DDS is decoded: _load_tex returns None and judge() says it found no texture to judge by
         text = must(r'    if not os\.path\.exists\(png\):\r?\n        subprocess\.run\(\[TEXCONV,',
                     '    if not os.path.exists(png) and TEXCONV:' + nl + '        subprocess.run([TEXCONV,', text, count=1)
+    if name == "mo2-elevated-launch-guard.py":
+        # the original's un-elevated launcher (role mo2-launch) drives its own MO2 instances and is not in the kit
+        text = must(r'"Launch it with: [^\r\n]*find mo2-launch\)[^\r\n]*"\)',
+                    '"Start it un-elevated instead: from its own shortcut, or a launcher of yours that drops elevation '
+                    '(the original\'s mo2-launch is not in the kit).\\n")', text, count=1)
+    if name == "touch-snapshot.ps1":
+        # the watched roots: the original's plan folder and its three Claude Code project memories -> the one memory
+        # folder of the project started at <ROOT>
+        text = must(r"(?m)^[ \t]*\(Join-Path \$ProjectRoot '4\. plans\\[^']+'\),[ \t]*\r?\n", "", text, count=1)
+        text = must(r"(?ms)^([ \t]*)\(Join-Path \$home_ '\.claude\\projects\\[^']+\\memory'\),[ \t]*\r?\n(?:[ \t]*\(Join-Path \$home_ '\.claude\\projects\\[^']+\\memory'\),?[ \t]*\r?\n)*",
+                    "    (Join-Path $home_ ('.claude\\projects\\' + ($ProjectRoot -replace '[^A-Za-z0-9]', '-') + '\\memory'))   # kit: the memory of the project started at <ROOT>" + nl,
+                    text, count=1)
+    if name == "relicense-gpl3.py":
+        text = must(r'GPL_SOURCE = r"[^"\r\n]*\\LICENSE"',
+                    'GPL_SOURCE = os.path.join(' + py_md_expr(rel) + ', "LICENSE-GPL-3.0.txt")  # kit: the GPL text kit-install puts in .MD',
+                    text, count=1)
+    if name == "esp-overlap.py":
+        text = must(r'open\(rf"[A-Za-z]:\\[^"\r\n]*\\profiles\\\{profile\}\\loadorder\.txt", encoding="utf-8"\)',
+                    'open(os.path.join(os.path.dirname(((os.environ.get("PIPELINE_MO2_INSTANCES") or "").split(";")[0]).rstrip("\\\\/")), '
+                    '"profiles", profile, "loadorder.txt"), encoding="utf-8")  # kit: the first MO2 instance', text, count=1)
     if name == "package_render_uv.py":
         text = must(r'\(set2\\\\uv_stretch_check\.py\)', '(a design-workspace script of the original, not in the kit)', text, count=1)
     if name == "engraving-layout-gate.py":
@@ -714,6 +769,8 @@ def main() -> int:
             put("scripts/" + d, sanitise(t), p)
     for d, body in DATA_EMPTY.items():
         put("scripts/" + d, body)
+    for d, body in MD_EMPTY.items():
+        put(d, body)
 
     # 2a. the role resolver (rule 70) - the scripts above look everything up through it
     for r in RESOLVER_FILES:
