@@ -9,7 +9,7 @@ module calls it directly, so no Python script joins "<stage>\\<Mod> <version>" i
     package_root(stage, mod, game)                 -> "<stage>\\<Game> - <Mod>" (existing or not)
     find_packages(stage, mod=None, game=None, version=None, folders=False, archives=False, symbols=False)
                                                    -> [{name, path, mod, version, tail, game, flat, is_dir}, ...]
-game is "Skyrim", "Oblivion Remastered", "Witcher 3" or "MO2".
+game is "Skyrim", "Oblivion Remastered", "Witcher 3", "Norse" or "MO2".
 """
 import importlib.util
 import os

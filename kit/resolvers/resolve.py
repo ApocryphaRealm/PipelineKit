@@ -816,15 +816,15 @@ def cmd_run(ctx, role, args):
 # stage-finalized). String comparisons follow PowerShell's: -eq / -like / -match / hashtable keys ignore case,
 # [regex]::Match does not.
 
-DISTRO_GAMES = ("Oblivion Remastered", "Skyrim", "MO2", "Witcher 3")
+DISTRO_GAMES = ("Oblivion Remastered", "Skyrim", "MO2", "Witcher 3", "Norse")
 # A name with map entries in several games, looked up WITHOUT a game: Skyrim (the project's default) first, then the
 # newer games. distro-names.ps1 took the first entry in .NET hashtable order, which no file states; this order gives
 # the same answer for every shared name in the map on 2026-10-09 (Apocrypha Menu Framework -> Skyrim, Unbind Vanilla
 # Controls -> Skyrim, Simple Loadout System -> Witcher 3).
-DISTRO_NOGAME_ORDER = ("Skyrim", "Witcher 3", "MO2", "Oblivion Remastered")
+DISTRO_NOGAME_ORDER = ("Skyrim", "Witcher 3", "MO2", "Oblivion Remastered", "Norse")
 DISTRO_MAP_FILE = "_distro-folders.json"
-FOLDER_GAME_RE = re.compile(r"^(Oblivion Remastered|Skyrim|MO2|Witcher 3) - ")
-FOLDER_PARTS_RE = re.compile(r"^(Oblivion Remastered|Skyrim|MO2|Witcher 3) - (.+)$")
+FOLDER_GAME_RE = re.compile(r"^(Oblivion Remastered|Skyrim|MO2|Witcher 3|Norse) - ")
+FOLDER_PARTS_RE = re.compile(r"^(Oblivion Remastered|Skyrim|MO2|Witcher 3|Norse) - (.+)$")
 MO2_NAME_RE = re.compile(r"^MO2 |MO2 Theme$", re.I)
 
 
@@ -1044,6 +1044,10 @@ def distro_game(text):
         return "Oblivion Remastered"
     if re.search("witcher", t, re.I):
         return "Witcher 3"
+    # NORSE: Oath of Blood (UE5 + UE4SS, Nexus domain "norse", 2026-11-18) - tested before the Skyrim fall-through,
+    # which used to turn "Norse" into "Skyrim" without a word
+    if re.search(r"^\s*norse\b", t, re.I):
+        return "Norse"
     if re.search(r"^(mo2|modorganizer)", t, re.I):
         return "MO2"
     return "Skyrim"
@@ -1060,6 +1064,8 @@ def distro_modpart(mod, game):
     elif g == "mo2":
         n = re.sub(r"^MO2 ", "", n, flags=re.I)
         n = re.sub(r" MO2 Theme$", " Theme", n, flags=re.I)
+    elif g == "norse":
+        n = re.sub(r"^Norse ", "", n, flags=re.I)   # "Norse Tagger" -> folder "Norse - Tagger" (2026-11-18)
     return n
 
 
@@ -1097,6 +1103,10 @@ def distro_packagegame(path):
     f = re.I | re.M
     if re.search(r"^(.*[\\/])?(OblivionRemastered|OBSE)[\\/]", joined, f):
         return "Oblivion Remastered"
+    # NORSE (2026-11-18): game-root relative Norse\Binaries\Win64\ue4ss\... - before Skyrim and MO2, whose loose
+    # patterns (a .py, a scripts\ folder) a UE4SS Lua mod could also hold
+    if re.search(r"^(.*[\\/])?Norse[\\/]Binaries[\\/]", joined, f):
+        return "Norse"
     # Witcher 3 before Skyrim: its Mods\mod*\content\scripts tree would read as a Skyrim scripts\ folder
     if re.search(r"^(.*[\\/])?bin[\\/](x64_dx12|config[\\/]r4game)[\\/]", joined, f) or re.search(r"\.ws$", joined, f):
         return "Witcher 3"
@@ -1176,6 +1186,8 @@ def distro_modname(ctx, folder, finalized_root=""):
         cands = [part, part + " for Oblivion Remastered", part + " for Oblivion"]
     elif game == "MO2":
         cands = [part, "MO2 " + part, re.sub(r" Theme$", " MO2 Theme", part, flags=re.I)]
+    elif game == "Norse":
+        cands = ["Norse " + part, part]
     else:
         cands = [part]
     if finalized_root and os.path.exists(finalized_root):
@@ -1231,6 +1243,8 @@ def distro_modgame(ctx, entry):
         return "Oblivion Remastered"
     if re.search("witcher", dom, re.I):
         return "Witcher 3"
+    if re.search(r"^norse$", dom, re.I):
+        return "Norse"
     name = _ps_string(entry.get("displayName"))
     if name:
         found = []

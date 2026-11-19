@@ -1,6 +1,6 @@
 # Rules digest - the one-page session-start read (GENERATED, do not edit)
 
-<!-- generated 2026-11-18 from rules v3.3.0 by scripts\rules-digest.py -->
+<!-- generated 2026-11-19 from rules v3.3.0 by scripts\rules-digest.py -->
 
 Read this with CLAUDE.md and PREFLIGHT.md at every session start (the owner, 2026-09-07: the middle path).
 When work enters a stage, read that stage's PART in full - the table in CLAUDE.md says which. A line here is

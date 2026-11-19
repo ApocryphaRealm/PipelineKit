@@ -92,830 +92,838 @@ reasoning that produced the mistake has faded.
 
 | line | entry | topics |
 |---:|---|---|
-| 1013 | 1. A stack trace names the plugin that DIED, not the one that broke it | crash, cpp, skyrim |
-| 1032 | 2. Correlation is not mechanism — and five of them in a row means the model is wrong | testing, cpp, crash |
-| 1050 | 3. Hold every other variable fixed — including the ones you did not choose to change | mo2, settings, testing |
-| 1063 | 4. A disabled mod's DLL may still be loaded, because another mod ships it | cpp, logging, ui |
-| 1076 | 5. Inline no-op stubs compile away — a "feature removed" build can be byte-identical | crash, testing |
-| 1092 | 6. Verify the premise before acting on it — timestamps are cheap | testing |
-| 1106 | 7. Never reason about a timeline from a truncated log | settings, logging |
-| 1118 | 8. Commit before letting an agent edit the working tree | git, build, cpp |
-| 1132 | 9. A logged failure in one subsystem means the whole subsystem is suspect | crash, logging |
-| 1145 | 10. Null checks do not defend against a bad code address | crash |
-| 1159 | 11. ROUTINE — when rebuilding or re-versioning a mod, set every location in one operation | build, packaging, versioning |
-| 1211 | 12. Inventory before deleting — "it's a temp folder" is not an inspection | cpp, crash, git |
-| 1256 | 13. ROUTINE — in analysis mode, instrument a WORKING mod before re-reading your own | devbench, crash |
-| 1299 | 14. The answer was already filed — search the reference folders BEFORE investigating | ui, process, scaleform |
-| 1347 | 15. ROUTINE — a check for an invisible failure has to run on a schedule, not on noticing | powershell, process, versioning |
-| 1379 | 16. Verify a capability against the binary, not against documentation for an older release | process, powershell |
-| 1418 | 17. ROUTINE — form a hypothesis, then try to kill it, before building anything (rule 56) | logging, testing, cpp |
-| 1459 | 18. A test that never ran returns "no result" — which reads exactly like a negative result | licensing, python, settings |
-| 1495 | 19. A licence declared in a build manifest is not evidence — only the LICENSE file is | licensing, packaging, build |
-| 1546 | 20. MO2's `modlist.txt`: a separator's members are the mods listed ABOVE it, and file-bottom wins conflicts | build, powershell, process |
-| 1867 | MO2 writes in-game INI changes INTO the providing mod's folder - version swaps silently delete user settings (2026-08-27) | settings, packaging, mo2 |
-| 1884 | Skyrim actions can trigger on button RELEASE - naive release-pass-through leaks them (2026-08-27) | ui |
-| 1893 | SKSE plugin identity is the NAME STRING, not the DLL filename - filename governs only load order and raw GetModuleHandle (2026-08-27) | skyrim, cpp, git |
-| 1912 | Host-shell filesystem checks don't see what a VFS-virtualized process sees (2026-08-27) | mo2, testing |
-| 1924 | SendKeys cannot navigate Skyrim's own menus - only real Win32 dialogs on top of it (2026-08-27) | ui, crash, process |
-| 1940 | A "hanging" old .NET 2.0 EXE with zero stdout/stderr may actually be an instant shim failure, not a hang (2026-08-27) | crash, powershell, testing |
-| 2005 | DevBench from the main menu: coc is flaky-by-design, `game load` by name is the reliable entry; replay `path` needs the full Data-relative path (2026-08-28) | ui, skyrim, devbench |
-| 2042 | Empirical: coc from the main menu EXECUTES but silently no-ops in a minimal load order (2026-08-28) | skyrim, testing, ui |
-| 2059 | ReSaver's `clean` cannot strip cross-load-order missing masters; it only removes elements undefined IN THE SAVE'S OWN context (2026-08-28) | testing, skyrim, crash |
-| 2077 | Confirmed: a full-modlist save crashes the ENGINE (not AMF) when loaded in a minimal list, interior or exterior (2026-08-28) | crash, skyrim, testing |
-| 2094 | Repeated game launches without confirming full close spawn DUPLICATE instances that corrupt tests and wedge processes (2026-08-28) | crash, skyrim, testing |
-| 2109 | 21. A path-matching hook must match the caller's RAW string, separator quirks and all — not the tidy path you imagined | cpp, skyrim, process |
-| 2134 | A rule-15 compatibility verdict must be named by the DISPLAY name, or the gate silently can't find it (2026-08-28) | process, ui, packaging |
-| 2159 | NEVER force-kill SkyrimSE with Stop-Process/taskkill - it wedges into an unkillable zombie; close it gracefully (2026-08-28) | ui, devbench, skyrim |
-| 2173 | The minimal-instance load crash is NOT missing-masters - a VANILLA save crashes at the same address; suspect an ESP mismatch (2026-08-28) | crash, testing, skyrim |
-| 2188 | Save-LOAD crashes in the minimal test instance for an unisolated reason; a NEW GAME is the untested path (2026-08-28, stop-after-5 analysis) | crash, testing, ui |
-| 2205 | RESOLVED root cause: DevBench cold save-load from the MAIN MENU is the crash/hang, not the mod set - new-game is the path (2026-08-28, final) | crash, testing, devbench |
-| 2228 | Gotcha: Nexus mod comments ARE scrapable - but only with the XHR header, and the failure is silent (2026-08-28) | - |
-| 2248 | Gotcha: a closed-source SKSE plugin that ships its .pdb is readable to near-source level (2026-08-28) | logging, packaging, cpp |
-| 2266 | DEFINITIVE (bisected): the load crash is DevBench's programmatic load, NOT the mods/AMF/environment (2026-08-28) | ui, crash, devbench |
-| 2297 | Root Builder: the Backup folder is inert, but MO2's `overwrite\Root` is a cross-profile deploy (2026-08-28) | mo2, python, testing |
-| 2319 | A "minimal" test profile can disable the infrastructure the test needs (2026-08-28) | mo2, testing, settings |
-| 2331 | rcedit --set-icon does NOT replace MO2's main icon - it adds a stray group #0; rewrite the named IDI_ICON1 with UpdateResource (2026-08-28) | mo2, powershell |
-| 2345 | Scheduled task `powershell -WindowStyle Hidden` still flashes a console every run; launch through wscript (2026-08-28) | powershell, mo2, testing |
-| 2356 | ROOT CAUSE of "zero plugins loaded / all 5 base ESMs 'no longer present' / New Game stalls" in Test Build: SE 1.5.97 needs Backported Extended ESL Support to read the 1.71-header ESMs (2026-08-28, PROVEN live) | testing, mo2, skyrim |
-| 2389 | SKSE kPostLoadGame's message `data` is a BOOL (load succeeded), NOT the save name - only kPreLoadGame/kSaveGame carry the name string (2026-08-28, cost 2 build numbers) | testing, skyrim, crash |
-| 2406 | One AMF (or any DLL-conflicting mod) enabled at a time in a test profile - two make usvfs serve the wrong file under the real name (2026-08-28) | mo2, cpp, logging |
-| 2416 | AMF alias identity guard must be order-based (named event), not filename-based (2026-08-28) | cpp, mo2, logging |
-| 2430 | SKSE AE (2.2.x) shows a BLOCKING "DLL plugin failed to load - Exit game?" modal when a plugin returns false from SKSEPluginLoad; SE (2.0.20) does not (2026-08-28) | cpp, skyrim, mo2 |
-| 2448 | AMF-Test (1.6.1170) fresh MO2 instance won't boot vanilla - C++ throw on Skyrim.esm via usvfs (PARKED 2026-08-28) | mo2, skyrim, crash |
-| 2464 | Mod version numbering: next = LAST WORKING + 1; failed/scratch builds are disposable and their numbers are REUSED (recurring - 2026-08-28) | versioning, powershell, ui |
-| 2503 | Rule-following FAILURES this session, and how to not repeat them (2026-08-28, the owner's standing practice) | process, testing, devbench |
-| 2526 | AMF ships an `amf.menu` DevBench tool - the menu is now testable HEADLESSLY (the owner's idea, 2026-08-28) | devbench, ui, licensing |
-| 2546 | Two build gotchas from that work (2026-08-28) | settings, cpp, python |
-| 2554 | MO2 launched from the Bash tool HANGS at startup - Git's mingw64\bin on PATH hijacks its OpenSSL (2026-08-28, diagnosed from the owner's screenshot) | testing, git, mo2 |
-| 2577 | Pressing the vanilla START MENU headlessly: invoke its ActionScript, never the GameDelegate handler directly (2026-08-28, VERIFIED) | process, testing, ui |
-| 2605 | Build AFTER the version bump, not before - or the binary ships mis-stamped (2026-08-28) | cpp, logging, packaging |
-| 2616 | MO2 drops a modlist.txt entry for a mod folder that has no meta.ini (2026-08-28) | mo2, powershell, settings |
-| 2626 | FLAW (mine, to correct): I never OFFERED to build automation hooks into the button interfaces - the owner had to propose it twice (2026-08-28) | process, devbench, testing |
-| 2655 | The driving tool caught a bug in the thing it drives - and the sweep is now a regression test (2026-08-28) | ui, settings, crash |
-| 2676 | Pixelated ImGui text = the built-in BITMAP font being magnified; rasterise a TTF at native size instead (2026-08-28) | ui, settings, build |
-| 2700 | Closing a HUNG Skyrim: terminate from INSIDE the process - external kills cannot (2026-08-28, VERIFIED) | devbench, crash, logging |
-| 2730 | Gotcha: a doubled backslash inside a Bash-tool heredoc arrives as a SINGLE backslash - Python then reads `\r` and `\v` as control characters and silently corrupts paths (2026-08-29) | python, process, build |
-| 2755 | Gotcha: PowerShell's comma binds tighter than `+` - `@($a, $b + 1, 0)` is a FOUR-element array, and the doc-version roll stamped 1.0.16 -> "1.0.1" (2026-08-29) | powershell, process, versioning |
-| 2767 | A "rule N" cross-reference is a pointer that dangles silently - 4 of 199 pointed at the WRONG rule and nobody had noticed (2026-08-29) | process, licensing, settings |
-| 2792 | MISTAKE (mine, recorded at the owner's instruction 2026-08-29): the in-process kill switch was available all along and I never offered it during the hung-game troubleshooting | devbench, cpp, mo2 |
-| 2816 | Gotcha: a failed build followed by package-mod.ps1 ships the PREVIOUS DLL under the NEW version number - check the build's exit code before packaging, and never read it through a pipe (2026-08-29) | packaging, cpp, powershell |
-| 2827 | A HUD widget callback runs on the RENDER thread - it must never call RE::UI (IsMenuOpen/GetMenu) or build a BSFixedString; track menu state from MenuOpenCloseEvent on the main thread instead (2026-08-29) | ui, cpp, devbench |
-| 2844 | Verifying an ImGui overlay needs an IN-PROCESS capture after the Present hook - the game's own screenshot is taken before it, and a desktop grab captures whatever window is on top (2026-08-29) | cpp, devbench |
-| 2855 | Gotcha: a "reinstall" that copies only the DLL leaves the OLD INI in place - and the INI is where colours, keys and thresholds live (2026-08-30) | settings, cpp, packaging |
-| 2863 | Gotcha: a copied CMake build tree does not transplant to a cloned repo - CMakeCache.txt remembers the source path and ninja loops "manifest still dirty" (2026-08-30) | build, packaging |
-| 2871 | Gotcha: `RE::BSInputEventQueue::GetSingleton()` returns garbage on SE 1.5.97 in this CommonLibSSE-NG build - `AddButtonEvent` crashed with this=[value removed] (2026-08-30) | cpp, crash |
-| 2883 | Stamp the version BEFORE the build that a gate and its captures use | process, versioning, packaging |
-| 2902 | Renaming an MO2 mod folder silently DISABLES the mod | mo2, process, skyrim |
-| 2925 | An ornamented UI frame can never be cropped out of a screenshot - export the shape from the SWF and composite instead (2026-09-02) | ui, scaleform, packaging |
-| 2960 | A licence check that stops at the source repository gets the answer wrong - the Nexus "Permissions and credits" block is the half that decides (2026-09-02) | licensing, packaging, powershell |
-| 2999 | A sub-agent explicitly told "do not touch this, do not continue this" did it anyway, concurrently, while I investigated what I thought might be a second session (2026-09-02) | process, cpp, git |
-| 3059 | An unquoted MO2 profile name does not fail loudly - it silently runs the WRONG profile, then fails on a phantom executable (2026-09-02) | mo2, testing, powershell |
-| 3102 | MO2's "selected_profile" is the only profile that matters - a profile whose NAME matches the modlist is not necessarily the one that launches (2026-09-02) | mo2, testing, settings |
-| 3133 | Rule OUR MOD OUT FIRST - and make sure the control test disables the MOD, not a feature (2026-09-02) | ui, settings, testing |
-| 3167 | (original entry, conclusion superseded above) A symptom seen in a full load order is not evidence that our code causes it (2026-09-02) | ui, build, skyrim |
-| 3204 | Force-killing Mod Organizer truncates plugins.txt and silently disables the entire load order (2026-09-02) | mo2, skyrim, testing |
-| 3233 | Reading source with Python's universal newlines corrupts string literals containing a raw CR (2026-09-02) | python, git, cpp |
-| 3265 | A self-check that has never been read is not a check - three ways the optimization sweep lied (2026-09-02) | powershell, process, testing |
-| 3306 | A registry read before the retry point proves nothing - I reported a working system as broken (2026-09-02) | devbench, logging, ui |
-| 3334 | A minimal test profile is not "vanilla" - the graphics injector lives in the game folder and runs anyway (2026-09-02) | mo2, cpp, settings |
-| 3367 | A recalled decision about MECHANISM has to be checked before the first line of the implementation, not after it looks wrong (2026-09-03) | ui, testing, process |
-| 3420 | The install guard has to be re-checked immediately before the write, not remembered from earlier (2026-09-03) | mo2, testing, cpp |
-| 3446 | A Steam-packed executable cannot be signature-scanned on disk - and "no matches" looks identical to a broken scanner (2026-09-03) | cpp, crash, powershell |
-| 3487 | An unregistered custom AppUserModelID makes a pinned taskbar button unresolvable - and the fix is a distinct target PATH, not a better AUMID (2026-09-03) | mo2, testing, cpp |
-| 3527 | Reading the rules only when a task looks rule-shaped means reading them after the work (2026-09-03) | process, packaging, skyrim |
-| 3557 | A clean compile is not evidence for a runtime LAYOUT - CommonLibSSE-NG runtime-data members must go through their accessor (2026-09-03) | cpp, devbench, testing |
-| 3597 | A copied skeleton keeps the donor's identity everywhere you did not look - and every one of those places still compiles (2026-09-03) | settings, cpp, ui |
-| 3716 | A byte signature found once proves the SHAPE, not the MEANING - verify the constant the site loads, and read the value the game actually uses, before believing a watch run (2026-09-05) | powershell, git, testing |
-| 3756 | 23. A licence gate recorded in a plan is binding in every later session (2026-09-05) | licensing, process, scaleform |
-| 3774 | 24. A menu that ignores synthesized input is driven through the game's own handler, found from the vanilla SWF's GameDelegate calls (2026-09-05) | ui, process, cpp |
-| 3800 | 25. A modlist swap that disables the old slot also disables its plugin - re-enable it in plugins.txt (2026-09-05) | mo2, skyrim |
-| 3814 | 26. A Nexus download that returns curl `000` on every CDN is usually a SPACE in the URI, not a network fault (2026-09-05) | packaging |
-| 3831 | 27. PowerShell 5.1: `@(... \| ConvertFrom-Json)` on a top-level JSON ARRAY gives a one-element array - the loop runs once with everything, and curl was handed seven URLs (2026-09-05) | powershell, process |
-| 3851 | 28. A test rig that SUPPLIES the thing under test proves nothing - the MO2 alias plugin made every AMF compatibility pass a false pass (2026-09-05) | cpp, mo2, skyrim |
-| 3867 | 29. A header's enum is a contract by NAME, and its structs are a contract by LAYOUT - not the numbers your library happens to use (2026-09-05) | crash, git |
-| 3885 | 30. "Local\" is the logon SESSION's namespace - a once-only guard named that way is shared with every other game left running, including a wedged one (2026-09-05) | logging, skyrim, devbench |
-| 3900 | 31. A running Mod Organizer instance intercepts `moshortcut://` launches aimed at ANOTHER instance's executable (2026-09-05) | mo2, testing, skyrim |
-| 3911 | 32. PowerShell variable names are case-insensitive: `$I` and a loop's `$i` are the SAME variable (2026-09-05) | mo2, powershell |
-| 3919 | 33. A Steam-packed executable's in-memory import directory is the PACKER's - patching "the exe's import of X" finds nothing (2026-09-05) | skyrim, cpp, testing |
-| 3933 | 34. Skyrim SE's Quit does not pass through ExitProcess, and `qqq` is a hard quit - neither exercises an exit hook (2026-09-05) | cpp, logging |
-| 3943 | 35. vcpkg installs headers with the source archive's OLD timestamps, so ninja does not rebuild against a changed dependency version - link errors against symbols from the previous headers (2026-09-05) | build, cpp |
-| 3953 | 36. The game keeps some of the player's permanent actor-value modifiers across a save and drops others - a co-save "applied" amount is only trustworthy after the load has been checked against it (2026-09-05) | testing |
-| 3966 | 37. `player.advlevel` takes the level directly and offers no attribute choice; a driven level-up needs real character XP, and the LevelUp Menu's confirm box swallows synthesized keys (2026-09-05) | ui, cpp, devbench |
-| 3977 | 38. A hooked call site can rely on a register the ABI calls volatile: the skill-improve call site adds the returned xp to [operand removed], so the level-income hook must not clobber rcx - keep it a leaf, or save rcx in the stub (2026-09-06) | cpp, crash, logging |
-| 3997 | 39. Synthesized key presses do not reach every menu: InputBench's splice never reached the Lockpicking Menu or the Journal, AUO's BSInputEventQueue press reached both, and neither turns a lock (2026-09-06) | ui, devbench |
-| 4009 | 40. A console `prid` selection does not carry between DevBench console execs - use the `<ref>.command` form (2026-09-06) | devbench |
-| 4018 | 41. `menu accept` with the box's own cancelIndex of -1 crashes the game inside devbench (SelectOption(-1)) (2026-09-06) | crash, devbench, cpp |
-| 4026 | 42. Console `activate` bypasses perk activation entry points - a perk-based mod (Lock Overhaul's choice box) only shows itself on a REAL activation (2026-09-06) | skyrim, settings, testing |
-| 4052 | 44. Killing a hung game or task: Claude runs elevated, so use the graceful-first ladder, never a reflexive force (2026-09-06) | cpp, mo2, powershell |
-| 4084 | 45. A PowerShell function that prints a line before `return $false` returns a TRUTHY array - and `if (Fn)` takes the branch it was written to skip (2026-09-07) | powershell, process, settings |
-| 4113 | 46. Routing a page's literals through a string table: three ways the tooling passes while strings stay English (2026-09-07) | git, cpp, ui |
-| 4145 | 47. Writing into an engine container the game sized for itself: it never grows, and CommonLibSSE will grow it anyway (2026-09-08) | cpp, crash, skyrim |
-| 4199 | 48. A before/after screenshot proves nothing unless the thing you changed was on screen (2026-09-08) | ui, git, crash |
-| 4242 | 49. The menu framework's header calls GetProcAddress results WITHOUT null-checking, so any ImGui call the loaded framework lacks is a jump to address zero (2026-09-08) | crash, cpp, logging |
-| 4294 | 50. When the game dies during plugin load, skse64.log NAMES the plugin - read it before bisecting (2026-09-08) | logging, crash, skyrim |
-| 4337 | 51. `[NoDelete]` in an MO2 folder name is a WILDCARD, so a path check on it silently answers about nothing (2026-09-08) | powershell, crash, ui |
-| 4373 | 52. The markers on screen belonged to a different mod, and both halves of the before/after were its work (2026-09-09) | mo2, scaleform, ui |
-| 4407 | A driving op nested inside another op's branch is unreachable - and it looks exactly like "the feature was never tested" (2026-09-09) | process, settings, crash |
-| 4438 | The game's inventory 3D renderer draws nothing when driven from a Present-hook overlay - loaded is not drawn (2026-09-09) | cpp, devbench, scaleform |
-| 4479 | Showing a game model on your own UI: three preconditions, and each one fails silently (2026-09-09) | ui, licensing, crash |
-| 4521 | Skyrim's inventory 3D is driven from the MOVIE, through GameDelegate - not by flags or by calling the manager (2026-09-09) | ui, scaleform, cpp |
-| 4563 | A third-party menu DOES host the item 3D - and the same function under two reverse-engineered names nearly sent the fix somewhere it could not go (2026-09-09) | ui, scaleform, skyrim |
-| 4627 | The instrument was the bug: a blank movie made "never rendered" and "rendered, nothing in it" the same picture (2026-09-09) | ui, python, skyrim |
-| 4673 | A comparison is only as good as the context you think is "working" - and driving a vanilla menu headlessly is not a solved problem (2026-09-09) | ui, git, scaleform |
-| 4713 | 53. To read Steam-packed game code, dump `.text` from the RUNNING process in one read - not through a 2 KB tool op (2026-09-09) | crash, settings, devbench |
-| 4762 | 54. A feature that "does not draw" may be switched off by a GAME ini setting nobody checked (2026-09-10) | settings, process, devbench |
-| 4800 | 55. A sub-agent's report is a claim, not an observation - check a surprising rule against its source sentence, and a reported side effect against the disk (2026-09-10) | process, git, logging |
-| 4841 | 56. "Installed and verified, 0 errors" is not "boots" - and closing a modal dialog can CONTINUE the action it was blocking (2026-09-10) | mo2, settings, testing |
-| 4878 | 57. `'build.bat' is not recognized` from a `cmd /c` started IN the repo folder: the session sets NoDefaultCurrentDirectoryInExePath=1, so cmd never searches the current directory for a program - call scripts by full path (2026-09-11) | settings, git, powershell |
-| 4904 | 58. A test that answers a confirm box "by index 0" answers whatever question is first - read the buttons, or four runs measure "No" (2026-09-11) | cpp, logging, process |
-| 4929 | 59. Porting a hook to Skyrim 1.7: the AE offsets were already right, and one dump of the running game proved it in minutes (2026-09-11) | crash, scaleform, cpp |
-| 4964 | Gotcha: a command refused as touching a "system path" may be naming a string that only APPEARS in its text - and the whole command is rejected before anything runs (2026-09-11) | powershell, mo2, cpp |
-| 5005 | Licence: the LICENSE file inside a mod ARCHIVE may be the UPSTREAM's, not the mod's - check the source repo at the RELEASED TAG (2026-09-11) | licensing, packaging, process |
-| 5048 | 60. `auo.input`'s BSInputEventQueue press CRASHES SE 1.5.97 - drive input with `bench.input`'s PollInputDevices splice instead (2026-09-12) | ui, cpp, settings |
-| 5236 | A rule enforced by several tools, each holding its own copy, is not enforced - it drifts; ONE tool that REFUSES is the shape that holds (2026-09-12) | powershell, process, cpp |
-| 5270 | A hook that consumes EVERY event must write the empty head back - the engine hands the same list pointer back on idle frames, so a consumed node is re-processed every frame until new input arrives (2026-09-12) | cpp, process, testing |
-| 5296 | A runtime debug switch is only as durable as the next config reload - and the driving tool's own ops trigger reloads (2026-09-12) | settings |
-| 5314 | Same-site hooks: the plugin that installs LAST runs FIRST, so a splicer that loads earlier never feeds a filter that loads later (2026-09-12) | cpp, skyrim |
-| 5326 | A menu that never opens from ANY synthetic press is not an observable - prove delivery with a control the profile does answer (2026-09-13) | ui, mo2, cpp |
-| 5340 | A shipped default that points at an asset pack nobody has draws NOTHING, and every proof by state passes anyway - take one picture before calling a surface working (2026-09-13) | settings |
-| 5355 | A DPI-unaware screenshot process captures the top-left fraction of a high-DPI screen - the "wheel at 0.75" was the capture, not the wheel (2026-09-13) | powershell, ui |
-| 5368 | A shipped default that points at an asset pack nobody has draws NOTHING, and every proof by state passes anyway - take one picture before calling a surface working (2026-09-13) | settings |
-| 5383 | A DPI-unaware screenshot process captures the top-left fraction of a high-DPI screen - the "wheel at 0.75" was the capture, not the wheel (2026-09-13) | powershell, ui |
-| 5396 | A proof rig must satisfy the feature's own validity predicate, or the feature quietly takes its default and the proof reads as a pass (2026-09-13) | settings, mo2, process |
-| 5413 | Driving an AMF consumer's tab bar from DevBench: `nav right` needs keyboard nav ON a tab, a recorded click does not switch tabs, and `inject` cannot send a left click (2026-09-13) | cpp, devbench, powershell |
-| 5433 | Driving the game's own Controls menu with spliced keys REMAPS a control: selection moves invisibly, Enter starts a remap, and the result is written to ControlMap_Custom.txt in the game root (2026-09-13) | mo2, ui, crash |
-| 5454 | A GPL library linked into ONE build line makes the whole mod GPL - Nexus took Lock Interaction Overhaul's page down for shipping MIT beside CommonLibSSE-NG 7.2 (2026-09-13) | licensing, packaging, ui |
-| 5493 | A boot that "times out" with the game Responding and its window titled `<plugin>.dll` is a CommonLibSSE-NG fatal dialog waiting for OK - read the dialog text before theorising about a hang (2026-09-13) | cpp, logging, skyrim |
-| 5526 | XAudio2 2.7: removing the active audio device invalidates the WHOLE engine - a new mastering voice cannot be created on it, and calling into it again crashed the game (2026-09-13) | crash, build, settings |
-| 5559 | Calling an ActionScript function by a path that runs THROUGH a function object crashes the game - [code removed] access-violated the moment it ran (2026-09-14) | crash, scaleform, cpp |
-| 5589 | Rebuilding Skyrim's XAudio2 engine: the game's output-mixer table still points at destroyed voices, and a send with no output voice crashes XAudio2_7[value removed] seconds later (2026-09-14) | crash, build, cpp |
-| 5626 | Unbinding a gameplay control also empties every MENU action the control map LINKS to it - the Favorite button showed [???] because Toggle POV was unbound, not Favorites (2026-09-14) | settings, ui, crash |
-| 5658 | A gamepad mapping created at runtime never fires: the engine's button lookup matches key AND modifier exactly, and "no modifier" is 0, not [value removed] (2026-09-14) | crash, cpp, devbench |
-| 5679 | A controller "Pause" press opens the journal on the SAVED tab; only keyboard Esc gets System (2026-09-14) | settings, cpp, ui |
-| 5695 | A hang whose stack runs through YOUR call is not necessarily yours - two unplug hangs were blamed on AAOS's DestroyVoice, and a dump with Microsoft's public symbols showed an XAudio2 2.7 internal deadlock with AAOS nowhere in it (2026-09-15) | crash, build, logging |
-| 5720 | A step that repoints a mod's meta.ini installationFile changes what "not installed yet" means for every later step - an installer run after the SE swaps reinstalled the replaced AE archives (2026-09-15) | python, settings, build |
-| 5736 | pefile.PE(path) keeps the DLL mapped until pe.close() - moving its folder later fails with WinError 32 halfway, leaving a copy in both places (2026-09-15) | cpp, crash, python |
-| 5754 | MO2's mod list ignores a style sheet's view/viewport background for plain rows; only ::item rules reach rows, and they replace separator colours (2026-09-15) | mo2, process, testing |
-| 5793 | A DLL that exports both SKSEPlugin_Query and SKSEPlugin_Version can still be AE-only: it refuses SE at query time (Currency Swapper, Container Distribution Framework, 2026-09-15) | cpp, logging, skyrim |
-| 5811 | An AE-only mod's SE build can be a SEPARATE Nexus page - search by name before porting or writing 'no SE build exists' (Currency Swapper, Container Distribution Framework, 2026-09-15) | cpp, testing, logging |
-| 5831 | An SE list's AE-only plugins cannot be found by DLL strings or mod names - the skse64.log refusals plus each mod's Nexus page are the evidence (Njordlinger, 2026-09-15) | cpp, logging, crash |
-| 5852 | A mod folder named after the parent can hold only one of that page's PATCH files - check installationFile against the page's MAIN file before trusting the folder name (Njordlinger, 2026-09-15) | python, mo2, settings |
-| 5874 | "Before the generated outputs" must mean the TRAILING block - MO2 sorts ESM-flagged PGPatcher.esp into the master block, so min(index) of output names clamps everything to the top (Njordlinger, 2026-09-15) | skyrim, mo2, python |
-| 5887 | Attributing a crash to a mod: compare every stack value against the MODULE BASES, and know that DevBench tools register at DATA LOAD (2026-09-15) | crash, cpp, devbench |
-| 5917 | A proof that cannot tell success from failure proves nothing: the driven rebind "passed" on a row that already held the target value (2026-09-15) | settings, devbench |
-| 5943 | A control must come from the SAME toolchain, or it proves nothing - "Pandora didn't patch the dodge" was wrong twice over (2026-09-15) | cpp, logging, process |
-| 5970 | Four tool misuses in a row, each null read as a fact - and a verification harness that passed having compared nothing (2026-09-16) | python, git, skyrim |
-| 6012 | A Python SyntaxWarning printed on three consecutive runs, ignored each time - and \f silently wrote a form feed into eleven meta.ini files (2026-09-16) | python, settings |
-| 6037 | The rules | python |
-| 6053 | A field you WRITE may be a field something else READS to decide - prefixing a modifier onto a Controls row would have flipped the list's device-family detection (2026-09-16) | settings |
-| 6072 | The rule | git, testing |
-| 6093 | A mod with two build lines will happily package the WRONG one, and only the strictest mod complains (2026-09-16) | cpp, packaging, powershell |
-| 6121 | TESQuest::IsRunning() does not mean the quest is running - it is true for a quest that never ran (2026-09-16) | cpp, testing |
-| 6149 | Two lookups that read alike: LookupByID<T> walks the hierarchy, TESDataHandler::LookupForm<T> demands an exact type (2026-09-16) | cpp |
-| 6178 | A clean boot proves nothing about a plugin that never loaded - check the LIVE load order, not the profile files (2026-09-16) | mo2, skyrim, crash |
-| 6212 | A FormID slot the merge schema did not name is a dangling pointer the game follows to a crash - "DATA" means different things per record type, and VMAD is not 4-byte aligned (2026-09-16) | crash, skyrim, cpp |
-| 6244 | A lesson that stays in the library is not a gate: the same defect shipped again the same evening, and the answer is a rules file the pipeline evaluates (2026-09-16) | packaging, process, powershell |
-| 6272 | An enable parent has a whole lifecycle - a reference a quest switches ON may be switched OFF again minutes later (2026-09-17) | process |
-| 6296 | A hand-built record header with form version 0 loads, runs, and is still wrong - the gate now reads every header (2026-09-17) | skyrim, packaging, process |
-| 6319 | An ARMO's addon list is one MODL subrecord PER addon - packed into one, the engine keeps none, and the piece is invisible (2026-09-17) | process, skyrim, crash |
-| 6343 | A task handed to the game thread that captures locals BY REFERENCE outlives its caller's timeout - and writes into a dead stack frame (2026-09-17) | devbench, process, cpp |
-| 6373 | A font atlas picked by a case-sensitive name check holds the wrong script - build the ranges from the language in play and the text itself (2026-09-17) | ui, process, logging |
-| 6400 | `ImFontAtlas::GetTexDataAsRGBA32` writes through its pixel pointer unconditionally - a null there is a crash at boot (2026-09-17) | crash, logging, testing |
-| 6412 | "failed to open the address library file" names nothing - check the file CommonLib will open BEFORE resolving anything, and say so (2026-09-17) | cpp, skyrim, logging |
-| 6441 | "The bottom slot" was the top slot - read the draw code's coordinate convention before building a feature on a position (2026-09-17) | settings, cpp, ui |
-| 6463 | A gate that checks the wrong instance passes forever - rule 29 kept looking in Apostasy after the test instance moved (2026-09-17) | process, mo2, powershell |
-| 6484 | A running MO2 instance does not mount a mod folder made after it started - the game loaded the old copy (2026-09-17) | mo2, testing, logging |
-| 6503 | Menus draw the character - a wheel picture without the body is taken in gameplay, first person, HUD off (2026-09-17) | ui, testing, devbench |
-| 6517 | Defender's AMSI blocks a PowerShell screen-grab loop as "malicious content" - write screen recorders in Python (2026-09-17) | powershell, python, testing |
-| 6533 | An SKSE C-ABI is addressed by PLUGIN NAME - a renamed host silently loses every consumer (2026-09-17) | cpp, devbench, skyrim |
-| 6556 | A spliced key press carries a user event from the GAMEPLAY context by default - inside a menu it is a press with no name, and menus ignore it (2026-09-17) | ui, settings |
-| 6577 | An installer gated on a per-character setting at data load can never attach - settings from a co-save arrive after the patches (2026-09-18) | settings, process, testing |
-| 6597 | The Nexus Short Description is cut at 350 characters on the live page - a longer summary ends mid-word and nobody is told (2026-09-18) | process, scaleform, ui |
-| 6618 | Opening a file for writing before its new content exists destroys it when the script fails halfway (2026-09-18) | packaging, ui, git |
-| 6641 | A spliced gamepad press proves the framework's own input path and nothing else - ImGui's Win32 backend polls XInput by itself, so a REAL controller reaches ImGui twice (2026-09-18) | build, cpp, process |
-| 6665 | The Loading Menu's hooks run on FOUR different threads, and only the movie's Display hook is on the one that draws - a swap from any other is a race with the draw (2026-09-18) | cpp, crash, logging |
-| 6692 | A game that vanishes with no crash log was killed by something that writes none - check the framework's own watchdog before hunting a crash (2026-09-18) | crash, logging, cpp |
-| 6713 | A guard placed after the call it guards is not a guard - CommonLibSSE-NG's SKSE::Init opens the Address Library itself (2026-09-18) | skyrim, cpp, logging |
-| 6733 | PGPatcher runs only through MO2's own shortcut with the PGPatcher Output mod DISABLED, and MO2 rewrites ModOrganizer.ini and the profile lists on exit (2026-09-18) | mo2, testing, settings |
-| 6751 | A completed quest can stay ENABLED, and console completequest fires neither a stage nor a stop event - react to the flag from more than one trigger (2026-09-18) | skyrim |
-| 6763 | Migrating a renamed mod's INI: the OLD file's values are the player's and must win once, then be written and retired - the first cut let the shipped file win (2026-09-18) | settings, logging |
-| 6774 | A count subrecord is a promise the engine keeps even when it is a lie - COCT said five after two CNTO entries were deleted, and the crash named SPID (2026-09-19) | crash, packaging, powershell |
-| 6793 | FFDec writes colour attributes ALPHABETICALLY, so a recolour that reported success had changed nothing (2026-09-18) | ui, mo2, process |
-| 6809 | A light plugin's index belongs to the LOAD ORDER, not to the plugin - a FormID written down earlier in the session addressed nothing (2026-09-19) | skyrim, devbench, powershell |
-| 6824 | A frame recorder that dies silently turns every later capture into the same old picture (2026-09-18) | powershell, process, settings |
-| 6837 | Skyrim's console is asynchronous: a burst of commands drops some, and an unequip queued before an equip lands after it (2026-09-18) | devbench |
-| 6848 | Folding one mod into another is a merge with a winner - the Dynamic Interface Patcher's grey output overwrote the black race menu (2026-09-18) | process, python, scaleform |
-| 6859 | Before recolouring art, ask the RUNNING game which movie draws the thing - an hour went into the quest tracker instead of the item popups (2026-09-18) | ui, devbench, process |
-| 6870 | A packager that SEEDS from the previous release ships the previous release's content under the new number (2026-09-19) | packaging, process, settings |
-| 6902 | DevBench's `console` op kills this game every time it is used - two crashes, same address (2026-09-19) | crash, devbench, logging |
-| 6927 | A 32-byte INPUT struct makes SendInput refuse every key with error 87 - the "proven" scan-code drivers never pressed anything (2026-09-20) | powershell, ui, devbench |
-| 6957 | A byte shape that starts at a function's entry stops matching the moment another plugin hooks that entry - and the evidence that listed the groups that DID install hid the ones that did not (2026-09-20) | logging, cpp, skyrim |
-| 6989 | A behaviour engine's OUTPUT shipped in a package outranks the player's own Pandora run wherever the mod sits above it - the T-pose with magic in hand (2026-09-20) | packaging, powershell, process |
-| 7011 | The Bash tool eats one level of backslashes inside a heredoc - a regex, a Windows path or a changelog line written that way ships mangled (2026-09-20) | packaging, process, python |
-| 7028 | A "FOMOD" second install of a mod carries the MAIN plugin too - moved above the real main as a patch folder, its old main plugin wins (2026-09-20) | python, skyrim |
-| 7042 | Plugin Sync's comparator is not transitive, so the order among ties depends on the input order - write the dependency-bearing order yourself and treat tie order as free (2026-09-20) | python, skyrim, mo2 |
-| 7055 | Disabling a folder as a "DLL twin" takes its INI and config folder with it - the surviving DLL then stops the game at its own error dialog before the main menu (2026-09-20) | cpp, settings, testing |
-| 7076 | Same file NAME is not same file CONTENT: four 'CC - *' folders disabled as duplicates of 'CC Content little C' handed the 1.6.1130-era Creation Club plugins to a 1.5.97 game, which died in InitTESThread (2026-09-20) | python, skyrim, crash |
-| 7101 | The Bash tool (Git Bash) rewrites slash options - robocopy /E /MOVE ran as a no-op twice; Windows tools that take /flags go through the PowerShell tool (2026-09-20) | powershell, git, mo2 |
-| 7113 | An import that installs mods without ticking their plugins leaves their archives unloaded and their masters unchecked - audit active plugins for missing masters and packed BSAs for a live plugin (2026-09-21) | python, skyrim, cpp |
-| 7131 | game-relaunch.ps1 ignored -Profile: MO2's moshortcut launch uses whatever profile MO2 last had selected, so every 'main profile' boot on 2026-09-20 was the Test profile (2026-09-21) | mo2, testing, devbench |
-| 7147 | The 2026-09-19 Apostasy import left 156 mods unsorted: parked in the main profile's Test Mods Area, and directly under the USER INTERFACE and FINISHING LINE headers in the Test profile (2026-09-21) | mo2, python, testing |
-| 7163 | Njordlinger's first xLODGen/TexGen/DynDOLOD run: the LOD tools read the Steam game unless given -D:, SSE Terrain Tamriel Extend blocks DynDOLOD, and version-mismatched patches stop it one at a time (2026-09-21) | skyrim, python, settings |
-| 7186 | A counter the engine shares with other mods must be held, not set once: AMF raised ControlMap's text-entry count when a field took focus, and another mod lowering it mid-focus killed typing until Escape (2026-09-21) | packaging, powershell, cpp |
-| 7207 | Installing a test build by copying the package overwrote the player's settings INI - AMF's saved System-row window position and size were lost on the next launch (2026-09-21) | settings, packaging, mo2 |
-| 7222 | A form-43 plugin is not made form 44 by restamping the number - weapons carry a 16-byte CRDT that form 44 reads as 24 (2026-09-22) | skyrim, python, packaging |
-| 7233 | A flat 'nothing brighter than 40' colour gate fails a correct black menu with white labels and passes a grey one - check the BAND the recolour removes (2026-09-22) | process, python, packaging |
-| 7244 | The fix was right and the test was wrong: a rebuilt DLL never reached the MO2 mod folder, so the same crash came back byte for byte (2026-09-22) | crash, packaging, cpp |
-| 7269 | A backup folder beside MO2's plugins IS a plugin to MO2 - it imported "Mod Organizer Plugin Browser.bak-20260922" and failed at start (2026-09-22) | mo2, python, testing |
-| 7278 | An MO2 crash "in" a native plugin was a Python plugin's application-wide event filter - read the whole thread, not the first plugin frame (2026-09-22) | crash, mo2, cpp |
-| 7299 | "It didn't scroll" three times while the log said it had: the pane on screen was another plugin's replacement of the one being scrolled (2026-09-22) | logging, mo2 |
-| 7310 | `organizer.refresh(True)` after writing a profile file hands the file back to MO2's memory - 350 plugins went back into their old BPM groups (2026-09-22) | mo2, testing, logging |
-| 7323 | A plugin shipped by two enabled mods is anchored to the mod MO2 loads it from, not the first one found (2026-09-22) | skyrim, mo2 |
-| 7335 | A plugin walking `mod.fileTree()` from a timer crashed MO2 on every rename - and faulthandler named the line where three minidumps could not (2026-09-23) | mo2, python, crash |
-| 7349 | A mobase callback that does its work synchronously crashed MO2 on "enable a mod" - callbacks start timers, timers do the work (2026-09-23) | mo2, build, crash |
-| 7370 | A QTimer parented to an MO2 pane died with the pane; the next callback started a dead timer (2026-09-23) | mo2, build, crash |
-| 7383 | `$PSScriptRoot` is empty inside a `[CmdletBinding()]` param default, `$args` cannot be a parameter name, and `Copy-Item -LiteralPath` does not expand `*` (2026-09-23) | powershell, process, settings |
-| 7402 | A build that leaves the machine needs a leak scan AND a gate rule - and the rule must not contain the literal it forbids (2026-09-23) | process, mo2, packaging |
-| 7419 | A fault whose only Python frame is a lambda "line ???" is a slot being INVOKED from MO2's emit - no slot body can prevent it; read MO2's own implementation and stop subscribing (2026-09-23) | mo2, crash, python |
-| 7451 | A resolver rule keyed on a WORD ("patch" in the name) cascades through masters: USSEP went to the bottom and 80 mods followed it; key it on the decision (2026-09-23) | mo2 |
-| 7471 | A scan budget shared across a plugin's top-level groups let 4 MB of interiors hide a 19 MB new worldspace: give each group its own (2026-09-23) | - |
-| 7486 | A package seeded from the previous release carries every file the assembler does not refresh - repack-fomod.ps1 never refreshed CHANGELOG.md (2026-09-23) | packaging, powershell, process |
-| 7500 | Four package-tool assumptions that broke on real repos in one evening: -BuildDir ignored, "the first *.ini", an empty build folder, a suffix-matched install folder (2026-09-23) | packaging, settings, ui |
-| 7518 | Blank boxes in every message box: the winning fontconfig.txt loaded font libraries no mod in the list ships (2026-09-24) | ui, scaleform, mo2 |
-| 7534 | "PapyrusUtil is not correctly installed": Campfire's bundled 2018 PapyrusUtil.dll outranked PapyrusUtil SE's (2026-09-24) | skyrim, cpp, mo2 |
-| 7545 | TestBench's `input tap` crashes SE 1.5.97 on every key: the CommonLib it builds on lays out BSInputEventQueue for 1.7.99 (2026-09-24) | crash, logging, ui |
-| 7571 | A packaged changelog, a release-link label and a generated header: three things a two-line release carried stale (2026-09-24) | packaging, powershell, cpp |
-| 7584 | A FOMOD passed every package rule and still could not install a file its previous release shipped (2026-09-24) | python, packaging, process |
-| 7599 | Actor::CalcArmorRating counts equipment only - armour from spells and stones is not in it (2026-09-24) | - |
-| 7609 | Driving a combat test headlessly: god mode zeroes damage, console casts do not take, the ref list is capped (2026-09-24) | skyrim, powershell |
-| 7623 | A tool that writes the load order must pass the same audit the launch runs - before it writes (2026-09-24) | mo2, skyrim, testing |
-| 7636 | Windows PowerShell 5.1 Compress-Archive writes backslash entry names, and 7-Zip's listing hides it (2026-09-25) | powershell, process, python |
-| 7647 | A test installer that keeps every *.ini as "the player's settings" keeps a package's data INIs too (2026-09-25) | settings, packaging, python |
-| 7659 | A DevBench status reply built with std::format was not JSON once a Windows path went into it (2026-09-25) | cpp, devbench, powershell |
-| 7669 | A theme's toolbar icons "did not show" in Njordlinger because Njordlinger Icon re-applies its own set every second - test a theme on a clean instance (2026-09-26) | mo2, python, powershell |
-| 7684 | A theme framework was built for a problem the owner's own baseline test then showed did not exist; and "the warning triangle in black" was read two wrong ways (2026-09-26) | mo2, ui |
-| 7701 | The version gate wrote every stamped file with a byte-order mark; U+FEFF reached five package folder names and a built stylesheet (2026-09-26) | mo2, powershell, process |
-| 7714 | On an update, `pre-finalize-check -SyncNexusDistro` fails its own first pass: the check runs before the sync (2026-09-26) | packaging, mo2, powershell |
-| 7724 | A test driver's XInput hook sees no reads in Oblivion Remastered: Steam Input answers XInputGetState first; drive the pad through AMF's inject op (2026-09-26) | cpp, ui |
-| 7737 | Code carried from a Skyrim mod keeps Skyrim's file roots: the Oblivion AMF looked for theme art under Data\ (2026-09-26) | logging, process, skyrim |
-| 7748 | A plugin that loads xinput1_4.dll at load kills the controller in Oblivion Remastered for the whole session (2026-09-26) | cpp, testing, ui |
-| 7764 | Force-stopping MO2 leaves Root Builder's copies in the game folder - the next launch loads a mod the profile has switched off (2026-09-26) | testing, mo2, cpp |
-| 7777 | Swallowing window messages does not take the controller from an Unreal game: it polls XInput, so A in the menu also fired in the game (2026-09-26) | ui, cpp |
-| 7793 | A repo started from a shallow template clone cannot be pushed: 'remote unpack failed ... did not receive expected object' (2026-09-26) | git, process, powershell |
-| 7805 | The SMF export-parity check counted SKSE's loader entry points as consumer names: an OBSE build can never carry SKSEPlugin_Load/Query/Version (2026-09-26) | skyrim, python, settings |
-| 7816 | A separator the plan renamed only in letter case vanished on Apply: on Windows "Player homes" and "Player Homes" are one folder (2026-09-26) | mo2, python, packaging |
-| 7834 | Third time: an edit script piped through a Bash heredoc lost a level of backslashes, and it wrote the file BEFORE checking it parsed (2026-09-26) | python, git, cpp |
-| 7854 | A patch LOOT recommends can be for another variant of the master: JK's Temple of Talos patch overrides a record "Solitude Only" Frescoes does not have (2026-09-27) | python, mo2, testing |
-| 7877 | A plugin I parked by hand came back the next time the Modlist Manager applied: a one-off fix in the list is undone by the tool that owns the list (2026-09-27) | mo2, python, process |
-| 7901 | The Modlist Manager never stripped a "[Patch]" tag from a name: one regex pass let the separator class eat the space and the "[" first (2026-09-27) | packaging, process, python |
-| 7917 | The LOOT Warning Checker reads a plugin's "version" from the MO2 mod's meta.ini, not from the plugin (2026-09-27) | mo2, settings, skyrim |
-| 7928 | "It's not letting me take screenshots of MO2 again": three direct MO2 launches from the elevated shell, with the unelevated launcher already written (2026-09-27) | mo2, testing, powershell |
-| 7959 | The Modlist Manager's plugin plan judged only today's winning copy of a plugin, and a reorder then handed the plugin to a copy with a missing master (2026-09-27) | git, skyrim, testing |
-| 7981 | A third-party SKSE plugin that links xinput1_4.dll leaves a Steam Input controller dead from the main menu on - and a virtual DualShock 4 through ViGEmBus reaches Skyrim, so it can be proven without the owner's hands (2026-09-27) | cpp, skyrim, ui |
-| 8005 | An ExtraDataList handed to RemoveItem is not yours afterwards - equipping through it crashed a later loadout switch (2026-09-27) | crash, cpp, logging |
-| 8021 | A menu action linked to SEVERAL gameplay controls has one mapping per link - converting links one key per action collapses Cancel's Tab and Esc into one (2026-09-28) | settings, ui |
-| 8037 | A Controls-page row this mod draws must use the GAME's key name - "Escape" has no key tile, "Esc" does (2026-09-28) | settings, ui |
-| 8051 | "It is by design" was written from a tooltip - the source gated the stick behind the key, so something else was rotating the character (2026-09-28) | process, cpp, licensing |
-| 8066 | "0 gamepad events" and a dead controller in one run - Steam was not active, so Steam Input passed nothing to the game (2026-09-28) | testing, powershell, cpp |
-| 8081 | The virtual pad takes the owner's controller slot - plugging vpad in while he plays leaves his DS4 dead in the game (2026-09-28) | python, ui |
-| 8093 | Opening InventoryMenu with DevBench `menu open` crashed Njordlinger - item menus must be opened the way the player opens them (2026-09-28) | ui, cpp, crash |
-| 8105 | A folder "took 366 GB" by name sum and 266 GB on disk - vcpkg hard-links every installed file, so sizes must be counted by file ID (2026-09-28) | build, skyrim, cpp |
-| 8117 | A 1 GB file named `.zip` in 7 and 10 - a package path built from an empty name IS the stage folder, and four scripts then `Remove-Item -Recurse -Force` it (2026-09-28) | packaging, powershell, devbench |
-| 8133 | A UE4SS Lua mod's hook list does not prove a native ProcessEvent hook will see those calls - and Oblivion Remastered's camera is table-driven, so spring-arm writes may not stick (2026-09-28) | cpp, settings, ui |
-| 8148 | An OBSE plugin's MinHook on UObject::ProcessEvent, placed before UE4SS starts, breaks UE4SS's own ProcessEvent hook - ExecuteInGameThread never runs, and with two hooks the chain jumps to [value removed] (2026-09-28) | cpp, ui, crash |
-| 8175 | Editing modlist.txt from Windows PowerShell 5.1: `Set-Content -Encoding utf8` writes a BOM, and `$string + $array` joins the whole list onto one line (2026-09-28) | mo2, powershell, settings |
-| 8194 | An xmake `/d1trimfile` flag that compiles cleanly can trim nothing: a bare string is split on the path's spaces, and a quoted value reaches cl with the quotes in the prefix - wrap the flag in a TABLE (2026-09-29) | build, cpp, process |
-| 8231 | A mod with an optional-file zip beside its main zip: the archive gate compared the optional file and never checked the main one, and the distro sync deletes the optional zip (2026-09-29) | packaging, process, powershell |
-| 8251 | An OBSE plugin's own thread calling StaticFindObject while Oblivion Remastered builds objects: a start-up died in UObjectArray ("another object exists at that index") - look engine objects up on the game thread (2026-09-29) | ui, testing, cpp |
-| 8271 | A runtime-built UMG widget taken off the viewport is garbage collected: the plugin's pointer to it then crashes the next open - keep it on the viewport and toggle its visibility (2026-09-29) | crash, ui, settings |
-| 8288 | A plugin that re-asserts its Enhanced Input bindings only when its own mapping is missing misses the game re-applying the saved map around it (2026-09-29) | ui, settings, crash |
-| 8306 | A reflected UFunction call with a zeroed parameter buffer passes 0 for every enum and struct: Enhanced Input's rebuild got RebuildType None and never rebuilt (2026-09-29) | build, ui, settings |
-| 8323 | An MO2 plugin that builds basePath()/profiles or basePath()/mods breaks on any instance whose ModOrganizer.ini points its folders elsewhere (2026-09-29) | mo2, settings, cpp |
-| 8342 | Oblivion Remastered's Controls-page key selector holds only a key chosen on the page this session - an untouched row reads None (2026-09-29) | settings, ui |
-| 8359 | Oblivion Remastered's plugin loader silently skips an ESP whose CELL lighting block is not 36 bytes - and it reads ESPs past MO2's virtual Data mapping (2026-09-29) | mo2, skyrim, testing |
-| 8389 | procdump on Oblivion Remastered freezes the game for minutes and, stopped, takes the game with it (2026-09-29) | crash, logging |
-| 8403 | Adding a row to one of Oblivion Remastered's UMG menus: insert into the menu's own layout, re-ACTIVATE what came off, and join the game's navigation subsystem (2026-09-29) | ui, process, build |
-| 8435 | Oblivion Remastered's InterfaceManager::menuMode is 1 in gameplay, not 0 - a truthy test reads "a menu is open" every frame (2026-09-29) | ui, crash, logging |
-| 8456 | Oblivion Remastered's equipment path traps every thread but the TES thread - a silent death with no crash record until TestBench wrote one; the 'Oblivion Main loop' per-iteration call is the hook (2026-09-29) | crash, cpp, process |
-| 8479 | Actor::EquipObject's last argument is the console's NoUnequip lock - CommonLibOB64 calls it a_force, and true made every restored piece permanent; and a WORN armour piece will not move out of the inventory (2026-09-29) | cpp, process |
-| 8495 | Oblivion Remastered's inventory menu shows what the TES side last pushed - the refresh is the argument-less rebuild [offset removed], not the UE-side pusher nor the widget's UpdateItemList (2026-09-29) | ui, git, build |
-| 8517 | Root Builder (copy mode) copies the game folder's deployed files BACK over the mod folder when the game exits - a build installed into the mod folder in that window is silently reverted (2026-09-29) | cpp, crash, testing |
-| 8531 | A native UClass found at startup can still have no properties linked - a layout self-check that treats "not found" as "wrong" latches a failure and the whole plugin stays off (2026-09-29) | testing, process |
-| 8543 | A write made in a PRE handler of a Blueprint event is undone by the event's own body - CCM's free camera did nothing until it wrote after ReceiveTick, as UCR does (2026-09-29) | cpp |
-| 8556 | Oblivion Remastered's menu navigation reads a row's parent and direction map when the row is CONSTRUCTED - a row edited afterwards looks right and goes nowhere; re-add the neighbour (2026-09-29) | settings, git, ui |
-| 8579 | offsetof through std::array's operator[] points a settings row at the wrong member - CCM's framing rows read and wrote the camera style (2026-09-29) | settings, logging, process |
-| 8600 | A UObject kept by object-array slot AND pointer still went stale - a freed widget's slot and address were both reused, and the dead one passed every liveness check (2026-09-29) | ui, build, settings |
-| 8623 | Oblivion Remastered's PlayerCharacter singleton exists at the main menu with no character - asking it for an actor value there hangs the game (2026-09-29) | ui, cpp, crash |
-| 8644 | Oblivion Remastered's compass HostileData lists only actors IN COMBAT - who can detect the player lives in each NPC's HighProcess detection list at [value removed] (2026-09-30) | ui |
-| 8666 | A per-tick UE call with a cached controller as its world context crashed the game on quit - the controller outlived its world, and a slot-checked handle still said it was fine (2026-09-30) | ui, crash, packaging |
-| 8689 | A rounded-box brush does not clip a MATERIAL in Oblivion Remastered - Minimap Menu's round map became a turning square; nested turned clip panels make the circle (2026-09-30) | ui, testing |
-| 8710 | The licence rules never looked at an Oblivion Remastered mod - their markers named only CMake/vcpkg projects, and every OBSE64 plugin builds with xmake (2026-09-30) | build, licensing, process |
-| 8731 | The packager seeded an Oblivion Remastered mod's package from the Skyrim mod of the same name - it chose its seed by display name alone (2026-09-30) | packaging, process, ui |
-| 8749 | OpenRGB "lost" its profiles after a restart - OpenRGB 1.0's own Windows service came up with an empty profile folder, and the window became its client (2026-09-30) | mo2, logging, python |
-| 8778 | A fix proven in one Oblivion Remastered mod stayed in that mod - AMF's System row still asked a FREED page "are you alive" by reading it, and crashed on a loadout swap (2026-09-30) | crash, ui |
-| 8798 | The version gate read every Nexus ID in Skyrim's section - linking the Oblivion Remastered pages recorded two 2016 Skyrim mods as our "working" versions (2026-09-30) | process, ui, git |
-| 8816 | A name two games share sent the finalize tools to the other game's mod - the Oblivion AMF 1.0.5 finalize rewrote the SKYRIM framework's Nexus folder and deleted its zip (2026-09-30) | ui, packaging, powershell |
-| 8836 | Typing into a web form box without reading it first spliced text into the middle of the owner's existing permissions (Nexus, 2026-09-30) | licensing, testing |
-| 8853 | package-gate.ps1 run on its own skipped every page rule - it looked for the distro folder by the pre-rename name (2026-09-30) | packaging, powershell, process |
-| 8865 | Item Explorer's live Nexus file read "1.0.10" - it was already the 1.1.1 build under a version number that never exists (2026-09-30) | packaging, process, testing |
-| 8886 | Driving and filming Oblivion Remastered without the owner: what reaches the game, and what a clip needs (2026-10-01) | python, logging, testing |
-| 8909 | Oblivion Remastered fixes an action's animation speed when the action STARTS - writing its Duration mid-action looses the logic early and leaves the animation (and the state) hanging (2026-10-01) | settings |
-| 8932 | Swallowing a controller's Blueprint input event did not stop the game's native action - "swallowed (ok)" proved nothing (2026-10-01) | settings, logging |
-| 8960 | A "read-only" TestBench probe crashed the owner's game - ue.struct walked a UEnum as if it were a struct (2026-10-01) | crash, mo2, build |
-| 8985 | An agent worktree inside a repo is a whole second copy of it - the version gate and the package gate both read it as the mod (2026-10-01) | process, packaging, powershell |
-| 8998 | Moving every package into per-game folders: what the migration and the tie-breaks taught (2026-10-01) | process, packaging, git |
-| 9019 | TestBench re.additem crashed the owner's game - it calls AddObjectToContainer on the UE game thread, the thread the engine's own trap refuses (2026-10-01) | cpp, crash, python |
-| 9044 | Nexus pages answer HTTP 403 to WebFetch and curl - read them in the built-in browser pane; a comments page past 1 silently returns page 1 there too (2026-10-02) | process, python, ui |
-| 9056 | Nexus description editor: Save stays disabled after a scripted val() unless a real keystroke lands in the editor AND the editor then loses focus; the click only focuses it when a screenshot came first (2026-10-02) | testing, process |
-| 9074 | Oblivion Remastered: `As<RE::TESBoundObject>()` is null for EVERY item, item names are LOC_FN_ keys, and AMF's "game language" is Windows' (2026-10-02) | process, ui |
-| 9095 | A link to paid modding content went onto 33 Nexus pages before anyone read Nexus's anti-solicitation policy (2026-10-02) | - |
-| 9103 | Closing Oblivion Remastered unattended: "qqq" through orcmd.py does nothing; CloseMainWindow ends it cleanly within about a minute (2026-10-02) | python, crash, mo2 |
-| 9116 | The health gate said STOP and the game launched anyway - the gate and the launch were chained with ";" in one PowerShell call (2026-10-02) | testing, process, powershell |
-| 9135 | Two posting snags on CCM 1.0.2: the distro sync left "release tag v1.0.1" as the link's label, and the live Nexus description indents with a non-breaking space (2026-10-02) | packaging, powershell, versioning |
-| 9149 | Release screenshots taken while the owner's monitor was off came out 1024x768 (4:3) - the desktop falls back when the screen is off, and nothing in the game can render past it (2026-10-01) | settings, ui, mo2 |
-| 9165 | A new release tripped Defender's cloud ML ("Trojan:Win32/Wacatac.C!ml") hours after posting - 1.9.9 passes, 2.0.1 does not, no code reason (AMF 2.0.1, 2026-10-02) | cpp, ui, python |
-| 9183 | A FOMOD's optional texture choice was never made - Security Overhaul Extra Locks drew untextured locks in Njordlinger's lockpicking screen (2026-10-02) | logging, python, mo2 |
-| 9205 | The owner took 10 screenshots for "the new banner" and got ONE banner - a set of shots he takes for a page is a set of banners that replaces the old ones (AMF 2.0.1, 2026-10-02) | ui, python, settings |
-| 9229 | An MO2 plugin fitted the start-up splash "for the next start" - MO2 actually loads plugins BEFORE it reads splash.png, so the owner saw a small splash for nothing (MO2 Splash Fit, 2026-10-02) | mo2, cpp, settings |
-| 9251 | A live Nexus page carried ANOTHER mod's description - Civil War Starts showed the Skyrim AMF text, and an anchored-replace check said 'no match' instead of saying why (2026-10-02) | process, ui |
-| 9268 | Oblivion Remastered stops reading XInput when no controller is connected - an iwm.pad test needs WM_DEVICECHANGE, and its end looks like the owner pressing buttons (2026-10-02) | ui, process, testing |
-| 9286 | Every frame capture came back black - AMF's in-process capture and a gamevideo clip - while the overlay was drawing on screen; it was the AMD driver, not the page (2026-10-03) | python, ui, cpp |
-| 9306 | vcpkg's stock imgui port at the usual baseline is 1.90.2 - AMF pins 1.90.8 through its own overlay port, and a consumer built without it was rightly refused (2026-10-03) | build, cpp |
-| 9319 | esp-audit failed DBReV.esp on a quest's ANAM - in QUST, ANAM is the next alias ID, a counter, not a FormID (2026-10-03) | skyrim, process, python |
-| 9330 | A consumer window's BlockUserInput cannot decide who gets the input - the stock SMF header defaults it to true, so a play-time overlay would have locked the player out (AMF 2.0.4, 2026-10-03) | settings, ui, process |
-| 9343 | Releasing a COM object another module may still hold a raw pointer to - AAOS freed XAudio2 engines Dragonborn ReVoiced kept, and its next line crashed (2026-10-03) | testing, cpp, crash |
-| 9359 | The owner's PC froze during a 1.7.104 boot proof - a startup message box, a spinning TextInputHost and an AMD driver fault together; the card came back on code 31 after the hard reset (2026-10-03) | testing, cpp, crash |
-| 9375 | A locked Windows session cannot be brought to the front - no screenshot, no SendInput; posting F12 to the game window does not trigger Steam's screenshot (2026-10-03) | devbench, python |
-| 9386 | Nexus's new edit form keeps Save disabled after a scripted description change - SCEditor's insert('') marks it changed, even in a hidden tab (2026-10-03) | testing, process |
-| 9412 | A script clicked the last menu button of the WHOLE gallery and deleted the new banner instead of the old one (Nexus media editor, 2026-10-03) | ui, python |
-| 9424 | install-test-build put an Oblivion Remastered package BESIDE the mod folder's Root\ - the game would have kept loading the old DLL (2026-10-04) | packaging, cpp, python |
-| 9436 | A race-type row in RaceMenu's list is not always a race - Apprentice files classes and traits there, and a replacement UI that calls ChangeRace on them changes the race (2026-10-04) | ui |
-| 9451 | TestBench could not read a menu's Scaleform data - `menu action=gfx` added rather than a one-off dump in the mod under test (2026-10-04) | ui, crash, process |
-| 9461 | The game's translation table (BSScaleformTranslator) cannot be read through CommonLib on 1.5.97 - a find() misses every key and iterating it crashed the game; read the mod's own Interface\Translations file (2026-10-04) | crash, cpp, logging |
-| 9482 | An MCM Helper mod may apply its settings ONLY in OnConfigClose - writing the value and sending OnSettingChange saves it but the mod ignores it until the next load (2026-10-04) | settings, ui, cpp |
-| 9505 | A Papyrus call dispatched from native code is NOT upcast - pass a script object typed as the PARAMETER's script, or the VM refuses the call and returns None (2026-10-04) | skyrim, logging, mo2 |
-| 9527 | SkyUI's config manager ignores RegisterMod/UnregisterMod while its Journal is open - they return -2 in the BUSY state (2026-10-04) | ui |
-| 9544 | SkyUI's MCM pages never load in Njordlinger Test - Papyrus does not run while the Journal is open there, with or without our code (2026-10-04) | skyrim, testing, devbench |
-| 9564 | Giving SkyUI's MCM list "back" with RegisterMod for every config adds menus that were never there and undoes other mods' hiding - give back only what you hid (2026-10-04) | skyrim, testing |
-| 9576 | CommonLib NG's Actor::GetGoldAmount faults on SE 1.5.97 every time, not only during loading - count the gold in InventoryChanges yourself (2026-10-04) | crash, ui, cpp |
-| 9596 | A switch that gives SkyUI its MCM menus back gave nothing back - the ledger trusted RegisterMod/UnregisterMod results that came back None (2026-10-04) | ui, cpp, mo2 |
-| 9635 | ImGui's Win32 backend sizes the display from the game WINDOW, but the overlay draws on the swap chain's IMAGE - they differ whenever the game renders smaller than its window (2026-10-04) | settings, logging, testing |
-| 9652 | A plugin's globals cannot be found by editor ID on SE 1.5.97 - look them up by form ID in their plugin, and first check the plugin actually LOADED (2026-10-04) | skyrim, mo2, settings |
-| 9666 | gamewatch.ps1 start launches a background frame RECORDER - against the owner's standing ban on continuous capture (2026-10-04) | powershell, testing |
-| 9677 | A fade multiplier on a clip whose owner TWEENS its own alpha compounds to 0 - set that clip's alpha outright instead (2026-10-04) | ui |
-| 9690 | A TestBench papyrus call that "returned null" had been REFUSED - a whole number sent to a Float parameter is an Int, and native dispatch does not convert it (2026-10-04) | skyrim, logging, ui |
-| 9719 | `Variable::IsNoneObject()` tests for a None TYPE, not a None value - an object variable set to None reads as holding an object (2026-10-04, AMF 2.0.9, Soulsthat) | skyrim, cpp, testing |
-| 9743 | TestBench's combat doctrine presses F10, and in Njordlinger Test F10 opens Immersive Equipment Displays - "no doctrine box opened" (2026-10-04, HPM real-blow test) | ui, cpp, mo2 |
-| 9764 | Nexus's new media editor leaves earlier gallery menus open in the page - a "Delete" found by text belonged to the wrong image (2026-10-04, AMF banner) | ui |
-| 9783 | TestBench keyboard taps (input action=tap) did not reach Skyrim in Njordlinger Test - sneak and weapon-draw never happened (2026-10-05, HPM A2) | skyrim, settings |
-| 9801 | A user's MO2 deprecation warning named a call the current release no longer makes - the line number matched an OLD version, and the Nexus audit never looked at the page (2026-10-05, MO2 Custom Filters) | mo2, git, python |
-| 9821 | A Qt dialog cannot be narrower than its widest child - four sentence-long labels without word wrap held the Modlist Manager wider than MO2 (2026-10-05) | mo2, settings, process |
-| 9844 | A backup of a mod's player folder copied only its top-level files - the Presets\ subfolder was overwritten by the test run (2026-10-05, AMF banner reshoot) | settings, ui |
-| 9853 | A dxgi.dll proxy beside the exe no longer reaches the game when the exe takes DXGI from NVIDIA Streamline - read the exe's imports before choosing a proxy or hook (Witcher 3 Remastered, 2026-10-05) | cpp |
-| 9874 | A posted F12 never reaches Steam's overlay hotkey, and a DPI-unaware game's client coordinates are not the capture's pixels (Witcher 3 TestBench, 2026-10-05) | cpp, process |
-| 9896 | Steam's F12 screenshot missed the overlay because inline hooks on dxgi's Present run last-hooked-first - write the vtable SLOT of the object the game holds and the overlay draws before every inline hook (Witcher 3 Remastered, 2026-10-05, proven in game) | cpp, logging, process |
-| 9927 | A saved window size came back as `inf` and the next opening filled the whole screen - the display size is [value removed] while the game is minimised or driven in the background (AMF Witcher 3, 2026-10-05) | testing, settings, ui |
-| 9942 | Witcher 3 mod-menu labels are hashed keys - .w3strings format, the key hash, and why a CSV's ;meta[language] line can't be trusted (AMF Witcher 3 M4, 2026-10-05) | ui, licensing, cpp |
-| 9975 | Rewriting a JSON rule file through json.load/json.dumps flipped all 1012 lines and turned two `\ufeff` escapes into literal byte-order marks (gate-rules.json, 2026-10-05) | git, packaging, process |
-| 9989 | Under Mod Organizer 2 a plugin's own module path is its REAL mod folder - game data looked up relative to it is missing; take game paths from the exe (AMF Witcher 3 1.0.1, 2026-10-05) | mo2, ui, settings |
-| 10014 | A "pad gate leak" was the test pad connecting on every press - log the gate's callers before redesigning the gate (AMF Witcher 3, 2026-10-05) | process, cpp, logging |
-| 10050 | Wording-pass lessons (sub-agent, AMF Witcher 3, 2026-10-05) | settings, git, cpp |
-| 10063 | Porting the Skyrim AMF's settings and UI to the Witcher 3 build: four traps (sub-agents' lessons, 2026-10-05) | settings, process, python |
-| 10078 | A button that closed the game instantly with nothing logged: a std::mutex taken twice on one thread throws, and the uncaught throw in the frame ends in std::terminate (AMF Witcher 3 1.0.3, 2026-10-05) | crash, logging, cpp |
-| 10097 | Four ImGui/Witcher 3 overlay traps from the AMF 1.0.3 runs (sub-agent's findings, 2026-10-05) | ui, settings, process |
-| 10114 | The Witcher 3 didn't fill the screen and a Steam toast flickered bottom-right: the exe is DPI-unaware, so at 150 % scaling it runs at 2133x1200 - Borderless can't go higher; use the game's own Full Screen (2026-10-05, corrected) | settings, mo2, logging |
-| 10153 | A crash on frame generation's present thread was blamed on an overlay drawing from the game's thread - wrong: frame generation presents through the hooked proxy, so the overlay already ran on that thread (Witcher 3 AMF, 2026-10-05, corrected) | crash, process, cpp |
-| 10197 | A Witcher 3 settings group with displayName="hidden" still shows in the game's Settings as an empty row - hide it with visibilityCondition="hideAlways" (AMF Witcher 3, 2026-10-05) | settings, ui |
-| 10222 | A WitcherScript @wrapMethod over an EVENT takes the event's bool return - a bare "return;" stops the whole script compile (AMF Witcher 3, 2026-10-05) | powershell, packaging, python |
-| 10234 | An SEH guard does not make a fault harmless in Witcher 3: the game's own crash reporter fires first and the game hangs - and an engine (overrideGroup) setting written at start-up faults (AMF Witcher 3, 2026-10-05) | crash, settings, cpp |
-| 10271 | Nested pad gates: only the OUTERMOST gate of a read may judge and blank it - judging at both ends leaked a held Start after close, judging at the innermost leaked the D-pad with the menu open (AMF Witcher 3, 2026-10-05) | process, cpp, ui |
-| 10293 | Witcher 3 5.0's own UI font can be read from the install at run time - bundle entries are [value removed] bytes, zlib only, the font is a DefineFont3 inside a CR2W-wrapped CFX movie (AMF Witcher 3, 2026-10-05) | ui, scaleform |
-| 10315 | A stylesheet frame on MO2's list rows ran out into the indent on every other mod: Qt draws the ::item rule again across an ALTERNATE row; a row frame needs alternation off and :first/:middle/:last pieces (Skellige MO2 Theme, 2026-10-05) | mo2, powershell, ui |
-| 10335 | Moving an MO2 instance left the owner's Taskbar Groups entries pointing at the old folder - a click did nothing; the group caches each icon as MD5(shortcut path).png (Witcher 3 instance, 2026-10-06) | mo2, testing, powershell |
-| 10349 | Some labels from our own .w3strings showed as "##key" and others from the same file worked - the key table must be sorted by hash (Unbind Vanilla Controls W3, 2026-10-06) | python, testing |
-| 10368 | "AMF loaded in every test, so MO2 supplies dinput8.dll" was wrong: the test launcher copied the loader into the real game folder before every run (Witcher 3, 2026-10-06) | testing, cpp, mo2 |
-| 10383 | A Bash call blocked by a PreToolUse hook runs NONE of its commands - an edit chained into it was reported done but never happened (AMF Witcher 3 page text, 2026-10-06) | cpp, python |
-| 10394 | Witcher 3 inventory: the hint bar's A equips the grid's selected item through the SCRIPT (OnInputHandled -> the item context), not through the inventory movie - a control added to the menu must deactivate the context (SLS Witcher 3, 2026-10-06) | ui |
-| 10411 | A D-pad press that set a binding also changed the Controller Scheme tab - one pad press reaches a Scaleform menu as more than one input event (UVC Witcher 3, 2026-10-06) | process, scaleform, settings |
-| 10426 | ResetGroupToDefaults on a probe's hidden group of three INPUTPAD rows reset the player's WHOLE input mapping to vanilla (UVC Witcher 3 probe 3, 2026-10-06) | settings, build, packaging |
-| 10442 | Two INPUTPAD rows naming the same action: a write to the second changed nothing (UVC Witcher 3, 2026-10-06 - by the evidence) | python |
-| 10452 | Nexus's new upload form does not save edits made in a BACKGROUND Chrome tab - the description, tags and dropdowns need the tab in front (SLS Witcher 3 post, 2026-10-06) | licensing, testing |
-| 10468 | An INPUTPAD write lands only when the action's current pad key is an Xbox key - IK_None or a PS4 key never changes again, and the read-back lies both ways (UVC Witcher 3 probe 4, 2026-10-06) | settings, logging, mo2 |
-| 10483 | Witcher 3 5.0 loads a mod's gameplay XML only from paths its .reddlc names - and a loot table re-declared in a DLC file ADDS to the game's table of that name (Witcher Gear Overhaul research, 2026-10-06) | process, testing |
-| 10509 | A Witcher 3 weapon effect with an apply chance of exactly 0 ALWAYS applies - and the chance belongs to the ability that holds the effect, not the item (Witcher Gear Overhaul research, 2026-10-06) | - |
-| 10527 | A Witcher 3 launch that sits on "Compiling scripts (parsing file N/M)" with no CPU is a hidden compile-ERROR dialog, not a hang (overnight combined run, 2026-10-06) | crash, testing, mo2 |
-| 10540 | A whole Witcher 3 test run stopped at the script compile because a local variable was named `state` - WitcherScript keywords include ordinary words (Witcher Gear Overhaul 1.0.0, 2026-10-06) | packaging, powershell, python |
-| 10563 | Witcher 3's GetItemsWithTag does not list every item carrying the tag - and WitcherScript's only text-to-name route is a settings var id (Item Explorer Witcher 3, 2026-10-06) | settings, python |
-| 10585 | Witcher 3 weapon damage read as 0 while the tooltip showed 236-305 - CalculateAttributeValue is base * mult + add, so a base-only stat comes out 0 (Witcher Gear Overhaul 1.0.0, 2026-10-06) | - |
-| 10602 | Rolling a Witcher 3 loot table from script on the player's inventory yields nothing - AddItemsFromLootDefinition only ATTACHES a table (Witcher Gear Overhaul 1.0.0, 2026-10-06) | settings |
-| 10615 | WaitIdle before a Release is not enough in an overlay: the frame being built may already show the texture - free it after THAT frame's fence (AMF Witcher 3 3D preview, 2026-10-06) | crash, cpp, process |
-| 10634 | A Root\ folder meant for MO2's Root Builder deploys in Vortex as <game>\Root\... and the ASI loader never loads - ship a FOMOD that asks where the loader goes; Vortex's Witcher 3 offers only admin symlinks when Documents and the game are on different drives (AMF Witcher 3 1.0.3, 2026-10-06) | mo2, packaging, powershell |
-| 10666 | A New Game in a test profile went into the vanilla Helgen cart although Alternate Perspective was ticked - the profile had "Base Game DLC Content" (the DLC .esm files) off (AMF 2.1.3 repro, 2026-10-07) | skyrim, mo2, logging |
-| 10685 | Nexus edit form in a HIDDEN Chrome tab: call the description editor's React onChange with the new text - Save enables and the save sticks (AMF 2.1.3 post, 2026-10-07) | testing |
-| 10699 | A WitcherScript annotation on a player STATE needs the state's class name `<owner>State<state>` - `@wrapMethod(Combat)` does not resolve (Camera Configuration Menu W3 probe, 2026-10-07) | ui |
-| 10712 | Root Builder put an OLD AMF loader into every Witcher 3 launch: it copies files the run left in the game folder into overwrite\Root (2026-10-07) | mo2, testing, cpp |
-| 10726 | package-gate.ps1 took the FIRST registry entry with the package's display name - a Witcher 3 package was checked against the Oblivion repo (Camera Configuration Menu W3, 2026-10-07) | packaging, process, ui |
-| 10748 | A Witcher 3 mod menu whose string table holds only the BARE displayName keys shows made-up labels - the menu looks up panel_ / option_ / preset_value_ (Simple Loadout System W3, 2026-10-07) | ui, python |
-| 10767 | The texture.cache key is the h*31+c hash of the lower-cased path - NOT FNV-1a 32 (Witcher Gear Overhaul Kaer Morhen relocation, 2026-10-07) | python, process |
-| 10778 | Witcher 3 HUD: holding a module up with its own fade-in means it never fades again once you stop (2026-10-07) | ui |
-| 10791 | Witcher 3 under MO2: a NEW Mods\mod<name> folder is not loaded until mods.settings lists it - the game did not add it (2026-10-07) | mo2, settings, git |
-| 10804 | A NEW Mods folder in the Witcher 3 MO2 profile is not loaded until mods.settings lists it - the game does not add it (Witcher Gear Overhaul Kaer Morhen fix, 2026-10-07) | settings, mo2, testing |
-| 10821 | WitcherScript string literals have NO backslash escape - a depot path is written with single backslashes (Witcher Gear Overhaul load probe, 2026-10-07) | - |
-| 10833 | The Witcher 3 Mod Manager (and Relapse's Mod Manager Redux on top of it) never installs bin\x64_dx12 - and takes a FOMOD's XML for menus (2026-10-08) | ui, settings, cpp |
-| 10871 | "Couldn't call RaceMenu" from an SKSE plugin = RaceMenu's Papyrus scripts never linked: the instance had NO SKSE scripts, and RaceMenu wants the scripts of the exact SKSE build (2026-10-07) | skyrim, mo2, cpp |
-| 10890 | Root Builder restores the game root's original files when MO2 closes - a file copied into the root by hand is silently undone (2026-10-07) | mo2, logging, settings |
-| 10902 | A SkyrimSE.exe stuck in kernel teardown keeps its SKSE log files open - NPA then fails to load on every launch ("fatal error"), and other plugins log to *.log0 (2026-10-07) | logging, skyrim, testing |
-| 10919 | A PowerShell 5.1 inline `(if ...)` in an expression emptied the AE test profile's modlist.txt while MO2 started - and MO2 then emptied plugins.txt and loadorder.txt (2026-10-07) | mo2, powershell, testing |
-| 10930 | TestBench's `input` tool (BSInputEventQueue) crashes the AE 1.6.1170 game on any key; `bench.input` is the safe one (2026-10-07) | crash, devbench, ui |
-| 10941 | AMF never sent SKSE Menu Framework's menu and frame events - a mod doing its work in them (NPC Preset Applier's portrait maker) waited forever with no error (2026-10-07) | ui, cpp, logging |
-| 10955 | An ImGui button whose label shows its state (+/-, A-Z/Z-A, "(13)") became a new item on every press - A worked once, then did nothing until the highlight moved off and back (AMF 2.1.5, 2026-10-07) | settings |
-| 10969 | Setting UI::numPausesGame to 0 under the open journal froze Skyrim on the spot - never take another menu's pause count (AMF 2.1.5, 2026-10-08) | ui, crash, devbench |
-| 10987 | package-mod -Force after its own prune had no seed left and wrote a flat package with no README, LICENSE, NOTICE or fomod (Carryweight on Level Up 1.0.7, 2026-10-08) | packaging, licensing, testing |
-| 11003 | install-test-build.py never removes a file the new package dropped - the old art layers kept drawing in game (AMF 2.1.6, 2026-10-08) | packaging, python, mo2 |
-| 11015 | desktop-grab.ps1 captures the HDR desktop about 2.2x too bright - saturated colours clip, greys look right (AMF 2.1.6, 2026-10-08) | powershell, ui |
-| 11026 | A converted SkyUI script menu that 'never loads' on a loaded save is usually its own mod still starting up - Honed Metal answered only after a couple of minutes (AMF 2.1.6, 2026-10-08) | ui, testing, process |
-| 11042 | An SKSE Menu Framework mod laid out with SameLine(<pixels>) puts its control ON its label at a big text size - fixed in AMF's SameLine export, not per mod (Show Player In Inventory, 2026-10-08) | cpp, python, skyrim |
-| 11053 | Two Witcher 3 mods' menu labels could show each other's text - both had taken .w3strings idspace 7715, each as "the next one after the last I knew of" (New Game Plus Max Level / HUD Position Manager W3, 2026-10-07) | ui, git, python |
-| 11074 | A Witcher 3 mod replaces the game's files BY PATH from its own Mods\mod*\content bundles - a tool that reads only content0 shows vanilla where the player sees the mod (Item Explorer W3 1.0.1, 2026-10-07) | mo2, settings, skyrim |
-| 11104 | An ImGui window that must never take the controller highlight: NoNav + NoFocusOnAppearing, hand the focus back on any click, and own the pad's B with SetKeyOwner - ImGui's nav cancel reads B only when nobody owns it (Item Explorer W3, 2026-10-07) | - |
-| 11121 | A shader embedded by a CMake configure-time step is NOT refreshed by build.bat - the DLL keeps the old HLSL until configure runs (Local Map Upgrade 1.3.3, 2026-10-08) | cpp, build, versioning |
-| 11134 | Two edit-tooling traps: the Write tool drops the spaces of whitespace-only lines, and Windows PowerShell 5.1 reads a BOM-less UTF-8 .ps1 as ANSI (2026-10-07) | powershell, packaging, python |
-| 11145 | Hosting another mod's own ImGui tool in AMF: OAR and IED each run their OWN ImGui context on the SAME game call sites as AMF; OAR has an open/close API, IED does not, and OAR's bEnableUI=false installs no UI at all (research, 2026-10-07) | settings, ui, cpp |
-| 11160 | A Nexus page's public Images tab lists one page of images - a backup built from it missed 26 of AMF's 50 gallery images (2026-10-08) | python, testing |
-| 11174 | Pictures with loading="lazy" inside a closed details element never loaded in the artifact viewer on the owner's PC - fine on his phone (2026-10-08) | settings |
-| 11184 | A tool that copies session transcripts into new files copies the secrets the owner pasted into them - a login token reached an archive-sweep digest in plain text (2026-10-08) | python, git, process |
-| 11203 | When a tool refusal's error text is mangled, isolate the operation - never infer the cause from the truncation (2026-09-12, saved 2026-10-08) | testing, process |
-| 11228 | A propose-then-apply tool that re-runs its proposal on --apply overwrites the reviewed input; a verbatim script handed to a low-level agent is proof-run by its author first (pipeline restructure plan, 2026-10-08) | process |
-| 11250 | Nexus's new edit UI: a file's "File options" description is a React field whose visible textarea is a decoy - typing, form_input and native setters all "save successfully" and change nothing; set it through the parent component's onChange(value) (2026-10-08) | testing, settings |
-| 11274 | A rename swept as plain text rewrote the owner's quoted words in five memories (pipeline restructure 9.1a, 2026-10-09) | process |
-| 11300 | A build that copies live files by path broke silently when the restructure moved them behind stubs; the kit nearly shipped retired-path stubs and literal byte-order marks (Pipeline Kit 1.0.2 rebuild, 2026-10-10) | process, packaging, build |
-| 11327 | A kit that leaves the machine shipped the owner's name in capitals, reused a number after packaging, and listed hashes no member could match (Pipeline Kit 1.0.2 -> 1.0.3, 2026-10-10) | packaging, build, process |
-| 11350 | The event log could count gate refusals but never say what caught them, and stopped recording finalizes when finalizing moved into a script (2026-10-10) | process, logging, powershell |
-| 11373 | Repackaging a two-line FOMOD with package-mod.ps1 seeds from an old flat package and prunes the previous FOMOD; changelog.ps1 cannot tell two repos sharing a ledger key (MIT-label sweep, 2026-10-10) | packaging, powershell, licensing |
-| 11395 | The distro one-zip rule hard-deleted an optional download at finalize; release scripts used Remove-Item where finalize's own prune used the Recycle Bin (AMF-W3 1.0.4, 2026-10-11) | powershell, build, packaging |
-| 11417 | Witcher 3 test gotchas from AMF-W3 1.0.5: `entry` is a WitcherScript keyword, the recent-saves list is not newest-first, run saves sync to the cloud, and an owner autosave is not a clean test save (2026-10-11) | testing, crash, settings |
-| 11430 | Retargeting a Nexus changelog entry by editing its version field deleted the newer entry (AMF-W3 credit change, 2026-10-11) | testing, process |
-| 11446 | "Missing UnknownPlugin = old FLICK header" also matched mods that are not FLICK-header consumers, and an old header has 31 table orders, not one (AMF 2.1.8, 2026-10-11) | cpp, crash, git |
-| 11481 | A sub-agent launched the game on a profile another session was using, because "nothing is running" is not "nobody holds it" (AMF themes, 2026-10-11) | testing, process, settings |
-| 11489 | A build-path fix measured on the flags would have passed twice while the artefact still leaked: a quoted VCPKG_CXX_FLAGS path was cut at its first space, and a reused PDB kept its old user-folder records (AMF 2.1.9 rebuild, 2026-10-12) | build, cpp, process |
-| 11517 | A gate row overrode an owner-named exception: the A-Z sort tick box was turned into a switch because checkbox-is-a-toggle flagged it, though the code comment said the owner asked for it (AMF 2.1.9, 2026-10-12) | process, settings, build |
-| 11526 | A control drawn with art lost its outline: the art path skipped ImGui's border, no shipped box, button or tick box part had an edge layer, and faces are the panel colour - Norden - Black's buttons were invisible (AMF next after 2.1.9, 2026-10-12) | process, cpp, python |
-| 11535 | A click shorter than a frame lost its release: CommonLib's IsUp() needs a held time, and the game's release of a button let go before its next poll carries none (AMF next v3, 2026-10-12) | cpp, testing |
-| 11543 | A theme switch that set a few style sizes over a scaled style undid the scale: rebuild the whole ImGui style each time (AMF next v3, 2026-10-12) | build, cpp, settings |
-| 11551 | The rules reached 2.10.0: a minor bump kept its own arithmetic while only the build step was collapsed into the version gate, and the gate's shape check looked at the patch digit alone (rules 2.9.1 -> 2.10.0, 2026-10-09; found 2026-10-12) | process, powershell, versioning |
-| 11560 | A key SendInput sends is proof only for mods that read Windows keys: F13-F15 never reached OAR, Community Shaders or IED, which read the game's own input events - and a splice inside AMF's load-time hook would reach no other plugin's hook (AMF 2.2.0, 2026-10-12) | testing, cpp, settings |
-| 11569 | The Nexus "1.0.5" file of MO2 Custom Filters was the 1.0.4 package - "the user runs an old version" was right about the code and wrong about why (2026-10-13) | mo2, packaging, python |
-| 11581 | "Two entries vanish from the Mods list in Chinese" - both were in the list, 150 rows from where the test looked: a menu name that follows the game's language is a newcomer to an order saved in another language (AMF 2.2.0 final5, 2026-10-13) | settings, cpp, testing |
-| 11592 | A requested feature was parked for a later version instead of folded into the open one (AMF 2.2.0 slider wheel, 2026-10-13) | build, testing |
-| 11601 | A Witcher 3 EIAB_Sprint lock moves the camera: the game treats Geralt as indoors and switches to the close indoor camera (Loot on Hover W3, 2026-10-13) | - |
-| 11611 | The gate was used as the test: 233 same-station re-runs of the finalize gate, 163 of them refusals (straight flow, 2026-10-13) | process, powershell |
-| 11637 | A package seeded from an older release than the last one: a folder named "<Mod> X.Y.Z FOMOD" is skipped as a seed, and new dist files landed at the FOMOD root (SLSC 1.0.3, 2026-10-13) | packaging, process, git |
-| 11654 | A HUD setting that "does nothing" on a settings page was parked as an INI-priority bug - the value reached the movie only once, in its constructor (Compass Navigation Overhaul 1.1.7, 2026-10-13) | settings, ui, mo2 |
-| 11681 | A Witcher 3 load sync in the player's OnSpawned never logged - thePlayer (and GetWitcherPlayer()) is still NULL there on a save load, and the sync's guard returned silently (Kaer Morhen Gear 1.0.0, 2026-10-13) | testing, cpp, logging |
-| 11698 | Inflated Witcher 3 item values were blamed on another mod's switches - the test save was New Game+, and the game's own NG+ item scaling explained every number (Kaer Morhen Gear, 2026-10-13) | testing, logging |
-| 11721 | A release was posted with its description still in the old plain-text format: every page check read facts, none the layout (Simple Loadout System W3 1.0.1, 2026-10-14) | process, packaging, powershell |
-| 11743 | A Papyrus script slot passed IsObject() and still crashed AMF - type and value are separate words, and GetObject() writes a refcount through the value (AMF Skyrim 2.2.1, 2026-10-17) | skyrim, crash, cpp |
-| 11765 | w3-tb.ps1 quit pressed CONTINUE at the Witcher 3 main menu, loaded a save, and the autosave rotated out an old one (WGO 1.0.0 test abort, 2026-10-18) | ui, testing, crash |
-| 11778 | WitcherScript rejects `!(SomeClass)x` - negating a cast is a syntax error (WGO 1.0.0, 2026-10-18) | - |
-| 11789 | A stat ability added to a slotted W3 mutagen item leaked 0.05 spell power per slot cycle (WGO 1.0.0, 2026-10-18) | crash |
-| 11802 | A set bonus was designed around enemies landing critical hits - in W3 5.01 enemies never crit (WGO armour sets, 2026-10-18) | - |
-| 11813 | LMU's map border drew nothing for a week - img:// loadMovie can't load loose DDS, and a disabled code path's log line was read as the cause (LMU 1.3.3, 2026-10-18) | logging, scaleform |
-| 11826 | Ragdoll "flying corpses" read from unsettled bodies; TestBench key presses queued while the game was unfocused fired together (Perfected Wheeler 1.4.0, 2026-10-18) | testing, cpp, crash |
-| 11839 | An outfit replacer recorded "working" never looked at the NPC - outfit overrides don't reach actors an existing save already dressed (Jarl Ulfric Armor Replacer 1.0.1 -> 1.0.2, 2026-10-18) | testing, skyrim |
-| 11852 | "No markers in inns" was a UI replacer's art file overriding the add-on's icon table everywhere (Local Map Item Markers 1.0.1, 2026-10-18) | mo2, packaging, scaleform |
-| 11865 | Norden UI Black's recolour skipped the dialogue box: a "neutral greys only" rule misses hued slate that reads as panel; the packager reverted the fix; a headless PC can't show 16:9 UI (2026-10-19) | packaging, crash, git |
-| 11878 | Five first packages failed the path gates because find-msvc.bat never called the shared build environment (2026-10-19) | cpp, process, packaging |
-| 11891 | Screenshot-run "bugs" were mostly not bugs - check a capture-run observation against live data before building a fix (2026-10-19) | settings, ui |
-| 11902 | The release check read a FOMOD's nested file mapping as "never installed", and a package layout was bent to suit it (Norden UI Black 1.0.4, 2026-10-20) | packaging, process, cpp |
-| 11913 | Three quiet traps met building Perfected Wheeler 1.4.1 (2026-10-20) | packaging, process, python |
-| 11930 | A side effect inside a wrapped permission query that the game polls on a timer repeats forever (WGO Magic system, 2026-10-20) | licensing, ui, logging |
-| 11944 | A Witcher 3 inventory "stats" hint never showed - the stats module is never selectable, so its context is never created (WGO 1.0.0, 2026-10-20) | ui |
-| 11957 | A scan for mods that replace a file missed every mod folder with "[" in its name - Python's glob reads brackets as a pattern (WGO build queue A1b, 2026-10-20) | mo2, python, process |
-| 11970 | A regex that edited label text also matched code, and the failed run then truncated the menu XML to 0 bytes (WGO build queue A3, 2026-10-20) | python, git, crash |
-| 11981 | A Witcher 3 item definition can hold <item> tags inside its own <item> block - a non-greedy regex cut the record short (WGO Viper split, 2026-10-20) | python |
-| 11994 | Enemy tiers "did nothing": the resistance step only reached resistances already above 0, and people have none - plus nothing redid the enemies already standing there (WGO fix round, 2026-10-20) | process, settings, ui |
-| 12007 | A "same key as jump" feature tested only against the default layout - the owner's pad has jump on Y and Roll on A (WGO combat jump, 2026-10-20) | settings, mo2 |
-| 12020 | Monster mutagens ran the skill-group colour bonus at LESSER size - the game reads the tier from the item's alchemy_s19 ability (WGO, 2026-10-20) | ui, settings |
-| 12033 | Git Bash grep `$'\r'` reported no CRLF in files that were CRLF, and heredoc edit scripts with literal tabs failed to match (WGO fix round, 2026-10-20) | git, python |
-| 12045 | A control holds several keys on one device: "already bound" and "is the default" checked only the first (Unbind Vanilla Controls Skyrim 1.1.2, 2026-10-20) | settings, packaging |
-| 12061 | A Witcher 3 stats list re-sent from script kept its old right-hand card - the panel refills the card only when the selected row CHANGES (WGO character points, 2026-10-20) | scaleform, ui |
-| 12075 | A Witcher 3 skill-slot list with more rows than sockets hands the extra rows to the MUTAGEN slots - CD PROJEKT RED's count always matched, so it never showed (WGO mutation slots 5-6, 2026-10-20) | ui, scaleform, settings |
-| 12094 | WitcherScript: a method call on an array a function RETURNS does not compile - "Only arrays coming from variables can be modified", even for .Size() (WGO mutation slots 5-6, 2026-10-20) | python |
-| 12109 | A Witcher 3 mod built for 4.0x loads its bundles and texture cache on 5.0, but its collision cache and its world file do not carry over - REDkit 5.0 calls a v9 collision.cache "NOT a collision cache", and a 4.0x .w2w has none of the Remastered lighting (Kaer Morhen Fortress, 2026-10-20) | python, testing, mo2 |
-| 12157 | Witcher 3 skill-grid moves follow each socket's navigation INDEX, not the nearest slot - added sockets got no controller navigation (WGO mutation slots 5-6, 2026-10-20) | scaleform, ui |
-| 12167 | "Launch when ready" was read as "launch with what is built" - the game was launched while a requested change (HPM vanilla adrenaline toggle, colours) was still unbuilt in another session (Main Agent, 2026-10-20) | testing, packaging, settings |
-| 12173 | A Windows bugcheck during a Root Builder deploy zeroed BuildData.json - MO2 then dies silently at "Previous build data exists, updating" (Njordlinger, 2026-10-21) | mo2, crash, testing |
-| 12179 | Nexus description save: SCEditor val() plus textarea input/change events no longer marks the form changed - Save quietly kept the old text (MO2 Modlist Manager 1.1.5, 2026-10-21) | testing, mo2 |
-| 12184 | FFDec's script export is not deterministic - the same SWF exported twice gave different text for some classes, so "only my script differs" checks must compare SWF tags byte by byte (SkyUI Config Diag, 2026-10-21) | scaleform, git, process |
-| 12189 | An edited SkyUI class inside a menu swf never ran - imported libraries ([asset path removed], inventorylists.swf) define the same AS2 class first and the class guard skips later copies (SkyUI Config Diag, 2026-10-21) | scaleform, logging, ui |
-| 12195 | A new settings row "did not appear": an old test mod's copy of the settings JSON won the load order (Perfected Wheeler 1.4.1, 2026-10-22) | settings, python, skyrim |
-| 12213 | A per-line FOMOD pre-selected the SE/AE DLL on every game - 1.7.104 players got "failed to open address library file" (Infinity UI 2.1.2, 2026-10-22) | cpp, scaleform, skyrim |
-| 12218 | LIO reported lock-breaking as a theft (StealAlarm) - guards shouted "Stop right there" but no bounty or arrest followed (Lock Interaction Overhaul 1.0.6, 2026-10-22) | python |
-| 12223 | A standalone pre-finalize check before finalize-mod blocked the finalize on gate C (AMF 2.2.3, 2026-10-22) | process, powershell, python |
-| 12238 | A sanitiser that names what it removes is itself the leak (Pipeline Kit, 2026-10-22) | git, process, python |
-| 12246 | Editing the repo CHANGELOG between packaging and finalize made finalize refuse (Lock Interaction Overhaul 1.1.0, 2026-10-22) | packaging, process |
-| 12254 | A lock answers "is it free?", not "may you launch?" - five agents each launched their own run (rule 69, 2026-10-23) | process, testing, mo2 |
-| 12262 | A gate saw a file hidden in MO2 (.mohidden) as "never installed" (Norden UI - Black 1.1.0, 2026-10-23) | process, mo2, cpp |
-| 12270 | A new Nexus page's first file can't go through nexus-upload.py or a browser upload over 10 MB (New Game in Third Person, 2026-10-23) | python, process |
-| 12279 | An MO2 Python plugin passed under python.exe and failed in MO2: ModOrganizer.exe is not long-path aware (Modlist Manager 1.1.5, 2026-10-23) | python, mo2, packaging |
-| 12295 | "Every page works but HPM's" under TW3SE: a loader guess stood for a week while a run's own logs already ruled it out (HUD Position Manager W3, 2026-10-23) | ui, logging, settings |
-| 12313 | A derived FOMOD kept "only recoloured files" and silently dropped the settings file that pairs with the art (Norden UI - Black 1.0.4-1.1.0, 2026-10-23) | settings, python, packaging |
-| 12327 | Shipping a mod's settings file to restore the source's values also overrides the PLAYER's own settings underneath (Norden UI - Black 1.1.1, 2026-10-23) | settings, mo2, testing |
-| 12342 | TestBench input in SkyUI lists and "mod off" tests in Njordlinger (batch B-20261023-192904, 2026-10-23) | process, skyrim, testing |
-| 12355 | Listed to-do items as "not worked on" from their HEADINGS while the bodies said done (Main Agent, 2026-10-23) | - |
-| 12368 | combined-run finish: crashes on a surrogate after restoring, and does not undo test-build installs (batch B-20261023-201147, 2026-10-23) | crash, process, mo2 |
-| 12381 | Probing a settings mod through its own control op wrote the owner's third-party files (UVC 1.2.0, 2026-10-23) | settings |
-| 12392 | Staged test profiles fail the order audit without loadorder.txt and every plugin of their enabled mods (2026-10-23) | mo2, crash, scaleform |
-| 12405 | Closing the map with TestBench "menu close" during SkyUI's finder search leaks a text-entry count (batch B-20261023-205401, 2026-10-23) | ui, testing |
-| 12419 | A test teleported with `cow Tamriel 5 -3` into Whiterun's Tamriel stand-in, and the frame looked like broken terrain (batch B-20261023-220257, 2026-10-23) | skyrim |
-| 12432 | Matching an owner's screenshot framing in game: camera, vanity, placement and horse traps (batch B-20261023-233541, 2026-10-24) | skyrim, testing |
-| 12448 | Running PGPatcher with an override mod enabled feeds the override's meshes back in as PGPatcher's input (2026-10-24) | skyrim, build, mo2 |
-| 12463 | Two sessions staging in the same .MD index: one commit swept up the other's staged files (2026-10-24) | git, powershell, python |
-| 12475 | combined-run result refused a short request id that start --only had accepted, and finish then wrote NOT-RUN over a real pass (batch B-20261024-004955-caa9, 2026-10-24) | logging |
-| 12487 | A text-position edit to gate-rules.json put a note into another row's id and switched the whole package gate off (2026-10-24) | process, packaging, git |
-| 12501 | Input Manager action ids are positions that go stale - a UVC bind renumbered every action (batch B-20261024-010711, 2026-10-24) | - |
-| 12513 | Tool and test-harness gotchas from the 2026-10-24 backlog run | settings, ui, mo2 |
-| 12528 | Modlist Manager judged a master "missing" by mod folders only, and the judgement cascaded down every dependent (1.1.5, 2026-10-24) | mo2, python, settings |
-| 12545 | Teleporting the test character by coordinates/drop killed it with falling damage - use coc (the owner, 2026-10-24) | skyrim |
-| 12557 | Searching swap files by the new plant's name missed City Trees' BOS swaps: NotWL renames vanilla tree editor ids (2026-10-24) | settings, skyrim, logging |
-| 12572 | A PBR base colour shipped under a non-PBR texture name rendered paper white, and noon test frames could not see it - they clip at 218 (All Snow Ground Match, 2026-10-24) | python |
-| 12592 | Nexus's description save strips the line break after [/quote] when the next line starts a tag - a raw SHA check fails (2026-10-24) | testing, ui |
-| 12605 | A Nexus reply drafted from a summary of the comment asked the commenter what they had already said (2026-10-24) | process, settings |
-| 12619 | A test that runs git, started from a pre-commit hook, inherited GIT_INDEX_FILE and read the repo being committed (2026-10-24) | git, cpp, python |
-| 12632 | A test's own SendInput presses made MO2 Agent Control report the PC "in use" (2026-10-24) | mo2 |
-| 12643 | The request named a version the profile did not have active (2026-10-24) | mo2, ui |
-| 12653 | Helgen tone ratios moved with weather state and box choice (2026-10-24) | - |
-| 12664 | AMF in-process capture black for a whole launch; what reaches Atelier's ImGui popup (2026-10-24) | testing |
-| 12676 | Two release-gate false results: a folder plugin could never pass rule 29, and a "<version>" placeholder read as an MIT label (MO2 Agent Control, 2026-10-25) | process, licensing, python |
-| 12689 | New Nexus page: the browser Files step attached the zip but never uploaded; the generated description duplicated Credit/Support/Source (Deep Snow, 2026-10-25) | python, crash |
-| 12703 | "Recorded working" was taken as "ready to finalize": three of six finalizes refused on stale packages and unfixed rules (release batch, 2026-10-25) | packaging, process, ui |
-| 12719 | Nexus informal warning: our pages disclosed AI code but not AI page media (2026-10-25) | process, python, ui |
-| 12736 | Finalize text step and build tools wipe or bump before the gate decides (2026-10-25) | process, packaging, python |
-| 12747 | Test-design lessons from combined run 2026-10-25 (presets, DEM typed entry, MO2 stand-in program) | testing, ui, mo2 |
-| 12764 | Hand-built parent CELL / WRLD overrides blanked the master's data (Ysgramor's Armor addon 1.0.1, Souls to Perks 1.0.6, 2026-10-25) | packaging, powershell, process |
-| 12781 | Wrapped text followed the content width once AMF's page got a horizontal scroll bar (AMF 2.3.0, 2026-10-25) | - |
-| 12792 | Naked Vigilants of Stendarr: a SkyPatcher outfit mod built for the ESL file of its master, installed beside the ESP file (Njordlinger, 2026-10-25) | skyrim, logging, process |
-| 12808 | No '= NULL' default is not 'ImGui dereferences it', and a parameter's name is not its contract (AMF 2.3.0 cimgui null checks, 2026-10-25) | settings, cpp, crash |
-| 12824 | An empty-string stand-in for a null pointer is not always safe (AMF 2.3.0 cimgui null checks, 2026-10-25) | cpp, settings |
-| 12839 | The null-check audit's memory floor stalls while the game runs (AMF null-check gate, 2026-10-25) | process, skyrim, packaging |
-| 12850 | "No snow in Riverwood": two saves named Save3, and Seasons keeps a season per save (Njordlinger, 2026-10-25) | testing, skyrim, settings |
-| 12865 | libclang positions are byte offsets - cutting decoded text at them hid every later `else` (AMF null-check audit, 2026-10-25) | python, process |
-| 12881 | A null guard on a job that holds a busy flag or a queue slot must end the job, not just return (AMF 2.3.0 null checks, 2026-10-25) | process, cpp, logging |
-| 12896 | Helgen "paper-white / grey snow" was a landscape layer, not the meshes we retoned twice (Njordlinger, 2026-10-25) | build, settings |
-| 12913 | A crash log's source line names the call, not the fault - and null checks never cover the engine's own reads (AMF 2.2.3 Discover crash, 2026-10-25) | crash, skyrim, logging |
-| 12933 | A slider held active steps at ImGui's nav-tweak rate (~54/s), not the key-repeat rate (AMF 2.3.0 one-way sliders, 2026-10-25) | crash, scaleform, skyrim |
-| 12947 | An ESL-flagged Nexus file can be invalid on SE 1.5.97 (Immersive Gathering, 2026-10-25) | skyrim, ui, settings |
-| 12958 | Two helpers of one session shared the MO2 instance lock (2026-10-25) | mo2, process |
-| 12969 | Scaleform calls queued through SKSE AddTask raced the HUD movie on another thread (Dragon's Eye Minimap 1.7.5, 2026-10-25) | ui, scaleform, crash |
-| 12984 | A UI task that re-queues itself runs every pass in the same frame (Hjerim Start 1.0.3, 2026-10-25) | process, skyrim, scaleform |
-| 12995 | Wrapping SetFormEditorID never captured LTEX/TXST/STAT editor IDs on SE 1.5.97 (Deep Snow 1.1.0, 2026-10-25) | logging, testing |
-| 13008 | A test save made with a behaviour mod ticked crashed every load once that mod was unticked (Njordlinger Test, 2026-10-25) | testing, crash, cpp |
-| 13023 | A merge that kept records but dropped the group tree broke a plugin, and the launch gate never looked at it (Civil War Guard Armor Replacer, 2026-10-25) | skyrim, process, python |
-| 13031 | A patch that gated every perk entry still left the chopping block opening another mod's menu (ChoppingBlockToIG, 2026-10-26) | settings, process, ui |
-| 13039 | SPID conversion: faction filters lost other mods' guards, and NPC filters spread through templates (Civil War Guard Armor Replacer 2.0.0, 2026-10-26) | skyrim, python, settings |
-| 13047 | combined-run keep on a folder did not protect a folder snapshotted with backup --dir (batch d1f8/721d, 2026-10-26) | skyrim |
-| 13055 | A "missed" road stretch was a vanilla road mesh brought back by a later plugin, and Seasons repaints every non-winter landscape texture (Njordlinger roads / no snow under roofs, 2026-10-26) | settings, skyrim |
-| 13063 | CommonLib API differences between build lines, and tooling blind spots, found building Njordlinger 1.0 (2026-10-26) | packaging, python, cpp |
-| 13071 | install-test-build kept shipped framework data INIs as "player settings", so changed KID/SkyPatcher data never reached the game (Njordlinger CGO, 2026-10-26) | settings, packaging |
-| 13079 | SPID never gave our gear perks to the player on an existing save, though its log showed every NPC getting them (Njordlinger CGO phase 3, 2026-10-26) | logging, testing, cpp |
-| 13087 | A sprint-cost effect did nothing because Paragon zeroes the game's sprint-drain setting and drains with its own spells (Njordlinger CGO, 2026-10-26) | settings, logging, skyrim |
-| 13095 | Every compiled Papyrus script we shipped carried this machine's Windows account and computer name in its .pex header (found 2026-10-26) | process, skyrim, packaging |
-| 13103 | Offline Mutagen staging without the Strings BSA made every localized vanilla text read empty (Stormcrown Forward, 2026-10-26) | git, skyrim |
-| 13111 | install-test-build left files the new package no longer ships, so an old loot INI kept stones in boss chests (Njordlinger CGO, 2026-10-26) | packaging, settings, mo2 |
-| 13119 | Backticks inside a double-quoted `python -c "..."` string were run by the shell, so the written text lost its file names (plan edits, 2026-10-26) | python, process |
-| 13130 | A combined-run result with quoted notes was split by PowerShell 5.1, failed unseen, and finish recorded NOT RUN (batch B-20261027-000506-8eac, 2026-10-27) | powershell |
-| 13139 | An esp/bsa-only MCM Helper did not reproduce a "script type without the function" crash (AMF 1.7.104 report, 2026-10-27) | crash, skyrim, testing |
-| 13147 | Python text-mode edit of modlist.txt wrote mixed newlines (AMF repro, 2026-10-27) | mo2, git, python |
-| 13155 | A game launched behind MO2 hung at frame 0 and nothing could close it cleanly (AMF repro, 2026-10-27) | mo2, testing, crash |
-| 13163 | Test teleports dropped the player into the void (combined run eacb, 2026-10-27) | skyrim |
-| 13171 | The owner-presence gate never saw the owner's Steam Controller (2026-10-27) | process |
-| 13179 | Posted versions of our mods sat unticked in the Test profile while older ones stayed active (found 2026-10-27) | mo2, process |
-| 13187 | A helper repackaged AMF 2.3.1 with a different fix while 2.3.1 was mid-test (2026-10-27) | packaging, cpp, process |
-| 13195 | A see-through floor you can walk over was a reverted room marker, not a missing floor (Blue Palace, 2026-10-27) | mo2, process, skyrim |
-| 13203 | Turning a town mod off: generated landscape patchers and PGPatcher output keep its traces (GCoS off, 2026-10-27) | mo2, skyrim |
-| 13211 | A beam-dimming patch that edited only the lighting mod's own records left bright beams (Lux Dim Beams, 2026-10-27) | - |
-| 13219 | First public release of a private fork hit four knowable stops (RaceMenu Atelier 1.0.1, 2026-10-27) | process, cpp, licensing |
-| 13227 | Items 'sent to the Recycle Bin' were purged within minutes by Storage Sense (disk cleanup, 2026-10-27) | build, cpp |
-| 13235 | Cyrillic showed as ????? in RaceMenu Atelier: the framework's font, plus lossy path conversion (2026-10-27) | ui, settings, build |
-| 13243 | AAOS blanked slots in the game's sound hash table and broke its chains (Bluetooth-at-startup CTD, 2026-10-27) | crash, cpp, skyrim |
-| 13251 | Two generated landscape patchers fed each other and left 3-4 m seams (Katla's Farm, 2026-10-27) | skyrim, build, python |
-| 13259 | A release-link label with words before its version passed the label gate, and the sync never relabelled it (RaceMenu Atelier 1.1.0, 2026-10-28) | process, ui, versioning |
-| 13267 | package-mod.ps1 packaged AMF as a flat folder without the SMF name stub; AMF's packager is tools/build-fomod.py, whose default output is the wrong folder (AMF 2.3.1 search focus, 2026-10-28) | packaging, python, process |
-| 13275 | A helper's navigate reused the owner's open Nexus edit tab and lost it (2026-10-28) | process, testing, settings |
-| 13283 | Unbind Vanilla Controls' Controls page broke on the plain SkyUI journal (Atttomsk, 2026-10-28) | scaleform, cpp, process |
-| 13292 | A "settled" check counted quiet frames, so it closed mid-animation at a high frame rate - and one test profile hid it (Dragon's Eye Minimap 1.8.1, 2026-11-01) | mo2, ui, scaleform |
-| 13300 | A profile tick written before the mod folder exists is dropped by MO2 - the game then runs without the mod, and the failure looks like a tool error (Dragon's Eye Minimap 1.8.1 test, 2026-11-01) | mo2, testing, ui |
-| 13309 | Researched how to build a render feature without first searching for mods that already do it (Depth First Culling, 2026-11-01) | process |
-| 13318 | PGPatcher waits at a "Generation Complete" window after an --autostart run, so a script waiting for it to exit waits for nothing (unified run, 2026-11-01) | mo2, logging |
-| 13326 | Installed a mod without checking the list already had it, then told the owner it was out (Texture Downscaler, 2026-11-01) | mo2, cpp, logging |
-| 13334 | Copied a winter sibling's total stats into SkyPatcher rules, and the race's starting values were added on top (Winter Animals, 2026-11-02) | testing |
-| 13342 | Reading test state from fields that only update on a press (combined run, 2026-11-02) | settings, devbench |
-| 13350 | A sheet that looked right on the game's own journal crashed on the first remap (UVC 1.2.0, 2026-11-02) | crash |
-| 13358 | Test harness traps from the 2026-11-02 batch: hard requirements, meta.ini, hold 6 | mo2, settings, testing |
-| 13366 | A sheet intercepting input only knew one journal's name for Accept (UVC 1.2.0, 2026-11-02) | crash, ui |
-| 13374 | Test run traps: INI sections, a connected pad, Steam F12 during a key capture (2026-11-02) | settings, mo2, testing |
-| 13382 | A log line and a flag read as proof that a corpse was placed (Ysgramor addon 1.0.2, 2026-11-02) | logging, skyrim |
-| 13390 | Rolling a mod back to its Nexus build brought its bundled DLL back, and the launch gate hid why it refused (2026-11-02) | testing, cpp, mo2 |
-| 13398 | Tomb steps went into combined runs against the owner's standing instruction (2026-11-02) | process |
-| 13406 | build.ps1 -OutRoot given a Git Bash path made an empty D:\d (2026-11-02) | powershell, git |
-| 13414 | A patch disabled the "duplicate" College bridge and the whole bridge vanished (Winterhold patch, 2026-11-02) | mo2, testing |
-| 13422 | A Morthal teleport crash was a placed object with no base, from a patch built for another Fortified Morthal (2026-11-02) | crash, skyrim, logging |
-| 13430 | A land texture change was aimed at the record while Seasons decided the picture (green ground, 2026-11-02) | settings |
-| 13438 | An observe-only tool hook reused by player widgets let a keybind press also walk the menu's tabs (AMF 2.4.0, 2026-11-04) | cpp, settings, devbench |
-| 13446 | A MODT copied across form 40 crashed at load: flat hashes below it, a header from it on (Campfire Camp Addon, 2026-11-04) | skyrim, crash, process |
-| 13456 | Finalize still refuses a patch number of 10 or more after semantic versioning retired the roll-over (release batch, 2026-11-05) | process, cpp, versioning |
-| 13464 | A "dry run" of a permanent action really did it: `Clear-RecycleBin -Force -WhatIf` emptied D's Recycle Bin (phone recycle bin page, 2026-11-05) | powershell, packaging |
-| 13472 | Told the owner a tool "is already on your PC and phone" without checking, then gave advice that could have removed his saves (OneDrive, 2026-11-05) | settings |
-| 13480 | A straight-edged flooded block on a rendered map was the renderer drawing each water shape as its bounding box (World Map Render, 2026-11-05) | python |
-| 13488 | Staged fixes sat uninstalled while the owner judged old pictures (World Map Render, 2026-11-05) | testing, process |
-| 13496 | A compositor's denoise broke on the largest pictures only, and a colour-mask smoothing wrecked a picture (World Map Render, 2026-11-05) | python |
-| 13504 | An order to build a fix arrived after the fix had already shipped (AMF, 2026-11-05) | git, process, powershell |
-| 13512 | An install reported "equal" for a package that did not exist (install-test-build, 2026-11-06) | packaging, python |
-| 13520 | A new Nexus page's header image silently didn't save (Nexus media step, 2026-11-06) | testing |
-| 13528 | A gate passed only after a file's timestamp was set back by hand (release gates, 2026-11-06) | process, build, cpp |
-| 13536 | A config keyed by DynDOLOD.esm FormIDs went dead after a regeneration (Fires Hurt RE, 2026-11-06) | skyrim, python, testing |
-| 13544 | A guessed-argument call into RaceMenu's CharGen object crashed the game (Mirrorwright run 15, 2026-11-06) | crash, testing, devbench |
-| 13552 | A new package shipped the previous version inside its FOMOD installer (QuickLoot Container Merge 1.1.0, UVC 1.5.0, 2026-11-07) | packaging, process, powershell |
-| 13560 | A "$key" message UVC sent to the Controls page showed its "$" although the key was in UVC's own translation file (UVC 1.5.0, batch B-20261107-000625-368b, 2026-11-07) | cpp, python, scaleform |
-| 13568 | DLL mods shipped without a Skyrim 1.7.x build - fourteen of them, five with a Line-17 preset nobody ever built (Line-17 ports, 2026-11-07) | packaging, cpp, process |
-| 13577 | A wider search for "who answers" let players into houses nobody was home in (Dynamic Simple Knock 1.0.0, found 2026-11-07) | - |
-| 13585 | A camera "that doesn't follow" was a camera that never turned (Hit Detection Meter yaw test, 2026-11-07) | build, process |
-| 13593 | A late default change left the FOMOD description and CHANGELOG saying the old value (Hit Detection Meter, 2026-11-07) | settings, git, packaging |
-| 13601 | An annotation comment appended to a line turned the code after it into comment text (AMF 2.3.0-2.4.0, 2026-11-07) | crash, process, settings |
-| 13609 | An AE DLL that lists its runtimes is refused on any runtime not in the list, even with every address from Address Library (World Map Selector for Controller 1.2.0, GOG 1.6.1179, 2026-11-08) | cpp, process, skyrim |
-| 13617 | A hook on an input handler's vtable slot is dead on Skyrim 1.7 because the header's index is the pre-1.7 one (Walk or Run for Controller 1.2.0, 2026-11-08) | cpp, process |
-| 13625 | A PGPatcher run for the Test profile sat on a hidden "Critical Error" box, and its wrapper switched the shared output back on (Wildfire removal, 2026-11-08) | mo2, logging, powershell |
-| 13634 | A version bump rebuilt CommonLibSSE outside the build environment, and the linker's long-lived mspdbsrv kept the user TEMP in the PDBs (AMF 2.4.2, 2026-11-08) | build, cpp, versioning |
-| 13643 | A static ship's deck held the player but he walked out through the bow, the stern and one side - the collision had open ends and the game meets a MOPP triangle from its front only (Longship 0.1.0, 2026-11-09) | process, python, testing |
-| 13652 | A boat-seat signal read from another mod's source did not hold in game - the player's collision flag stayed on (UVC 1.6.0 Boat context, 2026-11-09) | testing, build, devbench |
-| 13660 | One added collision box in a script-built ship crashed the game on loading the cell, with no Crash Logger file (Longship 0.2.0, 2026-11-09) | crash, skyrim, logging |
-| 13668 | TexGen's and DynDOLOD's end-of-run choice dialogs ignore BM_CLICK; UI Automation Invoke works, and a PGPatcher-wrapper lock outlived MO2 again (PGLite install, 2026-11-09) | mo2, testing, powershell |
-| 13678 | A full package install replaced newer hand-made data in the test folder with the package's older copies (World Map Render, 2026-11-09) | packaging, cpp, process |
-| 13687 | An AP menu injection took Alternate Perspective's built-in None/Random cards for a loaded menu and drew a dead card twice (AP Home Start - Winter Cove 1.0.0, Nexus report, 2026-11-09) | ui, scaleform, cpp |
-| 13696 | Finishing a stale combined run restores the profile from the batch-start backup and wipes every change made since (combined-run, 2026-11-10) | mo2, git, testing |
-| 13705 | Copying PGPatcher's metal TruePBR block onto a new mesh without a fuzz map gives a wrong material (nif, 2026-11-10) | packaging, process, python |
-| 13714 | "Followed the owner's drawn outline" while the result did not match it (weapon modelling, 2026-11-10) | - |
-| 13723 | A plate built in rows silently loses material where its outline rises again (Blender weapon builds, 2026-11-10) | - |
-| 13732 | A vague visual complaint was answered with a rule instead of a question - "wider on one side" became a symmetry fix that reshaped the wrong part (weapon modelling, 2026-11-10) | mo2 |
-| 13741 | A flat steel end face mirrored the render's warm backdrop and read as a brown wooden block in the side view (weapon renders, 2026-11-10) | - |
-| 13750 | Fixing one part by "taking the old version's lines" also brought back a line the owner had already redrawn (warhammer v2c, 2026-11-10) | mo2 |
-| 13759 | One px-per-unit value for a mixed-density atlas halved the normal strength on the parts painted denser (Truly Nordic weapons, 2026-11-10) | - |
-| 13768 | The shared tube builder sizes a part's texture slot from the round shaft, so a wider square core overlaps its neighbours' UVs (Truly Nordic weapons, 2026-11-10) | process |
-| 13777 | A flanged mace head drawn with a smooth superellipse profile read as an egg or a cage, not a mace (weapon modelling, 2026-11-10) | mo2 |
-| 13786 | The owner's "fill to here" outline was built as a "trim to here" limit, and his position-marker triangles were built as real triangles (Nordic shield v2, 2026-11-10) | - |
-| 13795 | Packaging the Truly Nordic set: five quiet traps between Blender and the game (nif/packaging, 2026-11-10) | packaging, skyrim, mo2 |
-| 13809 | Chaining after another mod's 6-byte call hook used the trampoline's pointer-slot address as the function (UVC 1.6.0, 2026-11-10) | cpp, crash, skyrim |
-| 13818 | A shield looked solid in every review render but was see-through from behind in game - design renders draw both sides of every face (Truly Nordic shield, 2026-11-11) | testing, mo2, process |
-| 13827 | A skinned mesh given a rigid weapon's shader block draws nothing (Truly Nordic bow, visual-design, nif, 2026-11-11) | python |
-| 13835 | A hook on the object's own Activate misses presses a perk takes first (Dynamic Simple Knock vs ESO Lockpick Menu, cpp, skyrim, 2026-11-11) | cpp, settings, ui |
-| 13843 | Nexus v3 refuses a single-part upload over 100 MiB; the multipart endpoint is /uploads/multipart (Truly Nordic first file, nexus, upload, 2026-11-11) | python |
-| 13852 | A repo with both dist\ and data\: the packager ignores data\ and ships the previous release's copies (TK Dodge AIO 1.1.0, release, packaging, 2026-11-11) | packaging, settings, powershell |
-| 13860 | A rename that only changed the code left the old name in the behaviour patch Pandora shows (Simple Dodge 1.1.0, release, packaging, 2026-11-11) | packaging, settings, logging |
-| 13868 | A roll's "head stays off the floor" check passed while the crown could still hit - the head bone sits at the base of the skull (Simple Dodge rolls, animation, 2026-11-11) | python |
-| 13878 | Open hands built as a small finger curl stayed curled - the vanilla rest pose is already half-closed (Simple Dodge unarmed, animation, 2026-11-11) | - |
-| 13888 | A replacement that inserted text with CRLF into an LF file hid whole lines behind bare carriage returns (build_stepdodge.py, animation tooling, 2026-11-11) | git, powershell, python |
-| 13898 | A package silently dropped files that share a NAME with another file in it - the packager's FOMOD by-name skip ran on a plain package (Simple Dodge 1.1.0, packaging, animation, 2026-11-11) | packaging, powershell, git |
-| 13908 | Pandora's run-and-close mode built none of a new patch - --auto_run reuses the saved selection, where a new or once-unticked code stays OFF (Simple Dodge, BFCO, MCO, launch, 2026-11-11) | process, testing, python |
-| 13918 | The installer put its backup INSIDE the mod folder - a full-path mod argument made os.path.join drop the backup root (install-test-build, Simple Dodge 1.1.0, 2026-11-11) | mo2, python |
-| 13928 | A build script wrote its package outside the pipeline - its OutRoot default pointed at an old folder (Ysgramor's Armor addon 1.1.0, build, 2026-11-11) | process, packaging, powershell |
-| 13938 | A Blender top-down render came out as flat background - the ortho camera's default clip_end (100 units) cut the whole scene (Simple Dodge showcase GIFs, blender, 2026-11-11) | settings, python |
-| 13948 | A PowerShell script used $p and $P (and $b and $B) as two variables - PowerShell names are case-insensitive, so one overwrote the other (combined-run launch scripting, 2026-11-11) | powershell, mo2, python |
-| 13958 | A reshaped weapon face broke the old build and engraving - a double crescent needs a slanted seam, a new split, and a weave field (Truly Nordic battle axe v10, visual design, 2026-11-11) | - |
-| 13968 | A point the owner drew beside an existing point meant MOVE it there, not ADD a second one (Truly Nordic battle axe v10 -> v11, visual design, 2026-11-11) | - |
-| 13978 | A sheath offset from the blade's outline can't be drawn - it must hold the blade's whole draw path (Truly Nordic sheaths v1, visual design, 2026-11-11) | settings |
-| 13988 | Two rebuilds came from tracing the owner's drawing by eye off a chat image - get it on disk and trace its pixels (Truly Nordic battle axe v10/v11 -> v12, visual design, 2026-11-11) | build, testing |
-| 13998 | A narrow face dropped the owner's symbol because it inherited a wider face's layout; and open tubes came out wound inside-out (Truly Nordic sheaths v2 / straight sword, visual design, 2026-11-11) | process |
-| 14008 | The sheath tips got a braid border with nothing inside it to go around - against the owner's braid rule (Truly Nordic sheaths v1-v4, visual design, 2026-11-11) | - |
-| 14018 | A model mod's installer named its alternate models in words only - the player could not see what he was choosing (Truly Nordic 1.0.0 -> 1.1.0, packaging, 2026-11-11) | process, python |
-| 14028 | A reshaped part clipped through its neighbour - and the original had clipped too, hidden inside the ferrule (Truly Nordic saber A5g -> A5h, visual design, 2026-11-11) | - |
-| 14038 | Two approved weapons broke the owner's braid rule and nothing caught it - the engraving checks measured margins, not layout (Truly Nordic battleaxe v12 and war axe v3, visual design, 2026-11-11) | process, python |
-| 14048 | A swept part folded through itself where it bent tighter than it was wide - the owner saw it as a crack (Truly Nordic saber pommel A5h -> A5i, visual design, 2026-11-12) | cpp |
-| 14058 | Finishing a stale combined-run batch rolled the test profile back nine hours, undoing the owner's decisions (Main session, combined-run, 2026-11-12) | mo2, git, testing |
-| 14068 | A release with several main files had no pipeline path - every release tool assumed one archive (Truly Nordic 1.1.0, release, 2026-11-12) | process, packaging, python |
-| 14078 | A Nexus image posted with an empty description, after a title the form refused (nexus-media, 2026-11-12) | settings |
-| 14086 | Building from the owner's markup without recovering the camera it was drawn on (weapon-engraving, 2026-11-12) | - |
-| 14094 | A "scratch" copy of Pandora rebuilt the live modlist's behaviour output (pandora, behaviour, sandbox, 2026-11-12) | mo2, settings, logging |
-| 14102 | "Tested with Pandora" said nothing about Nemesis: an empty info.ini field crashed Nemesis at start (nemesis, pandora, behaviour, 2026-11-12) | settings, crash, packaging |
-| 14110 | A tap detector built from "down" events fired on a held key (input, skse, 2026-11-12) | cpp, skyrim |
-| 14118 | Packaging keyed files by NAME in an animation patch, dropping a node file (packaging, behaviour, 2026-11-12) | packaging, powershell, process |
-| 14126 | A translation check that compares languages to English misses a key missing from English too (translations, 2026-11-12) | settings, process, python |
-| 14135 | A sticky was edited on the wrong mod page because the script ran before the navigation finished (nexus-media, browser, 2026-11-12) | process |
-| 14143 | The same full-package install reverted the hand-smoothed world maps a second time, a day after it was caught and logged (World Map Render, 2026-11-10, found 2026-11-12) | packaging, python, cpp |
-| 14153 | A "first look" built from a re-texture and from block-outs was rejected as low effort (visual design, engraving, 2026-11-12) | - |
-| 14161 | A Sketchfab reupload reported as "uploaded and processing" was never live - it waited for an approval click (Truly Nordic 1.1.0, 2026-11-12) | - |
-| 14169 | A scripted text insert doubled the whole to-do list because str.find returned -1 (to-do list edit, 2026-11-12) | python |
-| 14177 | A reply draft claimed eight first-person dodges because the eight event names were in the first-person graph (Simple Dodge reply, 2026-11-12) | - |
-| 14185 | Copying the game's state writes is not enough - the game refreshes the HUD after its setter, not inside it (Sprint or Sneak for Controller 1.1.0, 2026-11-12) | ui, cpp, crash |
-| 14201 | A "DevBench" folder name does not make code test-only, and a bound on a read value does not protect the pointer read (Perfected Wheeler 1.7.0, 2026-11-12) | process, crash, devbench |
-| 14219 | A texture check that matched an old path prefix passed while checking nothing (Truly Nordic verify.py / build-packages.py, 2026-11-12) | python, packaging, git |
-| 14231 | A measuring script given "--nif NAME" silently measured the first NIF in the folder (surface_profile_measure.py, 2026-11-12) | mo2, python, settings |
-| 14240 | KID creates an unresolved keyword EditorID instead of skipping the line (Truly Nordic spear KID ini, 2026-11-12) | logging, settings |
-| 14251 | Re-running an old painter on today's libraries changed pixels outside the face being repainted (Truly Nordic ring pass, 2026-11-12) | crash, git |
-| 14262 | "Our code never calls it" came from a grep that skipped the headers (Simple Dodge, Perk Entry Point Extender report, 2026-11-12) | cpp, logging |
-| 14276 | Behaviour nodes copied to another graph carry that graph's hard-coded event and variable numbers (Simple Dodge 1.2.0 sheathed dodge, 2026-11-12) | cpp, python, settings |
-| 14294 | The packager copied only fomod/info.xml, so a new installer choice never reached the package (Simple Dodge 1.2.0, 2026-11-12) | packaging, process, powershell |
-| 14307 | An IK knee aim set in the foot's frame follows a turned-out foot outward (Simple Dodge step rework, 2026-11-12) | - |
-| 14320 | A low-priority OAR weapon set loses to any combat overhaul replacing the same clip names (Simple Dodge 1.2.0 bow, 2026-11-12) | mo2, cpp, logging |
-| 14335 | Shading patches on a large face came from base-colour grime sized to the atlas, not from normals (Truly Nordic shields, 2026-11-12) | process |
-| 14351 | A batch's profile restore put the old mod back but left Pandora's output built for the new one (combined runs, 2026-11-12) | process, mo2, testing |
-| 14370 | A two-handed grip solved at the hand bone left the palm 14 units off the shaft (Simple Dodge polearm sets, 2026-11-12) | python |
-| 14384 | Pandora dropped a patch's new nodes over one invalid enum value, still listed the mod as built, and the save crashed (Simple Dodge 1.2.0 chain patch, 2026-11-12) | git, logging, mo2 |
-| 14402 | Amendment: a fresh Pandora output did not bring back the player's sitting, so stale output was not the whole cause (combined runs, 2026-11-12) | mo2, skyrim, testing |
-| 14418 | "The player never sits" was a sit that started and ended inside the poll interval (combined runs, 2026-11-12) | skyrim, ui |
-| 14434 | The player's furniture exit came from code, not from an animation replacer - the graph-event log settled it in one run (combined runs, 2026-11-12) | logging, cpp, skyrim |
-| 14452 | A trace's "culprit" was the outermost hook on the player's update, not the code that stood the player up (combined runs, 2026-11-13) | cpp, testing, skyrim |
-| 14475 | The player's furniture stand-up was our own test tool: TestBench.esp gives the player an AI package from game start (combined runs, 2026-11-13) | packaging, skyrim, testing |
-| 14505 | A Sketchfab reupload kept the 1.0.0 materials by name - ten pieces showed old textures on new UVs, "defaced" and blurry (Truly Nordic 1.2.0, sketchfab, nexus-media, 2026-11-13) | settings, python, testing |
-| 14530 | A proof that applied the same rotation as the export could not catch the export's wrong rotation (Truly Nordic Sketchfab GLB, quiver, 2026-11-13) | python, settings |
-| 14545 | TestBench advanceTime ran the game clock backwards, so time-based checks after a jump were invalid (Knock 1.3.2 test, 2026-11-13) | crash, mo2, scaleform |
-| 14561 | A packaging gate started Pandora's window over the owner's game (pandora-patch-builds gate, 2026-11-13) | process, packaging |
-| 14575 | A sheath designed and approved off the body was buried in the owner's armour at the hip - nothing measured it on a body (Truly Nordic saber C2 / straight sheath v3, 2026-11-13) | python |
-| 14596 | A mod DLL flagged as malware right after a compiler update, with no code change behind it (Simple Dodge 1.2.0 / Knock 1.3.2 quarantined on Nexus, 2026-11-13) | cpp, build, process |
-| 14605 | A sed replacement holding a Windows path split the line and also hit an older line (Truly Nordic notes.txt, 2026-11-13) | git, python |
-| 14613 | Nexus media editor: the gallery order is not set through media/save, and the Sketchfab properties page locks on a set file input (2026-11-13) | testing, settings, ui |
-| 14622 | A test install that "read back equal to the package" laid the files out in the package's option folders (Nordic Ebony Armor and Weapons Replacer 1.1.0, 2026-11-14) | packaging, testing |
-| 14631 | A part that rendered fine in Blender came out flat black in game (Ebony Wolf warhammer face, 2026-11-14) | python, testing, process |
-| 14639 | Light came through a bow every render drew solid - pieces that did not meet and open shells, invisible to a two-sided render and to a winding vote (Ebony Wolf bow and arrow, nif, blender, 2026-11-14) | process, python, testing |
-| 14647 | A UV and tangent gate that passed the bow because it never read it - a skinned shape keeps its vertices in the skin partition (Ebony Wolf bow r02, nif, 2026-11-14) | python, process, mo2 |
-| 14657 | A "is the player moving" check read the rider, not the horse, so a mounted feature broke (Walk or Run for Controller 1.2.1, 2026-11-14) | settings, git |
-| 14665 | Copying another framework's pause copied what it looked like, not how it was done (AMF 2.4.0, found 2026-11-14) | ui, skyrim, testing |
-| 14673 | Blind scripted mesh edits pick the wrong vertices and tear the model; a hole needs new faces, not dragged ones (Ysgramor cuirass, 2026-11-15) | process |
-| 14681 | A crash with no Crash Logger log was blamed on the mod under test; the Windows dump named another mod (Deep Snow 1.3.0, 2026-11-15) | crash, logging, cpp |
-| 14689 | An INI re-read at load changed the setting but not the value in force (Walk or Run for Controller 1.2.2, 2026-11-15) | settings, logging, ui |
-| 14697 | A Nexus description save does not move "Last updated" or the recently-updated list - only a file change does (Auto Draw pilot, 2026-11-15) | testing |
-| 14705 | A Controls-page binding row that nothing read (AMF on-screen keyboard, found 2026-11-15) | settings, cpp |
-| 14712 | The FOMOD package shipped an old INI because the repo kept its INI at dist's root (UVC 1.6.0, found 2026-11-15) | settings, packaging, skyrim |
-| 14720 | A mod's own INI in its MO2 folder can hold saved settings that User.ini does not show (AMF 2.4.2 test 9ce3, 2026-11-15) | settings, mo2 |
-| 14733 | A gate piped through `\| tail -1` reported OK while it FAILED (katana scabbard runner, 2026-11-15) | process, python |
-| 14745 | A quiver "kept all six arrows at 3 and 1" because the same ammo was re-equipped - the quiver only rebuilds on an ammo change (Nordic Skyforged 1.1.0 test c381, 2026-11-15) | build, devbench, testing |
-| 14753 | The package render died on a BodySlide NIF at a 263-character path - PyNifly cannot open past MAX_PATH (Nordic Skyforged 1.1.0 finalize, 2026-11-15) | packaging, python, git |
-| 14762 | Two asset mods reached "post it" with a NOTICE that checked only the main source's permissions - Xtudo's textures and the HIMBO files need their authors' permission (Nordic Ebony / Nordic Skyforged 1.1.0, 2026-11-15) | licensing, process |
-| 14771 | A FOMOD package whose core folder is not "Common" was installed raw - "00 Core" sat inside the MO2 mod folder, and in game the armour was invisible (Nordic Ebony / Nordic Skyforged 1.1.0 TruePBR test, 2026-11-15) | packaging, mo2, python |
-| 14779 | A FOMOD option that "replaces the cuirass" shipped its meshes on the vanilla path while the plugin pointed the worn armour at our own folder - the option changed only the ground model (Nordic Ebony 1.1.0, before posting, 2026-11-15) | git, python, settings |
-| 14786 | A recolour gain chosen from "the black look keeps ~0.5x" turned an already dark fur into a flat black silhouette - and the proof renderer drew every alpha-tested shape black anyway (Nordic Ebony / Skyforged 1.1.0 fur collar, 2026-11-15) | python |
-| 14793 | Armour equipped while TestBench's free camera is on does not redraw - it looks invisible (Ebony chainmail test, 2026-11-16) | build |
-| 14801 | nexus-upload's single-file path still did a single-part upload - a 119 MB first file was refused although multipart was already written (Nordic Ebony 1.1.0, nexus, upload, 2026-11-16) | python, packaging |
-| 14808 | Disabling and re-enabling a test NPC strips the armour equipped on it (in-game FPS test, 2026-11-16) | settings |
-| 14816 | Weather set with fw drifts back to the region default in Njordlinger (in-game FPS test, 2026-11-16) | settings, testing |
-| 14824 | A long unattended in-game run started while the permission classifier is failing can be stranded half-way (combined-run executor, 2026-11-16) | licensing, mo2, testing |
-| 14832 | With AI off (tai), SetPosition moves an actor's data but not its drawn model (in-game FPS test, 2026-11-16) | settings |
-| 14840 | FPS compared across launches is skewed by scene differences such as snow cover (in-game FPS test, 2026-11-16) | testing |
-| 14848 | Close-ups of leveled NPCs do not repeat between launches; use frozen ground models (in-game test, 2026-11-16) | testing |
-| 14856 | Right after an Alternate Perspective new game, start-up scripts re-dress the player (in-game test, 2026-11-16) | - |
-| 14864 | A parallax claim went onto banners before the effect was seen in game (3D armour banners, 2026-11-16) | ui, testing |
-| 14872 | A record copied from another mod's template carries that template's defects (Skyforged shield not shown on the back by IED, 2026-11-16) | skyrim, python, process |
-| 14880 | A record generator that copies subrecords but writes its own header drops the template's record flags (Skyforged shield not on the back with Simple Dual Sheath, 2026-11-16) | process, python, skyrim |
-| 14888 | A PreToolUse guard that matches tool names anywhere in a command blocks notes that only mention them (windowed-tool-while-game-guard, 2026-11-16) | testing, git, powershell |
-| 14896 | A FormID typed from memory equipped the wrong item (in-game test, 2026-11-16) | - |
-| 14904 | Papyrus DrawWeapon/SheatheWeapon on the player desyncs the weapon state (in-game test, 2026-11-16) | skyrim, settings |
-| 14912 | At the main menu, Down then Enter picks Continue, not New Game, when a save exists (in-game test, 2026-11-16) | ui, testing |
-| 14920 | A request queued after combined-run start is not in the batch and cannot be recorded (batch B-20261116-050228-04d1) | process |
-| 14929 | A two-download package failed repo-fomod-installer-ships - the gate looked for fomod\ at the version folder only, and the packager rewrote one installer's title (Truly Nordic Ebony / Skyforged 1.0.0, packaging, 2026-11-16) | packaging, process, python |
-| 14939 | After a mod rename, finalize leaves the old-named zip in the distro folder and the audit reads the old version (Truly Nordic 1.0.0, 2026-11-16) | packaging |
-| 14947 | A Nexus page that is not yet published fails nexus-upload's verify, so the number is not recorded posted (Truly Nordic 1.0.0, 2026-11-16) | process |
-| 14955 | A comment's sticky/lock calls on Nexus raise confirm() dialogs that block the browser (Truly Nordic 1.0.0, 2026-11-16) | settings |
-| 14963 | Importing a page script for its data re-ran every page build (nlysg-1.1.0 gen_pages.py, 2026-11-16) | python |
-| 14971 | Package renders started at posting time held a release for hours (Truly Nordic 1.0.0, 2026-11-16) | packaging, process, logging |
-| 14979 | A full build on a WIP branch replaced the release's test package in place (Truly Nordic Carved 1.4.0, 2026-11-16) | packaging, testing, git |
-| 14987 | Matching _0/_1 armour meshes came out with different vertex orders and triangles (own-armour exercise 1 bracers, 2026-11-16) | process |
-| 14995 | Equip changes didn't show while TestBench's free camera was on, and sleeves hid forearm armour (combined run B-20261116-163944-953a, 2026-11-16) | testing, settings, ui |
-| 15003 | A new page's first update would have posted its files as new files, not new versions (Truly Nordic Skyforged 1.0.1, 2026-11-16) | packaging, process |
-| 15011 | A dark notch on the greatsword's bevel was another part painted onto the blade's texels (Truly Nordic Carved, shipped since 2026-11-12, found 2026-11-16) | process, python |
-| 15019 | A test combination was refused because a generated patch masters our Standalone plugin; KID's log can't count one ini's items (combined run B-20261116-185706-77ad, 2026-11-16) | logging, settings, skyrim |
-| 15027 | The blade's hard seams came from the 1.1.0 shading-fix pass, not from unwelded vertices (mirror-finish study, Truly Nordic Carved, 2026-11-16) | git, python |
-| 15035 | UE4SS probes crashed Norse twice: hundreds of hooks at once, and ForEach over an array with null slots (Norse Phase 0, 2026-11-17) | cpp, crash, python |
-| 15043 | RE-UE4SS C++ mods need a private submodule; build against the installed UE4SS.dll instead (NorseRealtimeNative 0.1.0, 2026-11-17) | cpp, crash, git |
-| 15051 | A UObject pointer kept across frames crashed the game once the game rebuilt the object (NorseRealtimeNative 0.2.1, 2026-11-17) | crash, cpp, ui |
-| 15059 | The log said the projectile flew, the screen said it never moved: K2_TeleportTo refused every move (NorseRealtimeNative 0.5.x arrows, 2026-11-17) | logging |
-| 15067 | A reused game animation clip ran the game's own gameplay through its notifies (NorseRealtimeNative 0.5.x bow, 2026-11-17) | - |
-| 15075 | A movement test passed because the owner's stick was moving the hero, not because the feature worked (NORSE dodge root motion, 2026-11-17) | logging |
-| 15083 | A reflected UFunction call with a hand-sized parameter block fails silently (NORSE aim hold, 2026-11-17) | logging |
-| 15091 | A runtime post-process anim blueprint "does nothing" because the game disables the post-process stage (NORSE upper layer, 2026-11-17) | build |
-| 15099 | A test hero that keeps walking one way ends up off the walkable area, and the safety guard's stop looks like a feature bug (NORSE walk tests, 2026-11-17) | logging |
-| 15107 | A UE4SS C++ mod's callbacks registered in its constructor are dropped without any error (NorsePatcher 0.1.0, 2026-11-17) | logging, cpp |
-| 15115 | A deleted test file kept changing the game: Root Builder's clean-up was cut short by killing MO2 (NORSE, 2026-11-17) | mo2, testing |
-| 15123 | A setting edited in a Root Builder mod while the game ran was silently reverted at game exit (NorseHUD, 2026-11-17) | settings, testing, logging |
-| 15131 | An address library that verifies bytes rejects a function another mod has already hooked (Norse Address Library, 2026-11-17) | cpp, crash |
-| 15139 | A UObject pointer cached across frames crashes once its actor is destroyed (Norse UE4SS frameworks, 2026-11-17) | crash, ui |
-| 15147 | An object written into a start-up asset is garbage-collected at the next map change (Norse UE4SS frameworks, 2026-11-18) | crash |
-| 15157 | A frame-count delay runs many times slower when the game window is not in front (Norse UE4SS frameworks, 2026-11-18) | - |
-| 15165 | A condition engine that needs a unit for every term makes world conditions false with no unit (NorseConditions, 2026-11-18) | - |
-| 15173 | A game widget set up before it is constructed ignores the setup, and its setter's name can mislead (NMMF, Norse UMG, 2026-11-18) | settings, logging |
-| 15181 | A good result credited to a fix whose own call never ran (NMMF decimal display, 2026-11-18) | process |
-| 15189 | A check that returns quietly on missing input looks exactly like "nothing happened" (NorseRealtimeNative fight end, 2026-11-18) | logging |
-| 15197 | A "remove" that only switches a flag off does nothing where the flag was already off (NorseEncounters on a real mission, 2026-11-18) | logging, cpp |
-| 15205 | A test kit built during a session lived only in its scratchpad - a whole night's helpers would vanish when the session was archived (Norse frameworks retrospective, 2026-11-18) | process, settings |
-| 15213 | The library held the same lesson three times and it was repeated a fourth - "read the area's entries first" did not fire because a copy did not feel like an area (Norse frameworks retrospective, 2026-11-18) | process, cpp, testing |
-| 15221 | A test that passed by itself failed inside the pre-commit hook - the hook's GIT_DIR aimed the test's git calls at the repo being committed (kit-daily-push, 2026-11-18) | git, cpp, python |
-| 15229 | Blender resolved a relative texture path against the .blend file, not the working folder - renders came out untextured (Pipeline Kit 1.1.0 render_lib, 2026-11-18) | process, python |
-| 15237 | The self-test hid Blender's add-ons by moving USERPROFILE - PyNifly read as "not installed" when it was (Pipeline Kit 1.1.0 self-test, 2026-11-18) | mo2, powershell, process |
-| 15245 | The kit copied the skills folder whole, so a skill another session was still writing would have shipped (Pipeline Kit 1.1.0 build, 2026-11-18) | python, git, process |
-| 15253 | A skill line said the Pipeline Kit is never mentioned on Nexus, and a memory a month newer said it is free - the skill was believed (Nexus reply to nexusguy, 2026-11-18) | process |
-| 15261 | A read-only Lua probe crashed the game - pcall does not catch a UFunction called on a null object (Norse, UE4SS Lua, 2026-11-18) | crash, cpp |
-| 15269 | Four PreToolUse guards let every call through when stdin began with a UTF-8 BOM - they exit 0 on unparseable input (Pipeline Kit 1.1.0 self-test, 2026-11-18) | git, mo2, powershell |
-| 15277 | Every bow draw stalled 125-224 ms - each clip lookup searched the whole object list, and our clips were collected between uses (NorseRealtimeNative, UE4SS, 2026-11-18) | logging |
+| 1023 | 1. A stack trace names the plugin that DIED, not the one that broke it | crash, cpp, skyrim |
+| 1042 | 2. Correlation is not mechanism — and five of them in a row means the model is wrong | testing, cpp, crash |
+| 1060 | 3. Hold every other variable fixed — including the ones you did not choose to change | mo2, settings, testing |
+| 1073 | 4. A disabled mod's DLL may still be loaded, because another mod ships it | cpp, logging, ui |
+| 1086 | 5. Inline no-op stubs compile away — a "feature removed" build can be byte-identical | crash, testing |
+| 1102 | 6. Verify the premise before acting on it — timestamps are cheap | testing |
+| 1116 | 7. Never reason about a timeline from a truncated log | settings, logging |
+| 1128 | 8. Commit before letting an agent edit the working tree | git, build, cpp |
+| 1142 | 9. A logged failure in one subsystem means the whole subsystem is suspect | crash, logging |
+| 1155 | 10. Null checks do not defend against a bad code address | crash |
+| 1169 | 11. ROUTINE — when rebuilding or re-versioning a mod, set every location in one operation | build, packaging, versioning |
+| 1221 | 12. Inventory before deleting — "it's a temp folder" is not an inspection | cpp, crash, git |
+| 1266 | 13. ROUTINE — in analysis mode, instrument a WORKING mod before re-reading your own | devbench, crash |
+| 1309 | 14. The answer was already filed — search the reference folders BEFORE investigating | ui, process, scaleform |
+| 1357 | 15. ROUTINE — a check for an invisible failure has to run on a schedule, not on noticing | powershell, process, versioning |
+| 1389 | 16. Verify a capability against the binary, not against documentation for an older release | process, powershell |
+| 1428 | 17. ROUTINE — form a hypothesis, then try to kill it, before building anything (rule 56) | logging, testing, cpp |
+| 1469 | 18. A test that never ran returns "no result" — which reads exactly like a negative result | licensing, python, settings |
+| 1505 | 19. A licence declared in a build manifest is not evidence — only the LICENSE file is | licensing, packaging, build |
+| 1556 | 20. MO2's `modlist.txt`: a separator's members are the mods listed ABOVE it, and file-bottom wins conflicts | build, powershell, process |
+| 1877 | MO2 writes in-game INI changes INTO the providing mod's folder - version swaps silently delete user settings (2026-08-27) | settings, packaging, mo2 |
+| 1894 | Skyrim actions can trigger on button RELEASE - naive release-pass-through leaks them (2026-08-27) | ui |
+| 1903 | SKSE plugin identity is the NAME STRING, not the DLL filename - filename governs only load order and raw GetModuleHandle (2026-08-27) | skyrim, cpp, git |
+| 1922 | Host-shell filesystem checks don't see what a VFS-virtualized process sees (2026-08-27) | mo2, testing |
+| 1934 | SendKeys cannot navigate Skyrim's own menus - only real Win32 dialogs on top of it (2026-08-27) | ui, crash, process |
+| 1950 | A "hanging" old .NET 2.0 EXE with zero stdout/stderr may actually be an instant shim failure, not a hang (2026-08-27) | crash, powershell, testing |
+| 2015 | DevBench from the main menu: coc is flaky-by-design, `game load` by name is the reliable entry; replay `path` needs the full Data-relative path (2026-08-28) | ui, skyrim, devbench |
+| 2052 | Empirical: coc from the main menu EXECUTES but silently no-ops in a minimal load order (2026-08-28) | skyrim, testing, ui |
+| 2069 | ReSaver's `clean` cannot strip cross-load-order missing masters; it only removes elements undefined IN THE SAVE'S OWN context (2026-08-28) | testing, skyrim, crash |
+| 2087 | Confirmed: a full-modlist save crashes the ENGINE (not AMF) when loaded in a minimal list, interior or exterior (2026-08-28) | crash, skyrim, testing |
+| 2104 | Repeated game launches without confirming full close spawn DUPLICATE instances that corrupt tests and wedge processes (2026-08-28) | crash, skyrim, testing |
+| 2119 | 21. A path-matching hook must match the caller's RAW string, separator quirks and all — not the tidy path you imagined | cpp, skyrim, process |
+| 2144 | A rule-15 compatibility verdict must be named by the DISPLAY name, or the gate silently can't find it (2026-08-28) | process, ui, packaging |
+| 2169 | NEVER force-kill SkyrimSE with Stop-Process/taskkill - it wedges into an unkillable zombie; close it gracefully (2026-08-28) | ui, devbench, skyrim |
+| 2183 | The minimal-instance load crash is NOT missing-masters - a VANILLA save crashes at the same address; suspect an ESP mismatch (2026-08-28) | crash, testing, skyrim |
+| 2198 | Save-LOAD crashes in the minimal test instance for an unisolated reason; a NEW GAME is the untested path (2026-08-28, stop-after-5 analysis) | crash, testing, ui |
+| 2215 | RESOLVED root cause: DevBench cold save-load from the MAIN MENU is the crash/hang, not the mod set - new-game is the path (2026-08-28, final) | crash, testing, devbench |
+| 2238 | Gotcha: Nexus mod comments ARE scrapable - but only with the XHR header, and the failure is silent (2026-08-28) | - |
+| 2258 | Gotcha: a closed-source SKSE plugin that ships its .pdb is readable to near-source level (2026-08-28) | logging, packaging, cpp |
+| 2276 | DEFINITIVE (bisected): the load crash is DevBench's programmatic load, NOT the mods/AMF/environment (2026-08-28) | ui, crash, devbench |
+| 2307 | Root Builder: the Backup folder is inert, but MO2's `overwrite\Root` is a cross-profile deploy (2026-08-28) | mo2, python, testing |
+| 2329 | A "minimal" test profile can disable the infrastructure the test needs (2026-08-28) | mo2, testing, settings |
+| 2341 | rcedit --set-icon does NOT replace MO2's main icon - it adds a stray group #0; rewrite the named IDI_ICON1 with UpdateResource (2026-08-28) | mo2, powershell |
+| 2355 | Scheduled task `powershell -WindowStyle Hidden` still flashes a console every run; launch through wscript (2026-08-28) | powershell, mo2, testing |
+| 2366 | ROOT CAUSE of "zero plugins loaded / all 5 base ESMs 'no longer present' / New Game stalls" in Test Build: SE 1.5.97 needs Backported Extended ESL Support to read the 1.71-header ESMs (2026-08-28, PROVEN live) | testing, mo2, skyrim |
+| 2399 | SKSE kPostLoadGame's message `data` is a BOOL (load succeeded), NOT the save name - only kPreLoadGame/kSaveGame carry the name string (2026-08-28, cost 2 build numbers) | testing, skyrim, crash |
+| 2416 | One AMF (or any DLL-conflicting mod) enabled at a time in a test profile - two make usvfs serve the wrong file under the real name (2026-08-28) | mo2, cpp, logging |
+| 2426 | AMF alias identity guard must be order-based (named event), not filename-based (2026-08-28) | cpp, mo2, logging |
+| 2440 | SKSE AE (2.2.x) shows a BLOCKING "DLL plugin failed to load - Exit game?" modal when a plugin returns false from SKSEPluginLoad; SE (2.0.20) does not (2026-08-28) | cpp, skyrim, mo2 |
+| 2458 | AMF-Test (1.6.1170) fresh MO2 instance won't boot vanilla - C++ throw on Skyrim.esm via usvfs (PARKED 2026-08-28) | mo2, skyrim, crash |
+| 2474 | Mod version numbering: next = LAST WORKING + 1; failed/scratch builds are disposable and their numbers are REUSED (recurring - 2026-08-28) | versioning, powershell, ui |
+| 2513 | Rule-following FAILURES this session, and how to not repeat them (2026-08-28, the owner's standing practice) | process, testing, devbench |
+| 2536 | AMF ships an `amf.menu` DevBench tool - the menu is now testable HEADLESSLY (the owner's idea, 2026-08-28) | devbench, ui, licensing |
+| 2556 | Two build gotchas from that work (2026-08-28) | settings, cpp, python |
+| 2564 | MO2 launched from the Bash tool HANGS at startup - Git's mingw64\bin on PATH hijacks its OpenSSL (2026-08-28, diagnosed from the owner's screenshot) | testing, git, mo2 |
+| 2587 | Pressing the vanilla START MENU headlessly: invoke its ActionScript, never the GameDelegate handler directly (2026-08-28, VERIFIED) | process, testing, ui |
+| 2615 | Build AFTER the version bump, not before - or the binary ships mis-stamped (2026-08-28) | cpp, logging, packaging |
+| 2626 | MO2 drops a modlist.txt entry for a mod folder that has no meta.ini (2026-08-28) | mo2, powershell, settings |
+| 2636 | FLAW (mine, to correct): I never OFFERED to build automation hooks into the button interfaces - the owner had to propose it twice (2026-08-28) | process, devbench, testing |
+| 2665 | The driving tool caught a bug in the thing it drives - and the sweep is now a regression test (2026-08-28) | ui, settings, crash |
+| 2686 | Pixelated ImGui text = the built-in BITMAP font being magnified; rasterise a TTF at native size instead (2026-08-28) | ui, settings, build |
+| 2710 | Closing a HUNG Skyrim: terminate from INSIDE the process - external kills cannot (2026-08-28, VERIFIED) | devbench, crash, logging |
+| 2740 | Gotcha: a doubled backslash inside a Bash-tool heredoc arrives as a SINGLE backslash - Python then reads `\r` and `\v` as control characters and silently corrupts paths (2026-08-29) | python, process, build |
+| 2765 | Gotcha: PowerShell's comma binds tighter than `+` - `@($a, $b + 1, 0)` is a FOUR-element array, and the doc-version roll stamped 1.0.16 -> "1.0.1" (2026-08-29) | powershell, process, versioning |
+| 2777 | A "rule N" cross-reference is a pointer that dangles silently - 4 of 199 pointed at the WRONG rule and nobody had noticed (2026-08-29) | process, licensing, settings |
+| 2802 | MISTAKE (mine, recorded at the owner's instruction 2026-08-29): the in-process kill switch was available all along and I never offered it during the hung-game troubleshooting | devbench, cpp, mo2 |
+| 2826 | Gotcha: a failed build followed by package-mod.ps1 ships the PREVIOUS DLL under the NEW version number - check the build's exit code before packaging, and never read it through a pipe (2026-08-29) | packaging, cpp, powershell |
+| 2837 | A HUD widget callback runs on the RENDER thread - it must never call RE::UI (IsMenuOpen/GetMenu) or build a BSFixedString; track menu state from MenuOpenCloseEvent on the main thread instead (2026-08-29) | ui, cpp, devbench |
+| 2854 | Verifying an ImGui overlay needs an IN-PROCESS capture after the Present hook - the game's own screenshot is taken before it, and a desktop grab captures whatever window is on top (2026-08-29) | cpp, devbench |
+| 2865 | Gotcha: a "reinstall" that copies only the DLL leaves the OLD INI in place - and the INI is where colours, keys and thresholds live (2026-08-30) | settings, cpp, packaging |
+| 2873 | Gotcha: a copied CMake build tree does not transplant to a cloned repo - CMakeCache.txt remembers the source path and ninja loops "manifest still dirty" (2026-08-30) | build, packaging |
+| 2881 | Gotcha: `RE::BSInputEventQueue::GetSingleton()` returns garbage on SE 1.5.97 in this CommonLibSSE-NG build - `AddButtonEvent` crashed with this=[value removed] (2026-08-30) | cpp, crash |
+| 2893 | Stamp the version BEFORE the build that a gate and its captures use | process, versioning, packaging |
+| 2912 | Renaming an MO2 mod folder silently DISABLES the mod | mo2, process, skyrim |
+| 2935 | An ornamented UI frame can never be cropped out of a screenshot - export the shape from the SWF and composite instead (2026-09-02) | ui, scaleform, packaging |
+| 2970 | A licence check that stops at the source repository gets the answer wrong - the Nexus "Permissions and credits" block is the half that decides (2026-09-02) | licensing, packaging, powershell |
+| 3009 | A sub-agent explicitly told "do not touch this, do not continue this" did it anyway, concurrently, while I investigated what I thought might be a second session (2026-09-02) | process, cpp, git |
+| 3069 | An unquoted MO2 profile name does not fail loudly - it silently runs the WRONG profile, then fails on a phantom executable (2026-09-02) | mo2, testing, powershell |
+| 3112 | MO2's "selected_profile" is the only profile that matters - a profile whose NAME matches the modlist is not necessarily the one that launches (2026-09-02) | mo2, testing, settings |
+| 3143 | Rule OUR MOD OUT FIRST - and make sure the control test disables the MOD, not a feature (2026-09-02) | ui, settings, testing |
+| 3177 | (original entry, conclusion superseded above) A symptom seen in a full load order is not evidence that our code causes it (2026-09-02) | ui, build, skyrim |
+| 3214 | Force-killing Mod Organizer truncates plugins.txt and silently disables the entire load order (2026-09-02) | mo2, skyrim, testing |
+| 3243 | Reading source with Python's universal newlines corrupts string literals containing a raw CR (2026-09-02) | python, git, cpp |
+| 3275 | A self-check that has never been read is not a check - three ways the optimization sweep lied (2026-09-02) | powershell, process, testing |
+| 3316 | A registry read before the retry point proves nothing - I reported a working system as broken (2026-09-02) | devbench, logging, ui |
+| 3344 | A minimal test profile is not "vanilla" - the graphics injector lives in the game folder and runs anyway (2026-09-02) | mo2, cpp, settings |
+| 3377 | A recalled decision about MECHANISM has to be checked before the first line of the implementation, not after it looks wrong (2026-09-03) | ui, testing, process |
+| 3430 | The install guard has to be re-checked immediately before the write, not remembered from earlier (2026-09-03) | mo2, testing, cpp |
+| 3456 | A Steam-packed executable cannot be signature-scanned on disk - and "no matches" looks identical to a broken scanner (2026-09-03) | cpp, crash, powershell |
+| 3497 | An unregistered custom AppUserModelID makes a pinned taskbar button unresolvable - and the fix is a distinct target PATH, not a better AUMID (2026-09-03) | mo2, testing, cpp |
+| 3537 | Reading the rules only when a task looks rule-shaped means reading them after the work (2026-09-03) | process, packaging, skyrim |
+| 3567 | A clean compile is not evidence for a runtime LAYOUT - CommonLibSSE-NG runtime-data members must go through their accessor (2026-09-03) | cpp, devbench, testing |
+| 3607 | A copied skeleton keeps the donor's identity everywhere you did not look - and every one of those places still compiles (2026-09-03) | settings, cpp, ui |
+| 3726 | A byte signature found once proves the SHAPE, not the MEANING - verify the constant the site loads, and read the value the game actually uses, before believing a watch run (2026-09-05) | powershell, git, testing |
+| 3766 | 23. A licence gate recorded in a plan is binding in every later session (2026-09-05) | licensing, process, scaleform |
+| 3784 | 24. A menu that ignores synthesized input is driven through the game's own handler, found from the vanilla SWF's GameDelegate calls (2026-09-05) | ui, process, cpp |
+| 3810 | 25. A modlist swap that disables the old slot also disables its plugin - re-enable it in plugins.txt (2026-09-05) | mo2, skyrim |
+| 3824 | 26. A Nexus download that returns curl `000` on every CDN is usually a SPACE in the URI, not a network fault (2026-09-05) | packaging |
+| 3841 | 27. PowerShell 5.1: `@(... \| ConvertFrom-Json)` on a top-level JSON ARRAY gives a one-element array - the loop runs once with everything, and curl was handed seven URLs (2026-09-05) | powershell, process |
+| 3861 | 28. A test rig that SUPPLIES the thing under test proves nothing - the MO2 alias plugin made every AMF compatibility pass a false pass (2026-09-05) | cpp, mo2, skyrim |
+| 3877 | 29. A header's enum is a contract by NAME, and its structs are a contract by LAYOUT - not the numbers your library happens to use (2026-09-05) | crash, git |
+| 3895 | 30. "Local\" is the logon SESSION's namespace - a once-only guard named that way is shared with every other game left running, including a wedged one (2026-09-05) | logging, skyrim, devbench |
+| 3910 | 31. A running Mod Organizer instance intercepts `moshortcut://` launches aimed at ANOTHER instance's executable (2026-09-05) | mo2, testing, skyrim |
+| 3921 | 32. PowerShell variable names are case-insensitive: `$I` and a loop's `$i` are the SAME variable (2026-09-05) | mo2, powershell |
+| 3929 | 33. A Steam-packed executable's in-memory import directory is the PACKER's - patching "the exe's import of X" finds nothing (2026-09-05) | skyrim, cpp, testing |
+| 3943 | 34. Skyrim SE's Quit does not pass through ExitProcess, and `qqq` is a hard quit - neither exercises an exit hook (2026-09-05) | cpp, logging |
+| 3953 | 35. vcpkg installs headers with the source archive's OLD timestamps, so ninja does not rebuild against a changed dependency version - link errors against symbols from the previous headers (2026-09-05) | build, cpp |
+| 3963 | 36. The game keeps some of the player's permanent actor-value modifiers across a save and drops others - a co-save "applied" amount is only trustworthy after the load has been checked against it (2026-09-05) | testing |
+| 3976 | 37. `player.advlevel` takes the level directly and offers no attribute choice; a driven level-up needs real character XP, and the LevelUp Menu's confirm box swallows synthesized keys (2026-09-05) | ui, cpp, devbench |
+| 3987 | 38. A hooked call site can rely on a register the ABI calls volatile: the skill-improve call site adds the returned xp to [operand removed], so the level-income hook must not clobber rcx - keep it a leaf, or save rcx in the stub (2026-09-06) | cpp, crash, logging |
+| 4007 | 39. Synthesized key presses do not reach every menu: InputBench's splice never reached the Lockpicking Menu or the Journal, AUO's BSInputEventQueue press reached both, and neither turns a lock (2026-09-06) | ui, devbench |
+| 4019 | 40. A console `prid` selection does not carry between DevBench console execs - use the `<ref>.command` form (2026-09-06) | devbench |
+| 4028 | 41. `menu accept` with the box's own cancelIndex of -1 crashes the game inside devbench (SelectOption(-1)) (2026-09-06) | crash, devbench, cpp |
+| 4036 | 42. Console `activate` bypasses perk activation entry points - a perk-based mod (Lock Overhaul's choice box) only shows itself on a REAL activation (2026-09-06) | skyrim, settings, testing |
+| 4062 | 44. Killing a hung game or task: Claude runs elevated, so use the graceful-first ladder, never a reflexive force (2026-09-06) | cpp, mo2, powershell |
+| 4094 | 45. A PowerShell function that prints a line before `return $false` returns a TRUTHY array - and `if (Fn)` takes the branch it was written to skip (2026-09-07) | powershell, process, settings |
+| 4123 | 46. Routing a page's literals through a string table: three ways the tooling passes while strings stay English (2026-09-07) | git, cpp, ui |
+| 4155 | 47. Writing into an engine container the game sized for itself: it never grows, and CommonLibSSE will grow it anyway (2026-09-08) | cpp, crash, skyrim |
+| 4209 | 48. A before/after screenshot proves nothing unless the thing you changed was on screen (2026-09-08) | ui, git, crash |
+| 4252 | 49. The menu framework's header calls GetProcAddress results WITHOUT null-checking, so any ImGui call the loaded framework lacks is a jump to address zero (2026-09-08) | crash, cpp, logging |
+| 4304 | 50. When the game dies during plugin load, skse64.log NAMES the plugin - read it before bisecting (2026-09-08) | logging, crash, skyrim |
+| 4347 | 51. `[NoDelete]` in an MO2 folder name is a WILDCARD, so a path check on it silently answers about nothing (2026-09-08) | powershell, crash, ui |
+| 4383 | 52. The markers on screen belonged to a different mod, and both halves of the before/after were its work (2026-09-09) | mo2, scaleform, ui |
+| 4417 | A driving op nested inside another op's branch is unreachable - and it looks exactly like "the feature was never tested" (2026-09-09) | process, settings, crash |
+| 4448 | The game's inventory 3D renderer draws nothing when driven from a Present-hook overlay - loaded is not drawn (2026-09-09) | cpp, devbench, scaleform |
+| 4489 | Showing a game model on your own UI: three preconditions, and each one fails silently (2026-09-09) | ui, licensing, crash |
+| 4531 | Skyrim's inventory 3D is driven from the MOVIE, through GameDelegate - not by flags or by calling the manager (2026-09-09) | ui, scaleform, cpp |
+| 4573 | A third-party menu DOES host the item 3D - and the same function under two reverse-engineered names nearly sent the fix somewhere it could not go (2026-09-09) | ui, scaleform, skyrim |
+| 4637 | The instrument was the bug: a blank movie made "never rendered" and "rendered, nothing in it" the same picture (2026-09-09) | ui, python, skyrim |
+| 4683 | A comparison is only as good as the context you think is "working" - and driving a vanilla menu headlessly is not a solved problem (2026-09-09) | ui, git, scaleform |
+| 4723 | 53. To read Steam-packed game code, dump `.text` from the RUNNING process in one read - not through a 2 KB tool op (2026-09-09) | crash, settings, devbench |
+| 4772 | 54. A feature that "does not draw" may be switched off by a GAME ini setting nobody checked (2026-09-10) | settings, process, devbench |
+| 4810 | 55. A sub-agent's report is a claim, not an observation - check a surprising rule against its source sentence, and a reported side effect against the disk (2026-09-10) | process, git, logging |
+| 4851 | 56. "Installed and verified, 0 errors" is not "boots" - and closing a modal dialog can CONTINUE the action it was blocking (2026-09-10) | mo2, settings, testing |
+| 4888 | 57. `'build.bat' is not recognized` from a `cmd /c` started IN the repo folder: the session sets NoDefaultCurrentDirectoryInExePath=1, so cmd never searches the current directory for a program - call scripts by full path (2026-09-11) | settings, git, powershell |
+| 4914 | 58. A test that answers a confirm box "by index 0" answers whatever question is first - read the buttons, or four runs measure "No" (2026-09-11) | cpp, logging, process |
+| 4939 | 59. Porting a hook to Skyrim 1.7: the AE offsets were already right, and one dump of the running game proved it in minutes (2026-09-11) | crash, scaleform, cpp |
+| 4974 | Gotcha: a command refused as touching a "system path" may be naming a string that only APPEARS in its text - and the whole command is rejected before anything runs (2026-09-11) | powershell, mo2, cpp |
+| 5015 | Licence: the LICENSE file inside a mod ARCHIVE may be the UPSTREAM's, not the mod's - check the source repo at the RELEASED TAG (2026-09-11) | licensing, packaging, process |
+| 5058 | 60. `auo.input`'s BSInputEventQueue press CRASHES SE 1.5.97 - drive input with `bench.input`'s PollInputDevices splice instead (2026-09-12) | ui, cpp, settings |
+| 5246 | A rule enforced by several tools, each holding its own copy, is not enforced - it drifts; ONE tool that REFUSES is the shape that holds (2026-09-12) | powershell, process, cpp |
+| 5280 | A hook that consumes EVERY event must write the empty head back - the engine hands the same list pointer back on idle frames, so a consumed node is re-processed every frame until new input arrives (2026-09-12) | cpp, process, testing |
+| 5306 | A runtime debug switch is only as durable as the next config reload - and the driving tool's own ops trigger reloads (2026-09-12) | settings |
+| 5324 | Same-site hooks: the plugin that installs LAST runs FIRST, so a splicer that loads earlier never feeds a filter that loads later (2026-09-12) | cpp, skyrim |
+| 5336 | A menu that never opens from ANY synthetic press is not an observable - prove delivery with a control the profile does answer (2026-09-13) | ui, mo2, cpp |
+| 5350 | A shipped default that points at an asset pack nobody has draws NOTHING, and every proof by state passes anyway - take one picture before calling a surface working (2026-09-13) | settings |
+| 5365 | A DPI-unaware screenshot process captures the top-left fraction of a high-DPI screen - the "wheel at 0.75" was the capture, not the wheel (2026-09-13) | powershell, ui |
+| 5378 | A shipped default that points at an asset pack nobody has draws NOTHING, and every proof by state passes anyway - take one picture before calling a surface working (2026-09-13) | settings |
+| 5393 | A DPI-unaware screenshot process captures the top-left fraction of a high-DPI screen - the "wheel at 0.75" was the capture, not the wheel (2026-09-13) | powershell, ui |
+| 5406 | A proof rig must satisfy the feature's own validity predicate, or the feature quietly takes its default and the proof reads as a pass (2026-09-13) | settings, mo2, process |
+| 5423 | Driving an AMF consumer's tab bar from DevBench: `nav right` needs keyboard nav ON a tab, a recorded click does not switch tabs, and `inject` cannot send a left click (2026-09-13) | cpp, devbench, powershell |
+| 5443 | Driving the game's own Controls menu with spliced keys REMAPS a control: selection moves invisibly, Enter starts a remap, and the result is written to ControlMap_Custom.txt in the game root (2026-09-13) | mo2, ui, crash |
+| 5464 | A GPL library linked into ONE build line makes the whole mod GPL - Nexus took Lock Interaction Overhaul's page down for shipping MIT beside CommonLibSSE-NG 7.2 (2026-09-13) | licensing, packaging, ui |
+| 5503 | A boot that "times out" with the game Responding and its window titled `<plugin>.dll` is a CommonLibSSE-NG fatal dialog waiting for OK - read the dialog text before theorising about a hang (2026-09-13) | cpp, logging, skyrim |
+| 5536 | XAudio2 2.7: removing the active audio device invalidates the WHOLE engine - a new mastering voice cannot be created on it, and calling into it again crashed the game (2026-09-13) | crash, build, settings |
+| 5569 | Calling an ActionScript function by a path that runs THROUGH a function object crashes the game - [code removed] access-violated the moment it ran (2026-09-14) | crash, scaleform, cpp |
+| 5599 | Rebuilding Skyrim's XAudio2 engine: the game's output-mixer table still points at destroyed voices, and a send with no output voice crashes XAudio2_7[value removed] seconds later (2026-09-14) | crash, build, cpp |
+| 5636 | Unbinding a gameplay control also empties every MENU action the control map LINKS to it - the Favorite button showed [???] because Toggle POV was unbound, not Favorites (2026-09-14) | settings, ui, crash |
+| 5668 | A gamepad mapping created at runtime never fires: the engine's button lookup matches key AND modifier exactly, and "no modifier" is 0, not [value removed] (2026-09-14) | crash, cpp, devbench |
+| 5689 | A controller "Pause" press opens the journal on the SAVED tab; only keyboard Esc gets System (2026-09-14) | settings, cpp, ui |
+| 5705 | A hang whose stack runs through YOUR call is not necessarily yours - two unplug hangs were blamed on AAOS's DestroyVoice, and a dump with Microsoft's public symbols showed an XAudio2 2.7 internal deadlock with AAOS nowhere in it (2026-09-15) | crash, build, logging |
+| 5730 | A step that repoints a mod's meta.ini installationFile changes what "not installed yet" means for every later step - an installer run after the SE swaps reinstalled the replaced AE archives (2026-09-15) | python, settings, build |
+| 5746 | pefile.PE(path) keeps the DLL mapped until pe.close() - moving its folder later fails with WinError 32 halfway, leaving a copy in both places (2026-09-15) | cpp, crash, python |
+| 5764 | MO2's mod list ignores a style sheet's view/viewport background for plain rows; only ::item rules reach rows, and they replace separator colours (2026-09-15) | mo2, process, testing |
+| 5803 | A DLL that exports both SKSEPlugin_Query and SKSEPlugin_Version can still be AE-only: it refuses SE at query time (Currency Swapper, Container Distribution Framework, 2026-09-15) | cpp, logging, skyrim |
+| 5821 | An AE-only mod's SE build can be a SEPARATE Nexus page - search by name before porting or writing 'no SE build exists' (Currency Swapper, Container Distribution Framework, 2026-09-15) | cpp, testing, logging |
+| 5841 | An SE list's AE-only plugins cannot be found by DLL strings or mod names - the skse64.log refusals plus each mod's Nexus page are the evidence (Njordlinger, 2026-09-15) | cpp, logging, crash |
+| 5862 | A mod folder named after the parent can hold only one of that page's PATCH files - check installationFile against the page's MAIN file before trusting the folder name (Njordlinger, 2026-09-15) | python, mo2, settings |
+| 5884 | "Before the generated outputs" must mean the TRAILING block - MO2 sorts ESM-flagged PGPatcher.esp into the master block, so min(index) of output names clamps everything to the top (Njordlinger, 2026-09-15) | skyrim, mo2, python |
+| 5897 | Attributing a crash to a mod: compare every stack value against the MODULE BASES, and know that DevBench tools register at DATA LOAD (2026-09-15) | crash, cpp, devbench |
+| 5927 | A proof that cannot tell success from failure proves nothing: the driven rebind "passed" on a row that already held the target value (2026-09-15) | settings, devbench |
+| 5953 | A control must come from the SAME toolchain, or it proves nothing - "Pandora didn't patch the dodge" was wrong twice over (2026-09-15) | cpp, logging, process |
+| 5980 | Four tool misuses in a row, each null read as a fact - and a verification harness that passed having compared nothing (2026-09-16) | python, git, skyrim |
+| 6022 | A Python SyntaxWarning printed on three consecutive runs, ignored each time - and \f silently wrote a form feed into eleven meta.ini files (2026-09-16) | python, settings |
+| 6047 | The rules | python |
+| 6063 | A field you WRITE may be a field something else READS to decide - prefixing a modifier onto a Controls row would have flipped the list's device-family detection (2026-09-16) | settings |
+| 6082 | The rule | git, testing |
+| 6103 | A mod with two build lines will happily package the WRONG one, and only the strictest mod complains (2026-09-16) | cpp, packaging, powershell |
+| 6131 | TESQuest::IsRunning() does not mean the quest is running - it is true for a quest that never ran (2026-09-16) | cpp, testing |
+| 6159 | Two lookups that read alike: LookupByID<T> walks the hierarchy, TESDataHandler::LookupForm<T> demands an exact type (2026-09-16) | cpp |
+| 6188 | A clean boot proves nothing about a plugin that never loaded - check the LIVE load order, not the profile files (2026-09-16) | mo2, skyrim, crash |
+| 6222 | A FormID slot the merge schema did not name is a dangling pointer the game follows to a crash - "DATA" means different things per record type, and VMAD is not 4-byte aligned (2026-09-16) | crash, skyrim, cpp |
+| 6254 | A lesson that stays in the library is not a gate: the same defect shipped again the same evening, and the answer is a rules file the pipeline evaluates (2026-09-16) | packaging, process, powershell |
+| 6282 | An enable parent has a whole lifecycle - a reference a quest switches ON may be switched OFF again minutes later (2026-09-17) | process |
+| 6306 | A hand-built record header with form version 0 loads, runs, and is still wrong - the gate now reads every header (2026-09-17) | skyrim, packaging, process |
+| 6329 | An ARMO's addon list is one MODL subrecord PER addon - packed into one, the engine keeps none, and the piece is invisible (2026-09-17) | process, skyrim, crash |
+| 6353 | A task handed to the game thread that captures locals BY REFERENCE outlives its caller's timeout - and writes into a dead stack frame (2026-09-17) | devbench, process, cpp |
+| 6383 | A font atlas picked by a case-sensitive name check holds the wrong script - build the ranges from the language in play and the text itself (2026-09-17) | ui, process, logging |
+| 6410 | `ImFontAtlas::GetTexDataAsRGBA32` writes through its pixel pointer unconditionally - a null there is a crash at boot (2026-09-17) | crash, logging, testing |
+| 6422 | "failed to open the address library file" names nothing - check the file CommonLib will open BEFORE resolving anything, and say so (2026-09-17) | cpp, skyrim, logging |
+| 6451 | "The bottom slot" was the top slot - read the draw code's coordinate convention before building a feature on a position (2026-09-17) | settings, cpp, ui |
+| 6473 | A gate that checks the wrong instance passes forever - rule 29 kept looking in Apostasy after the test instance moved (2026-09-17) | process, mo2, powershell |
+| 6494 | A running MO2 instance does not mount a mod folder made after it started - the game loaded the old copy (2026-09-17) | mo2, testing, logging |
+| 6513 | Menus draw the character - a wheel picture without the body is taken in gameplay, first person, HUD off (2026-09-17) | ui, testing, devbench |
+| 6527 | Defender's AMSI blocks a PowerShell screen-grab loop as "malicious content" - write screen recorders in Python (2026-09-17) | powershell, python, testing |
+| 6543 | An SKSE C-ABI is addressed by PLUGIN NAME - a renamed host silently loses every consumer (2026-09-17) | cpp, devbench, skyrim |
+| 6566 | A spliced key press carries a user event from the GAMEPLAY context by default - inside a menu it is a press with no name, and menus ignore it (2026-09-17) | ui, settings |
+| 6587 | An installer gated on a per-character setting at data load can never attach - settings from a co-save arrive after the patches (2026-09-18) | settings, process, testing |
+| 6607 | The Nexus Short Description is cut at 350 characters on the live page - a longer summary ends mid-word and nobody is told (2026-09-18) | process, scaleform, ui |
+| 6628 | Opening a file for writing before its new content exists destroys it when the script fails halfway (2026-09-18) | packaging, ui, git |
+| 6651 | A spliced gamepad press proves the framework's own input path and nothing else - ImGui's Win32 backend polls XInput by itself, so a REAL controller reaches ImGui twice (2026-09-18) | build, cpp, process |
+| 6675 | The Loading Menu's hooks run on FOUR different threads, and only the movie's Display hook is on the one that draws - a swap from any other is a race with the draw (2026-09-18) | cpp, crash, logging |
+| 6702 | A game that vanishes with no crash log was killed by something that writes none - check the framework's own watchdog before hunting a crash (2026-09-18) | crash, logging, cpp |
+| 6723 | A guard placed after the call it guards is not a guard - CommonLibSSE-NG's SKSE::Init opens the Address Library itself (2026-09-18) | skyrim, cpp, logging |
+| 6743 | PGPatcher runs only through MO2's own shortcut with the PGPatcher Output mod DISABLED, and MO2 rewrites ModOrganizer.ini and the profile lists on exit (2026-09-18) | mo2, testing, settings |
+| 6761 | A completed quest can stay ENABLED, and console completequest fires neither a stage nor a stop event - react to the flag from more than one trigger (2026-09-18) | skyrim |
+| 6773 | Migrating a renamed mod's INI: the OLD file's values are the player's and must win once, then be written and retired - the first cut let the shipped file win (2026-09-18) | settings, logging |
+| 6784 | A count subrecord is a promise the engine keeps even when it is a lie - COCT said five after two CNTO entries were deleted, and the crash named SPID (2026-09-19) | crash, packaging, powershell |
+| 6803 | FFDec writes colour attributes ALPHABETICALLY, so a recolour that reported success had changed nothing (2026-09-18) | ui, mo2, process |
+| 6819 | A light plugin's index belongs to the LOAD ORDER, not to the plugin - a FormID written down earlier in the session addressed nothing (2026-09-19) | skyrim, devbench, powershell |
+| 6834 | A frame recorder that dies silently turns every later capture into the same old picture (2026-09-18) | powershell, process, settings |
+| 6847 | Skyrim's console is asynchronous: a burst of commands drops some, and an unequip queued before an equip lands after it (2026-09-18) | devbench |
+| 6858 | Folding one mod into another is a merge with a winner - the Dynamic Interface Patcher's grey output overwrote the black race menu (2026-09-18) | process, python, scaleform |
+| 6869 | Before recolouring art, ask the RUNNING game which movie draws the thing - an hour went into the quest tracker instead of the item popups (2026-09-18) | ui, devbench, process |
+| 6880 | A packager that SEEDS from the previous release ships the previous release's content under the new number (2026-09-19) | packaging, process, settings |
+| 6912 | DevBench's `console` op kills this game every time it is used - two crashes, same address (2026-09-19) | crash, devbench, logging |
+| 6937 | A 32-byte INPUT struct makes SendInput refuse every key with error 87 - the "proven" scan-code drivers never pressed anything (2026-09-20) | powershell, ui, devbench |
+| 6967 | A byte shape that starts at a function's entry stops matching the moment another plugin hooks that entry - and the evidence that listed the groups that DID install hid the ones that did not (2026-09-20) | logging, cpp, skyrim |
+| 6999 | A behaviour engine's OUTPUT shipped in a package outranks the player's own Pandora run wherever the mod sits above it - the T-pose with magic in hand (2026-09-20) | packaging, powershell, process |
+| 7021 | The Bash tool eats one level of backslashes inside a heredoc - a regex, a Windows path or a changelog line written that way ships mangled (2026-09-20) | packaging, process, python |
+| 7038 | A "FOMOD" second install of a mod carries the MAIN plugin too - moved above the real main as a patch folder, its old main plugin wins (2026-09-20) | python, skyrim |
+| 7052 | Plugin Sync's comparator is not transitive, so the order among ties depends on the input order - write the dependency-bearing order yourself and treat tie order as free (2026-09-20) | python, skyrim, mo2 |
+| 7065 | Disabling a folder as a "DLL twin" takes its INI and config folder with it - the surviving DLL then stops the game at its own error dialog before the main menu (2026-09-20) | cpp, settings, testing |
+| 7086 | Same file NAME is not same file CONTENT: four 'CC - *' folders disabled as duplicates of 'CC Content little C' handed the 1.6.1130-era Creation Club plugins to a 1.5.97 game, which died in InitTESThread (2026-09-20) | python, skyrim, crash |
+| 7111 | The Bash tool (Git Bash) rewrites slash options - robocopy /E /MOVE ran as a no-op twice; Windows tools that take /flags go through the PowerShell tool (2026-09-20) | powershell, git, mo2 |
+| 7123 | An import that installs mods without ticking their plugins leaves their archives unloaded and their masters unchecked - audit active plugins for missing masters and packed BSAs for a live plugin (2026-09-21) | python, skyrim, cpp |
+| 7141 | game-relaunch.ps1 ignored -Profile: MO2's moshortcut launch uses whatever profile MO2 last had selected, so every 'main profile' boot on 2026-09-20 was the Test profile (2026-09-21) | mo2, testing, devbench |
+| 7157 | The 2026-09-19 Apostasy import left 156 mods unsorted: parked in the main profile's Test Mods Area, and directly under the USER INTERFACE and FINISHING LINE headers in the Test profile (2026-09-21) | mo2, python, testing |
+| 7173 | Njordlinger's first xLODGen/TexGen/DynDOLOD run: the LOD tools read the Steam game unless given -D:, SSE Terrain Tamriel Extend blocks DynDOLOD, and version-mismatched patches stop it one at a time (2026-09-21) | skyrim, python, settings |
+| 7196 | A counter the engine shares with other mods must be held, not set once: AMF raised ControlMap's text-entry count when a field took focus, and another mod lowering it mid-focus killed typing until Escape (2026-09-21) | packaging, powershell, cpp |
+| 7217 | Installing a test build by copying the package overwrote the player's settings INI - AMF's saved System-row window position and size were lost on the next launch (2026-09-21) | settings, packaging, mo2 |
+| 7232 | A form-43 plugin is not made form 44 by restamping the number - weapons carry a 16-byte CRDT that form 44 reads as 24 (2026-09-22) | skyrim, python, packaging |
+| 7243 | A flat 'nothing brighter than 40' colour gate fails a correct black menu with white labels and passes a grey one - check the BAND the recolour removes (2026-09-22) | process, python, packaging |
+| 7254 | The fix was right and the test was wrong: a rebuilt DLL never reached the MO2 mod folder, so the same crash came back byte for byte (2026-09-22) | crash, packaging, cpp |
+| 7279 | A backup folder beside MO2's plugins IS a plugin to MO2 - it imported "Mod Organizer Plugin Browser.bak-20260922" and failed at start (2026-09-22) | mo2, python, testing |
+| 7288 | An MO2 crash "in" a native plugin was a Python plugin's application-wide event filter - read the whole thread, not the first plugin frame (2026-09-22) | crash, mo2, cpp |
+| 7309 | "It didn't scroll" three times while the log said it had: the pane on screen was another plugin's replacement of the one being scrolled (2026-09-22) | logging, mo2 |
+| 7320 | `organizer.refresh(True)` after writing a profile file hands the file back to MO2's memory - 350 plugins went back into their old BPM groups (2026-09-22) | mo2, testing, logging |
+| 7333 | A plugin shipped by two enabled mods is anchored to the mod MO2 loads it from, not the first one found (2026-09-22) | skyrim, mo2 |
+| 7345 | A plugin walking `mod.fileTree()` from a timer crashed MO2 on every rename - and faulthandler named the line where three minidumps could not (2026-09-23) | mo2, python, crash |
+| 7359 | A mobase callback that does its work synchronously crashed MO2 on "enable a mod" - callbacks start timers, timers do the work (2026-09-23) | mo2, build, crash |
+| 7380 | A QTimer parented to an MO2 pane died with the pane; the next callback started a dead timer (2026-09-23) | mo2, build, crash |
+| 7393 | `$PSScriptRoot` is empty inside a `[CmdletBinding()]` param default, `$args` cannot be a parameter name, and `Copy-Item -LiteralPath` does not expand `*` (2026-09-23) | powershell, process, settings |
+| 7412 | A build that leaves the machine needs a leak scan AND a gate rule - and the rule must not contain the literal it forbids (2026-09-23) | process, mo2, packaging |
+| 7429 | A fault whose only Python frame is a lambda "line ???" is a slot being INVOKED from MO2's emit - no slot body can prevent it; read MO2's own implementation and stop subscribing (2026-09-23) | mo2, crash, python |
+| 7461 | A resolver rule keyed on a WORD ("patch" in the name) cascades through masters: USSEP went to the bottom and 80 mods followed it; key it on the decision (2026-09-23) | mo2 |
+| 7481 | A scan budget shared across a plugin's top-level groups let 4 MB of interiors hide a 19 MB new worldspace: give each group its own (2026-09-23) | - |
+| 7496 | A package seeded from the previous release carries every file the assembler does not refresh - repack-fomod.ps1 never refreshed CHANGELOG.md (2026-09-23) | packaging, powershell, process |
+| 7510 | Four package-tool assumptions that broke on real repos in one evening: -BuildDir ignored, "the first *.ini", an empty build folder, a suffix-matched install folder (2026-09-23) | packaging, settings, ui |
+| 7528 | Blank boxes in every message box: the winning fontconfig.txt loaded font libraries no mod in the list ships (2026-09-24) | ui, scaleform, mo2 |
+| 7544 | "PapyrusUtil is not correctly installed": Campfire's bundled 2018 PapyrusUtil.dll outranked PapyrusUtil SE's (2026-09-24) | skyrim, cpp, mo2 |
+| 7555 | TestBench's `input tap` crashes SE 1.5.97 on every key: the CommonLib it builds on lays out BSInputEventQueue for 1.7.99 (2026-09-24) | crash, logging, ui |
+| 7581 | A packaged changelog, a release-link label and a generated header: three things a two-line release carried stale (2026-09-24) | packaging, powershell, cpp |
+| 7594 | A FOMOD passed every package rule and still could not install a file its previous release shipped (2026-09-24) | python, packaging, process |
+| 7609 | Actor::CalcArmorRating counts equipment only - armour from spells and stones is not in it (2026-09-24) | - |
+| 7619 | Driving a combat test headlessly: god mode zeroes damage, console casts do not take, the ref list is capped (2026-09-24) | skyrim, powershell |
+| 7633 | A tool that writes the load order must pass the same audit the launch runs - before it writes (2026-09-24) | mo2, skyrim, testing |
+| 7646 | Windows PowerShell 5.1 Compress-Archive writes backslash entry names, and 7-Zip's listing hides it (2026-09-25) | powershell, process, python |
+| 7657 | A test installer that keeps every *.ini as "the player's settings" keeps a package's data INIs too (2026-09-25) | settings, packaging, python |
+| 7669 | A DevBench status reply built with std::format was not JSON once a Windows path went into it (2026-09-25) | cpp, devbench, powershell |
+| 7679 | A theme's toolbar icons "did not show" in Njordlinger because Njordlinger Icon re-applies its own set every second - test a theme on a clean instance (2026-09-26) | mo2, python, powershell |
+| 7694 | A theme framework was built for a problem the owner's own baseline test then showed did not exist; and "the warning triangle in black" was read two wrong ways (2026-09-26) | mo2, ui |
+| 7711 | The version gate wrote every stamped file with a byte-order mark; U+FEFF reached five package folder names and a built stylesheet (2026-09-26) | mo2, powershell, process |
+| 7724 | On an update, `pre-finalize-check -SyncNexusDistro` fails its own first pass: the check runs before the sync (2026-09-26) | packaging, mo2, powershell |
+| 7734 | A test driver's XInput hook sees no reads in Oblivion Remastered: Steam Input answers XInputGetState first; drive the pad through AMF's inject op (2026-09-26) | cpp, ui |
+| 7747 | Code carried from a Skyrim mod keeps Skyrim's file roots: the Oblivion AMF looked for theme art under Data\ (2026-09-26) | logging, process, skyrim |
+| 7758 | A plugin that loads xinput1_4.dll at load kills the controller in Oblivion Remastered for the whole session (2026-09-26) | cpp, testing, ui |
+| 7774 | Force-stopping MO2 leaves Root Builder's copies in the game folder - the next launch loads a mod the profile has switched off (2026-09-26) | testing, mo2, cpp |
+| 7787 | Swallowing window messages does not take the controller from an Unreal game: it polls XInput, so A in the menu also fired in the game (2026-09-26) | ui, cpp |
+| 7803 | A repo started from a shallow template clone cannot be pushed: 'remote unpack failed ... did not receive expected object' (2026-09-26) | git, process, powershell |
+| 7815 | The SMF export-parity check counted SKSE's loader entry points as consumer names: an OBSE build can never carry SKSEPlugin_Load/Query/Version (2026-09-26) | skyrim, python, settings |
+| 7826 | A separator the plan renamed only in letter case vanished on Apply: on Windows "Player homes" and "Player Homes" are one folder (2026-09-26) | mo2, python, packaging |
+| 7844 | Third time: an edit script piped through a Bash heredoc lost a level of backslashes, and it wrote the file BEFORE checking it parsed (2026-09-26) | python, git, cpp |
+| 7864 | A patch LOOT recommends can be for another variant of the master: JK's Temple of Talos patch overrides a record "Solitude Only" Frescoes does not have (2026-09-27) | python, mo2, testing |
+| 7887 | A plugin I parked by hand came back the next time the Modlist Manager applied: a one-off fix in the list is undone by the tool that owns the list (2026-09-27) | mo2, python, process |
+| 7911 | The Modlist Manager never stripped a "[Patch]" tag from a name: one regex pass let the separator class eat the space and the "[" first (2026-09-27) | packaging, process, python |
+| 7927 | The LOOT Warning Checker reads a plugin's "version" from the MO2 mod's meta.ini, not from the plugin (2026-09-27) | mo2, settings, skyrim |
+| 7938 | "It's not letting me take screenshots of MO2 again": three direct MO2 launches from the elevated shell, with the unelevated launcher already written (2026-09-27) | mo2, testing, powershell |
+| 7969 | The Modlist Manager's plugin plan judged only today's winning copy of a plugin, and a reorder then handed the plugin to a copy with a missing master (2026-09-27) | git, skyrim, testing |
+| 7991 | A third-party SKSE plugin that links xinput1_4.dll leaves a Steam Input controller dead from the main menu on - and a virtual DualShock 4 through ViGEmBus reaches Skyrim, so it can be proven without the owner's hands (2026-09-27) | cpp, skyrim, ui |
+| 8015 | An ExtraDataList handed to RemoveItem is not yours afterwards - equipping through it crashed a later loadout switch (2026-09-27) | crash, cpp, logging |
+| 8031 | A menu action linked to SEVERAL gameplay controls has one mapping per link - converting links one key per action collapses Cancel's Tab and Esc into one (2026-09-28) | settings, ui |
+| 8047 | A Controls-page row this mod draws must use the GAME's key name - "Escape" has no key tile, "Esc" does (2026-09-28) | settings, ui |
+| 8061 | "It is by design" was written from a tooltip - the source gated the stick behind the key, so something else was rotating the character (2026-09-28) | process, cpp, licensing |
+| 8076 | "0 gamepad events" and a dead controller in one run - Steam was not active, so Steam Input passed nothing to the game (2026-09-28) | testing, powershell, cpp |
+| 8091 | The virtual pad takes the owner's controller slot - plugging vpad in while he plays leaves his DS4 dead in the game (2026-09-28) | python, ui |
+| 8103 | Opening InventoryMenu with DevBench `menu open` crashed Njordlinger - item menus must be opened the way the player opens them (2026-09-28) | ui, cpp, crash |
+| 8115 | A folder "took 366 GB" by name sum and 266 GB on disk - vcpkg hard-links every installed file, so sizes must be counted by file ID (2026-09-28) | build, skyrim, cpp |
+| 8127 | A 1 GB file named `.zip` in 7 and 10 - a package path built from an empty name IS the stage folder, and four scripts then `Remove-Item -Recurse -Force` it (2026-09-28) | packaging, powershell, devbench |
+| 8143 | A UE4SS Lua mod's hook list does not prove a native ProcessEvent hook will see those calls - and Oblivion Remastered's camera is table-driven, so spring-arm writes may not stick (2026-09-28) | cpp, settings, ui |
+| 8158 | An OBSE plugin's MinHook on UObject::ProcessEvent, placed before UE4SS starts, breaks UE4SS's own ProcessEvent hook - ExecuteInGameThread never runs, and with two hooks the chain jumps to [value removed] (2026-09-28) | cpp, ui, crash |
+| 8185 | Editing modlist.txt from Windows PowerShell 5.1: `Set-Content -Encoding utf8` writes a BOM, and `$string + $array` joins the whole list onto one line (2026-09-28) | mo2, powershell, settings |
+| 8204 | An xmake `/d1trimfile` flag that compiles cleanly can trim nothing: a bare string is split on the path's spaces, and a quoted value reaches cl with the quotes in the prefix - wrap the flag in a TABLE (2026-09-29) | build, cpp, process |
+| 8241 | A mod with an optional-file zip beside its main zip: the archive gate compared the optional file and never checked the main one, and the distro sync deletes the optional zip (2026-09-29) | packaging, process, powershell |
+| 8261 | An OBSE plugin's own thread calling StaticFindObject while Oblivion Remastered builds objects: a start-up died in UObjectArray ("another object exists at that index") - look engine objects up on the game thread (2026-09-29) | ui, testing, cpp |
+| 8281 | A runtime-built UMG widget taken off the viewport is garbage collected: the plugin's pointer to it then crashes the next open - keep it on the viewport and toggle its visibility (2026-09-29) | crash, ui, settings |
+| 8298 | A plugin that re-asserts its Enhanced Input bindings only when its own mapping is missing misses the game re-applying the saved map around it (2026-09-29) | ui, settings, crash |
+| 8316 | A reflected UFunction call with a zeroed parameter buffer passes 0 for every enum and struct: Enhanced Input's rebuild got RebuildType None and never rebuilt (2026-09-29) | build, ui, settings |
+| 8333 | An MO2 plugin that builds basePath()/profiles or basePath()/mods breaks on any instance whose ModOrganizer.ini points its folders elsewhere (2026-09-29) | mo2, settings, cpp |
+| 8352 | Oblivion Remastered's Controls-page key selector holds only a key chosen on the page this session - an untouched row reads None (2026-09-29) | settings, ui |
+| 8369 | Oblivion Remastered's plugin loader silently skips an ESP whose CELL lighting block is not 36 bytes - and it reads ESPs past MO2's virtual Data mapping (2026-09-29) | mo2, skyrim, testing |
+| 8399 | procdump on Oblivion Remastered freezes the game for minutes and, stopped, takes the game with it (2026-09-29) | crash, logging |
+| 8413 | Adding a row to one of Oblivion Remastered's UMG menus: insert into the menu's own layout, re-ACTIVATE what came off, and join the game's navigation subsystem (2026-09-29) | ui, process, build |
+| 8445 | Oblivion Remastered's InterfaceManager::menuMode is 1 in gameplay, not 0 - a truthy test reads "a menu is open" every frame (2026-09-29) | ui, crash, logging |
+| 8466 | Oblivion Remastered's equipment path traps every thread but the TES thread - a silent death with no crash record until TestBench wrote one; the 'Oblivion Main loop' per-iteration call is the hook (2026-09-29) | crash, cpp, process |
+| 8489 | Actor::EquipObject's last argument is the console's NoUnequip lock - CommonLibOB64 calls it a_force, and true made every restored piece permanent; and a WORN armour piece will not move out of the inventory (2026-09-29) | cpp, process |
+| 8505 | Oblivion Remastered's inventory menu shows what the TES side last pushed - the refresh is the argument-less rebuild [offset removed], not the UE-side pusher nor the widget's UpdateItemList (2026-09-29) | ui, git, build |
+| 8527 | Root Builder (copy mode) copies the game folder's deployed files BACK over the mod folder when the game exits - a build installed into the mod folder in that window is silently reverted (2026-09-29) | cpp, crash, testing |
+| 8541 | A native UClass found at startup can still have no properties linked - a layout self-check that treats "not found" as "wrong" latches a failure and the whole plugin stays off (2026-09-29) | testing, process |
+| 8553 | A write made in a PRE handler of a Blueprint event is undone by the event's own body - CCM's free camera did nothing until it wrote after ReceiveTick, as UCR does (2026-09-29) | cpp |
+| 8566 | Oblivion Remastered's menu navigation reads a row's parent and direction map when the row is CONSTRUCTED - a row edited afterwards looks right and goes nowhere; re-add the neighbour (2026-09-29) | settings, git, ui |
+| 8589 | offsetof through std::array's operator[] points a settings row at the wrong member - CCM's framing rows read and wrote the camera style (2026-09-29) | settings, logging, process |
+| 8610 | A UObject kept by object-array slot AND pointer still went stale - a freed widget's slot and address were both reused, and the dead one passed every liveness check (2026-09-29) | ui, build, settings |
+| 8633 | Oblivion Remastered's PlayerCharacter singleton exists at the main menu with no character - asking it for an actor value there hangs the game (2026-09-29) | ui, cpp, crash |
+| 8654 | Oblivion Remastered's compass HostileData lists only actors IN COMBAT - who can detect the player lives in each NPC's HighProcess detection list at [value removed] (2026-09-30) | ui |
+| 8676 | A per-tick UE call with a cached controller as its world context crashed the game on quit - the controller outlived its world, and a slot-checked handle still said it was fine (2026-09-30) | ui, crash, packaging |
+| 8699 | A rounded-box brush does not clip a MATERIAL in Oblivion Remastered - Minimap Menu's round map became a turning square; nested turned clip panels make the circle (2026-09-30) | ui, testing |
+| 8720 | The licence rules never looked at an Oblivion Remastered mod - their markers named only CMake/vcpkg projects, and every OBSE64 plugin builds with xmake (2026-09-30) | build, licensing, process |
+| 8741 | The packager seeded an Oblivion Remastered mod's package from the Skyrim mod of the same name - it chose its seed by display name alone (2026-09-30) | packaging, process, ui |
+| 8759 | OpenRGB "lost" its profiles after a restart - OpenRGB 1.0's own Windows service came up with an empty profile folder, and the window became its client (2026-09-30) | mo2, logging, python |
+| 8788 | A fix proven in one Oblivion Remastered mod stayed in that mod - AMF's System row still asked a FREED page "are you alive" by reading it, and crashed on a loadout swap (2026-09-30) | crash, ui |
+| 8808 | The version gate read every Nexus ID in Skyrim's section - linking the Oblivion Remastered pages recorded two 2016 Skyrim mods as our "working" versions (2026-09-30) | process, ui, git |
+| 8826 | A name two games share sent the finalize tools to the other game's mod - the Oblivion AMF 1.0.5 finalize rewrote the SKYRIM framework's Nexus folder and deleted its zip (2026-09-30) | ui, packaging, powershell |
+| 8846 | Typing into a web form box without reading it first spliced text into the middle of the owner's existing permissions (Nexus, 2026-09-30) | licensing, testing |
+| 8863 | package-gate.ps1 run on its own skipped every page rule - it looked for the distro folder by the pre-rename name (2026-09-30) | packaging, powershell, process |
+| 8875 | Item Explorer's live Nexus file read "1.0.10" - it was already the 1.1.1 build under a version number that never exists (2026-09-30) | packaging, process, testing |
+| 8896 | Driving and filming Oblivion Remastered without the owner: what reaches the game, and what a clip needs (2026-10-01) | python, logging, testing |
+| 8919 | Oblivion Remastered fixes an action's animation speed when the action STARTS - writing its Duration mid-action looses the logic early and leaves the animation (and the state) hanging (2026-10-01) | settings |
+| 8942 | Swallowing a controller's Blueprint input event did not stop the game's native action - "swallowed (ok)" proved nothing (2026-10-01) | settings, logging |
+| 8970 | A "read-only" TestBench probe crashed the owner's game - ue.struct walked a UEnum as if it were a struct (2026-10-01) | crash, mo2, build |
+| 8995 | An agent worktree inside a repo is a whole second copy of it - the version gate and the package gate both read it as the mod (2026-10-01) | process, packaging, powershell |
+| 9008 | Moving every package into per-game folders: what the migration and the tie-breaks taught (2026-10-01) | process, packaging, git |
+| 9029 | TestBench re.additem crashed the owner's game - it calls AddObjectToContainer on the UE game thread, the thread the engine's own trap refuses (2026-10-01) | cpp, crash, python |
+| 9054 | Nexus pages answer HTTP 403 to WebFetch and curl - read them in the built-in browser pane; a comments page past 1 silently returns page 1 there too (2026-10-02) | process, python, ui |
+| 9066 | Nexus description editor: Save stays disabled after a scripted val() unless a real keystroke lands in the editor AND the editor then loses focus; the click only focuses it when a screenshot came first (2026-10-02) | testing, process |
+| 9084 | Oblivion Remastered: `As<RE::TESBoundObject>()` is null for EVERY item, item names are LOC_FN_ keys, and AMF's "game language" is Windows' (2026-10-02) | process, ui |
+| 9105 | A link to paid modding content went onto 33 Nexus pages before anyone read Nexus's anti-solicitation policy (2026-10-02) | - |
+| 9113 | Closing Oblivion Remastered unattended: "qqq" through orcmd.py does nothing; CloseMainWindow ends it cleanly within about a minute (2026-10-02) | python, crash, mo2 |
+| 9126 | The health gate said STOP and the game launched anyway - the gate and the launch were chained with ";" in one PowerShell call (2026-10-02) | testing, process, powershell |
+| 9145 | Two posting snags on CCM 1.0.2: the distro sync left "release tag v1.0.1" as the link's label, and the live Nexus description indents with a non-breaking space (2026-10-02) | packaging, powershell, versioning |
+| 9159 | Release screenshots taken while the owner's monitor was off came out 1024x768 (4:3) - the desktop falls back when the screen is off, and nothing in the game can render past it (2026-10-01) | settings, ui, mo2 |
+| 9175 | A new release tripped Defender's cloud ML ("Trojan:Win32/Wacatac.C!ml") hours after posting - 1.9.9 passes, 2.0.1 does not, no code reason (AMF 2.0.1, 2026-10-02) | cpp, ui, python |
+| 9193 | A FOMOD's optional texture choice was never made - Security Overhaul Extra Locks drew untextured locks in Njordlinger's lockpicking screen (2026-10-02) | logging, python, mo2 |
+| 9215 | The owner took 10 screenshots for "the new banner" and got ONE banner - a set of shots he takes for a page is a set of banners that replaces the old ones (AMF 2.0.1, 2026-10-02) | ui, python, settings |
+| 9239 | An MO2 plugin fitted the start-up splash "for the next start" - MO2 actually loads plugins BEFORE it reads splash.png, so the owner saw a small splash for nothing (MO2 Splash Fit, 2026-10-02) | mo2, cpp, settings |
+| 9261 | A live Nexus page carried ANOTHER mod's description - Civil War Starts showed the Skyrim AMF text, and an anchored-replace check said 'no match' instead of saying why (2026-10-02) | process, ui |
+| 9278 | Oblivion Remastered stops reading XInput when no controller is connected - an iwm.pad test needs WM_DEVICECHANGE, and its end looks like the owner pressing buttons (2026-10-02) | ui, process, testing |
+| 9296 | Every frame capture came back black - AMF's in-process capture and a gamevideo clip - while the overlay was drawing on screen; it was the AMD driver, not the page (2026-10-03) | python, ui, cpp |
+| 9316 | vcpkg's stock imgui port at the usual baseline is 1.90.2 - AMF pins 1.90.8 through its own overlay port, and a consumer built without it was rightly refused (2026-10-03) | build, cpp |
+| 9329 | esp-audit failed DBReV.esp on a quest's ANAM - in QUST, ANAM is the next alias ID, a counter, not a FormID (2026-10-03) | skyrim, process, python |
+| 9340 | A consumer window's BlockUserInput cannot decide who gets the input - the stock SMF header defaults it to true, so a play-time overlay would have locked the player out (AMF 2.0.4, 2026-10-03) | settings, ui, process |
+| 9353 | Releasing a COM object another module may still hold a raw pointer to - AAOS freed XAudio2 engines Dragonborn ReVoiced kept, and its next line crashed (2026-10-03) | testing, cpp, crash |
+| 9369 | The owner's PC froze during a 1.7.104 boot proof - a startup message box, a spinning TextInputHost and an AMD driver fault together; the card came back on code 31 after the hard reset (2026-10-03) | testing, cpp, crash |
+| 9385 | A locked Windows session cannot be brought to the front - no screenshot, no SendInput; posting F12 to the game window does not trigger Steam's screenshot (2026-10-03) | devbench, python |
+| 9396 | Nexus's new edit form keeps Save disabled after a scripted description change - SCEditor's insert('') marks it changed, even in a hidden tab (2026-10-03) | testing, process |
+| 9422 | A script clicked the last menu button of the WHOLE gallery and deleted the new banner instead of the old one (Nexus media editor, 2026-10-03) | ui, python |
+| 9434 | install-test-build put an Oblivion Remastered package BESIDE the mod folder's Root\ - the game would have kept loading the old DLL (2026-10-04) | packaging, cpp, python |
+| 9446 | A race-type row in RaceMenu's list is not always a race - Apprentice files classes and traits there, and a replacement UI that calls ChangeRace on them changes the race (2026-10-04) | ui |
+| 9461 | TestBench could not read a menu's Scaleform data - `menu action=gfx` added rather than a one-off dump in the mod under test (2026-10-04) | ui, crash, process |
+| 9471 | The game's translation table (BSScaleformTranslator) cannot be read through CommonLib on 1.5.97 - a find() misses every key and iterating it crashed the game; read the mod's own Interface\Translations file (2026-10-04) | crash, cpp, logging |
+| 9492 | An MCM Helper mod may apply its settings ONLY in OnConfigClose - writing the value and sending OnSettingChange saves it but the mod ignores it until the next load (2026-10-04) | settings, ui, cpp |
+| 9515 | A Papyrus call dispatched from native code is NOT upcast - pass a script object typed as the PARAMETER's script, or the VM refuses the call and returns None (2026-10-04) | skyrim, logging, mo2 |
+| 9537 | SkyUI's config manager ignores RegisterMod/UnregisterMod while its Journal is open - they return -2 in the BUSY state (2026-10-04) | ui |
+| 9554 | SkyUI's MCM pages never load in Njordlinger Test - Papyrus does not run while the Journal is open there, with or without our code (2026-10-04) | skyrim, testing, devbench |
+| 9574 | Giving SkyUI's MCM list "back" with RegisterMod for every config adds menus that were never there and undoes other mods' hiding - give back only what you hid (2026-10-04) | skyrim, testing |
+| 9586 | CommonLib NG's Actor::GetGoldAmount faults on SE 1.5.97 every time, not only during loading - count the gold in InventoryChanges yourself (2026-10-04) | crash, ui, cpp |
+| 9606 | A switch that gives SkyUI its MCM menus back gave nothing back - the ledger trusted RegisterMod/UnregisterMod results that came back None (2026-10-04) | ui, cpp, mo2 |
+| 9645 | ImGui's Win32 backend sizes the display from the game WINDOW, but the overlay draws on the swap chain's IMAGE - they differ whenever the game renders smaller than its window (2026-10-04) | settings, logging, testing |
+| 9662 | A plugin's globals cannot be found by editor ID on SE 1.5.97 - look them up by form ID in their plugin, and first check the plugin actually LOADED (2026-10-04) | skyrim, mo2, settings |
+| 9676 | gamewatch.ps1 start launches a background frame RECORDER - against the owner's standing ban on continuous capture (2026-10-04) | powershell, testing |
+| 9687 | A fade multiplier on a clip whose owner TWEENS its own alpha compounds to 0 - set that clip's alpha outright instead (2026-10-04) | ui |
+| 9700 | A TestBench papyrus call that "returned null" had been REFUSED - a whole number sent to a Float parameter is an Int, and native dispatch does not convert it (2026-10-04) | skyrim, logging, ui |
+| 9729 | `Variable::IsNoneObject()` tests for a None TYPE, not a None value - an object variable set to None reads as holding an object (2026-10-04, AMF 2.0.9, Soulsthat) | skyrim, cpp, testing |
+| 9753 | TestBench's combat doctrine presses F10, and in Njordlinger Test F10 opens Immersive Equipment Displays - "no doctrine box opened" (2026-10-04, HPM real-blow test) | ui, cpp, mo2 |
+| 9774 | Nexus's new media editor leaves earlier gallery menus open in the page - a "Delete" found by text belonged to the wrong image (2026-10-04, AMF banner) | ui |
+| 9793 | TestBench keyboard taps (input action=tap) did not reach Skyrim in Njordlinger Test - sneak and weapon-draw never happened (2026-10-05, HPM A2) | skyrim, settings |
+| 9811 | A user's MO2 deprecation warning named a call the current release no longer makes - the line number matched an OLD version, and the Nexus audit never looked at the page (2026-10-05, MO2 Custom Filters) | mo2, git, python |
+| 9831 | A Qt dialog cannot be narrower than its widest child - four sentence-long labels without word wrap held the Modlist Manager wider than MO2 (2026-10-05) | mo2, settings, process |
+| 9854 | A backup of a mod's player folder copied only its top-level files - the Presets\ subfolder was overwritten by the test run (2026-10-05, AMF banner reshoot) | settings, ui |
+| 9863 | A dxgi.dll proxy beside the exe no longer reaches the game when the exe takes DXGI from NVIDIA Streamline - read the exe's imports before choosing a proxy or hook (Witcher 3 Remastered, 2026-10-05) | cpp |
+| 9884 | A posted F12 never reaches Steam's overlay hotkey, and a DPI-unaware game's client coordinates are not the capture's pixels (Witcher 3 TestBench, 2026-10-05) | cpp, process |
+| 9906 | Steam's F12 screenshot missed the overlay because inline hooks on dxgi's Present run last-hooked-first - write the vtable SLOT of the object the game holds and the overlay draws before every inline hook (Witcher 3 Remastered, 2026-10-05, proven in game) | cpp, logging, process |
+| 9937 | A saved window size came back as `inf` and the next opening filled the whole screen - the display size is [value removed] while the game is minimised or driven in the background (AMF Witcher 3, 2026-10-05) | testing, settings, ui |
+| 9952 | Witcher 3 mod-menu labels are hashed keys - .w3strings format, the key hash, and why a CSV's ;meta[language] line can't be trusted (AMF Witcher 3 M4, 2026-10-05) | ui, licensing, cpp |
+| 9985 | Rewriting a JSON rule file through json.load/json.dumps flipped all 1012 lines and turned two `\ufeff` escapes into literal byte-order marks (gate-rules.json, 2026-10-05) | git, packaging, process |
+| 9999 | Under Mod Organizer 2 a plugin's own module path is its REAL mod folder - game data looked up relative to it is missing; take game paths from the exe (AMF Witcher 3 1.0.1, 2026-10-05) | mo2, ui, settings |
+| 10024 | A "pad gate leak" was the test pad connecting on every press - log the gate's callers before redesigning the gate (AMF Witcher 3, 2026-10-05) | process, cpp, logging |
+| 10060 | Wording-pass lessons (sub-agent, AMF Witcher 3, 2026-10-05) | settings, git, cpp |
+| 10073 | Porting the Skyrim AMF's settings and UI to the Witcher 3 build: four traps (sub-agents' lessons, 2026-10-05) | settings, process, python |
+| 10088 | A button that closed the game instantly with nothing logged: a std::mutex taken twice on one thread throws, and the uncaught throw in the frame ends in std::terminate (AMF Witcher 3 1.0.3, 2026-10-05) | crash, logging, cpp |
+| 10107 | Four ImGui/Witcher 3 overlay traps from the AMF 1.0.3 runs (sub-agent's findings, 2026-10-05) | ui, settings, process |
+| 10124 | The Witcher 3 didn't fill the screen and a Steam toast flickered bottom-right: the exe is DPI-unaware, so at 150 % scaling it runs at 2133x1200 - Borderless can't go higher; use the game's own Full Screen (2026-10-05, corrected) | settings, mo2, logging |
+| 10163 | A crash on frame generation's present thread was blamed on an overlay drawing from the game's thread - wrong: frame generation presents through the hooked proxy, so the overlay already ran on that thread (Witcher 3 AMF, 2026-10-05, corrected) | crash, process, cpp |
+| 10207 | A Witcher 3 settings group with displayName="hidden" still shows in the game's Settings as an empty row - hide it with visibilityCondition="hideAlways" (AMF Witcher 3, 2026-10-05) | settings, ui |
+| 10232 | A WitcherScript @wrapMethod over an EVENT takes the event's bool return - a bare "return;" stops the whole script compile (AMF Witcher 3, 2026-10-05) | powershell, packaging, python |
+| 10244 | An SEH guard does not make a fault harmless in Witcher 3: the game's own crash reporter fires first and the game hangs - and an engine (overrideGroup) setting written at start-up faults (AMF Witcher 3, 2026-10-05) | crash, settings, cpp |
+| 10281 | Nested pad gates: only the OUTERMOST gate of a read may judge and blank it - judging at both ends leaked a held Start after close, judging at the innermost leaked the D-pad with the menu open (AMF Witcher 3, 2026-10-05) | process, cpp, ui |
+| 10303 | Witcher 3 5.0's own UI font can be read from the install at run time - bundle entries are [value removed] bytes, zlib only, the font is a DefineFont3 inside a CR2W-wrapped CFX movie (AMF Witcher 3, 2026-10-05) | ui, scaleform |
+| 10325 | A stylesheet frame on MO2's list rows ran out into the indent on every other mod: Qt draws the ::item rule again across an ALTERNATE row; a row frame needs alternation off and :first/:middle/:last pieces (Skellige MO2 Theme, 2026-10-05) | mo2, powershell, ui |
+| 10345 | Moving an MO2 instance left the owner's Taskbar Groups entries pointing at the old folder - a click did nothing; the group caches each icon as MD5(shortcut path).png (Witcher 3 instance, 2026-10-06) | mo2, testing, powershell |
+| 10359 | Some labels from our own .w3strings showed as "##key" and others from the same file worked - the key table must be sorted by hash (Unbind Vanilla Controls W3, 2026-10-06) | python, testing |
+| 10378 | "AMF loaded in every test, so MO2 supplies dinput8.dll" was wrong: the test launcher copied the loader into the real game folder before every run (Witcher 3, 2026-10-06) | testing, cpp, mo2 |
+| 10393 | A Bash call blocked by a PreToolUse hook runs NONE of its commands - an edit chained into it was reported done but never happened (AMF Witcher 3 page text, 2026-10-06) | cpp, python |
+| 10404 | Witcher 3 inventory: the hint bar's A equips the grid's selected item through the SCRIPT (OnInputHandled -> the item context), not through the inventory movie - a control added to the menu must deactivate the context (SLS Witcher 3, 2026-10-06) | ui |
+| 10421 | A D-pad press that set a binding also changed the Controller Scheme tab - one pad press reaches a Scaleform menu as more than one input event (UVC Witcher 3, 2026-10-06) | process, scaleform, settings |
+| 10436 | ResetGroupToDefaults on a probe's hidden group of three INPUTPAD rows reset the player's WHOLE input mapping to vanilla (UVC Witcher 3 probe 3, 2026-10-06) | settings, build, packaging |
+| 10452 | Two INPUTPAD rows naming the same action: a write to the second changed nothing (UVC Witcher 3, 2026-10-06 - by the evidence) | python |
+| 10462 | Nexus's new upload form does not save edits made in a BACKGROUND Chrome tab - the description, tags and dropdowns need the tab in front (SLS Witcher 3 post, 2026-10-06) | licensing, testing |
+| 10478 | An INPUTPAD write lands only when the action's current pad key is an Xbox key - IK_None or a PS4 key never changes again, and the read-back lies both ways (UVC Witcher 3 probe 4, 2026-10-06) | settings, logging, mo2 |
+| 10493 | Witcher 3 5.0 loads a mod's gameplay XML only from paths its .reddlc names - and a loot table re-declared in a DLC file ADDS to the game's table of that name (Witcher Gear Overhaul research, 2026-10-06) | process, testing |
+| 10519 | A Witcher 3 weapon effect with an apply chance of exactly 0 ALWAYS applies - and the chance belongs to the ability that holds the effect, not the item (Witcher Gear Overhaul research, 2026-10-06) | - |
+| 10537 | A Witcher 3 launch that sits on "Compiling scripts (parsing file N/M)" with no CPU is a hidden compile-ERROR dialog, not a hang (overnight combined run, 2026-10-06) | crash, testing, mo2 |
+| 10550 | A whole Witcher 3 test run stopped at the script compile because a local variable was named `state` - WitcherScript keywords include ordinary words (Witcher Gear Overhaul 1.0.0, 2026-10-06) | packaging, powershell, python |
+| 10573 | Witcher 3's GetItemsWithTag does not list every item carrying the tag - and WitcherScript's only text-to-name route is a settings var id (Item Explorer Witcher 3, 2026-10-06) | settings, python |
+| 10595 | Witcher 3 weapon damage read as 0 while the tooltip showed 236-305 - CalculateAttributeValue is base * mult + add, so a base-only stat comes out 0 (Witcher Gear Overhaul 1.0.0, 2026-10-06) | - |
+| 10612 | Rolling a Witcher 3 loot table from script on the player's inventory yields nothing - AddItemsFromLootDefinition only ATTACHES a table (Witcher Gear Overhaul 1.0.0, 2026-10-06) | settings |
+| 10625 | WaitIdle before a Release is not enough in an overlay: the frame being built may already show the texture - free it after THAT frame's fence (AMF Witcher 3 3D preview, 2026-10-06) | crash, cpp, process |
+| 10644 | A Root\ folder meant for MO2's Root Builder deploys in Vortex as <game>\Root\... and the ASI loader never loads - ship a FOMOD that asks where the loader goes; Vortex's Witcher 3 offers only admin symlinks when Documents and the game are on different drives (AMF Witcher 3 1.0.3, 2026-10-06) | mo2, packaging, powershell |
+| 10676 | A New Game in a test profile went into the vanilla Helgen cart although Alternate Perspective was ticked - the profile had "Base Game DLC Content" (the DLC .esm files) off (AMF 2.1.3 repro, 2026-10-07) | skyrim, mo2, logging |
+| 10695 | Nexus edit form in a HIDDEN Chrome tab: call the description editor's React onChange with the new text - Save enables and the save sticks (AMF 2.1.3 post, 2026-10-07) | testing |
+| 10709 | A WitcherScript annotation on a player STATE needs the state's class name `<owner>State<state>` - `@wrapMethod(Combat)` does not resolve (Camera Configuration Menu W3 probe, 2026-10-07) | ui |
+| 10722 | Root Builder put an OLD AMF loader into every Witcher 3 launch: it copies files the run left in the game folder into overwrite\Root (2026-10-07) | mo2, testing, cpp |
+| 10736 | package-gate.ps1 took the FIRST registry entry with the package's display name - a Witcher 3 package was checked against the Oblivion repo (Camera Configuration Menu W3, 2026-10-07) | packaging, process, ui |
+| 10758 | A Witcher 3 mod menu whose string table holds only the BARE displayName keys shows made-up labels - the menu looks up panel_ / option_ / preset_value_ (Simple Loadout System W3, 2026-10-07) | ui, python |
+| 10777 | The texture.cache key is the h*31+c hash of the lower-cased path - NOT FNV-1a 32 (Witcher Gear Overhaul Kaer Morhen relocation, 2026-10-07) | python, process |
+| 10788 | Witcher 3 HUD: holding a module up with its own fade-in means it never fades again once you stop (2026-10-07) | ui |
+| 10801 | Witcher 3 under MO2: a NEW Mods\mod<name> folder is not loaded until mods.settings lists it - the game did not add it (2026-10-07) | mo2, settings, git |
+| 10814 | A NEW Mods folder in the Witcher 3 MO2 profile is not loaded until mods.settings lists it - the game does not add it (Witcher Gear Overhaul Kaer Morhen fix, 2026-10-07) | settings, mo2, testing |
+| 10831 | WitcherScript string literals have NO backslash escape - a depot path is written with single backslashes (Witcher Gear Overhaul load probe, 2026-10-07) | - |
+| 10843 | The Witcher 3 Mod Manager (and Relapse's Mod Manager Redux on top of it) never installs bin\x64_dx12 - and takes a FOMOD's XML for menus (2026-10-08) | ui, settings, cpp |
+| 10881 | "Couldn't call RaceMenu" from an SKSE plugin = RaceMenu's Papyrus scripts never linked: the instance had NO SKSE scripts, and RaceMenu wants the scripts of the exact SKSE build (2026-10-07) | skyrim, mo2, cpp |
+| 10900 | Root Builder restores the game root's original files when MO2 closes - a file copied into the root by hand is silently undone (2026-10-07) | mo2, logging, settings |
+| 10912 | A SkyrimSE.exe stuck in kernel teardown keeps its SKSE log files open - NPA then fails to load on every launch ("fatal error"), and other plugins log to *.log0 (2026-10-07) | logging, skyrim, testing |
+| 10929 | A PowerShell 5.1 inline `(if ...)` in an expression emptied the AE test profile's modlist.txt while MO2 started - and MO2 then emptied plugins.txt and loadorder.txt (2026-10-07) | mo2, powershell, testing |
+| 10940 | TestBench's `input` tool (BSInputEventQueue) crashes the AE 1.6.1170 game on any key; `bench.input` is the safe one (2026-10-07) | crash, devbench, ui |
+| 10951 | AMF never sent SKSE Menu Framework's menu and frame events - a mod doing its work in them (NPC Preset Applier's portrait maker) waited forever with no error (2026-10-07) | ui, cpp, logging |
+| 10965 | An ImGui button whose label shows its state (+/-, A-Z/Z-A, "(13)") became a new item on every press - A worked once, then did nothing until the highlight moved off and back (AMF 2.1.5, 2026-10-07) | settings |
+| 10979 | Setting UI::numPausesGame to 0 under the open journal froze Skyrim on the spot - never take another menu's pause count (AMF 2.1.5, 2026-10-08) | ui, crash, devbench |
+| 10997 | package-mod -Force after its own prune had no seed left and wrote a flat package with no README, LICENSE, NOTICE or fomod (Carryweight on Level Up 1.0.7, 2026-10-08) | packaging, licensing, testing |
+| 11013 | install-test-build.py never removes a file the new package dropped - the old art layers kept drawing in game (AMF 2.1.6, 2026-10-08) | packaging, python, mo2 |
+| 11025 | desktop-grab.ps1 captures the HDR desktop about 2.2x too bright - saturated colours clip, greys look right (AMF 2.1.6, 2026-10-08) | powershell, ui |
+| 11036 | A converted SkyUI script menu that 'never loads' on a loaded save is usually its own mod still starting up - Honed Metal answered only after a couple of minutes (AMF 2.1.6, 2026-10-08) | ui, testing, process |
+| 11052 | An SKSE Menu Framework mod laid out with SameLine(<pixels>) puts its control ON its label at a big text size - fixed in AMF's SameLine export, not per mod (Show Player In Inventory, 2026-10-08) | cpp, python, skyrim |
+| 11063 | Two Witcher 3 mods' menu labels could show each other's text - both had taken .w3strings idspace 7715, each as "the next one after the last I knew of" (New Game Plus Max Level / HUD Position Manager W3, 2026-10-07) | ui, git, python |
+| 11084 | A Witcher 3 mod replaces the game's files BY PATH from its own Mods\mod*\content bundles - a tool that reads only content0 shows vanilla where the player sees the mod (Item Explorer W3 1.0.1, 2026-10-07) | mo2, settings, skyrim |
+| 11114 | An ImGui window that must never take the controller highlight: NoNav + NoFocusOnAppearing, hand the focus back on any click, and own the pad's B with SetKeyOwner - ImGui's nav cancel reads B only when nobody owns it (Item Explorer W3, 2026-10-07) | - |
+| 11131 | A shader embedded by a CMake configure-time step is NOT refreshed by build.bat - the DLL keeps the old HLSL until configure runs (Local Map Upgrade 1.3.3, 2026-10-08) | cpp, build, versioning |
+| 11144 | Two edit-tooling traps: the Write tool drops the spaces of whitespace-only lines, and Windows PowerShell 5.1 reads a BOM-less UTF-8 .ps1 as ANSI (2026-10-07) | powershell, packaging, python |
+| 11155 | Hosting another mod's own ImGui tool in AMF: OAR and IED each run their OWN ImGui context on the SAME game call sites as AMF; OAR has an open/close API, IED does not, and OAR's bEnableUI=false installs no UI at all (research, 2026-10-07) | settings, ui, cpp |
+| 11170 | A Nexus page's public Images tab lists one page of images - a backup built from it missed 26 of AMF's 50 gallery images (2026-10-08) | python, testing |
+| 11184 | Pictures with loading="lazy" inside a closed details element never loaded in the artifact viewer on the owner's PC - fine on his phone (2026-10-08) | settings |
+| 11194 | A tool that copies session transcripts into new files copies the secrets the owner pasted into them - a login token reached an archive-sweep digest in plain text (2026-10-08) | python, git, process |
+| 11213 | When a tool refusal's error text is mangled, isolate the operation - never infer the cause from the truncation (2026-09-12, saved 2026-10-08) | testing, process |
+| 11238 | A propose-then-apply tool that re-runs its proposal on --apply overwrites the reviewed input; a verbatim script handed to a low-level agent is proof-run by its author first (pipeline restructure plan, 2026-10-08) | process |
+| 11260 | Nexus's new edit UI: a file's "File options" description is a React field whose visible textarea is a decoy - typing, form_input and native setters all "save successfully" and change nothing; set it through the parent component's onChange(value) (2026-10-08) | testing, settings |
+| 11284 | A rename swept as plain text rewrote the owner's quoted words in five memories (pipeline restructure 9.1a, 2026-10-09) | process |
+| 11310 | A build that copies live files by path broke silently when the restructure moved them behind stubs; the kit nearly shipped retired-path stubs and literal byte-order marks (Pipeline Kit 1.0.2 rebuild, 2026-10-10) | process, packaging, build |
+| 11337 | A kit that leaves the machine shipped the owner's name in capitals, reused a number after packaging, and listed hashes no member could match (Pipeline Kit 1.0.2 -> 1.0.3, 2026-10-10) | packaging, build, process |
+| 11360 | The event log could count gate refusals but never say what caught them, and stopped recording finalizes when finalizing moved into a script (2026-10-10) | process, logging, powershell |
+| 11383 | Repackaging a two-line FOMOD with package-mod.ps1 seeds from an old flat package and prunes the previous FOMOD; changelog.ps1 cannot tell two repos sharing a ledger key (MIT-label sweep, 2026-10-10) | packaging, powershell, licensing |
+| 11405 | The distro one-zip rule hard-deleted an optional download at finalize; release scripts used Remove-Item where finalize's own prune used the Recycle Bin (AMF-W3 1.0.4, 2026-10-11) | powershell, build, packaging |
+| 11427 | Witcher 3 test gotchas from AMF-W3 1.0.5: `entry` is a WitcherScript keyword, the recent-saves list is not newest-first, run saves sync to the cloud, and an owner autosave is not a clean test save (2026-10-11) | testing, crash, settings |
+| 11440 | Retargeting a Nexus changelog entry by editing its version field deleted the newer entry (AMF-W3 credit change, 2026-10-11) | testing, process |
+| 11456 | "Missing UnknownPlugin = old FLICK header" also matched mods that are not FLICK-header consumers, and an old header has 31 table orders, not one (AMF 2.1.8, 2026-10-11) | cpp, crash, git |
+| 11491 | A sub-agent launched the game on a profile another session was using, because "nothing is running" is not "nobody holds it" (AMF themes, 2026-10-11) | testing, process, settings |
+| 11499 | A build-path fix measured on the flags would have passed twice while the artefact still leaked: a quoted VCPKG_CXX_FLAGS path was cut at its first space, and a reused PDB kept its old user-folder records (AMF 2.1.9 rebuild, 2026-10-12) | build, cpp, process |
+| 11527 | A gate row overrode an owner-named exception: the A-Z sort tick box was turned into a switch because checkbox-is-a-toggle flagged it, though the code comment said the owner asked for it (AMF 2.1.9, 2026-10-12) | process, settings, build |
+| 11536 | A control drawn with art lost its outline: the art path skipped ImGui's border, no shipped box, button or tick box part had an edge layer, and faces are the panel colour - Norden - Black's buttons were invisible (AMF next after 2.1.9, 2026-10-12) | process, cpp, python |
+| 11545 | A click shorter than a frame lost its release: CommonLib's IsUp() needs a held time, and the game's release of a button let go before its next poll carries none (AMF next v3, 2026-10-12) | cpp, testing |
+| 11553 | A theme switch that set a few style sizes over a scaled style undid the scale: rebuild the whole ImGui style each time (AMF next v3, 2026-10-12) | build, cpp, settings |
+| 11561 | The rules reached 2.10.0: a minor bump kept its own arithmetic while only the build step was collapsed into the version gate, and the gate's shape check looked at the patch digit alone (rules 2.9.1 -> 2.10.0, 2026-10-09; found 2026-10-12) | process, powershell, versioning |
+| 11570 | A key SendInput sends is proof only for mods that read Windows keys: F13-F15 never reached OAR, Community Shaders or IED, which read the game's own input events - and a splice inside AMF's load-time hook would reach no other plugin's hook (AMF 2.2.0, 2026-10-12) | testing, cpp, settings |
+| 11579 | The Nexus "1.0.5" file of MO2 Custom Filters was the 1.0.4 package - "the user runs an old version" was right about the code and wrong about why (2026-10-13) | mo2, packaging, python |
+| 11591 | "Two entries vanish from the Mods list in Chinese" - both were in the list, 150 rows from where the test looked: a menu name that follows the game's language is a newcomer to an order saved in another language (AMF 2.2.0 final5, 2026-10-13) | settings, cpp, testing |
+| 11602 | A requested feature was parked for a later version instead of folded into the open one (AMF 2.2.0 slider wheel, 2026-10-13) | build, testing |
+| 11611 | A Witcher 3 EIAB_Sprint lock moves the camera: the game treats Geralt as indoors and switches to the close indoor camera (Loot on Hover W3, 2026-10-13) | - |
+| 11621 | The gate was used as the test: 233 same-station re-runs of the finalize gate, 163 of them refusals (straight flow, 2026-10-13) | process, powershell |
+| 11647 | A package seeded from an older release than the last one: a folder named "<Mod> X.Y.Z FOMOD" is skipped as a seed, and new dist files landed at the FOMOD root (SLSC 1.0.3, 2026-10-13) | packaging, process, git |
+| 11664 | A HUD setting that "does nothing" on a settings page was parked as an INI-priority bug - the value reached the movie only once, in its constructor (Compass Navigation Overhaul 1.1.7, 2026-10-13) | settings, ui, mo2 |
+| 11691 | A Witcher 3 load sync in the player's OnSpawned never logged - thePlayer (and GetWitcherPlayer()) is still NULL there on a save load, and the sync's guard returned silently (Kaer Morhen Gear 1.0.0, 2026-10-13) | testing, cpp, logging |
+| 11708 | Inflated Witcher 3 item values were blamed on another mod's switches - the test save was New Game+, and the game's own NG+ item scaling explained every number (Kaer Morhen Gear, 2026-10-13) | testing, logging |
+| 11731 | A release was posted with its description still in the old plain-text format: every page check read facts, none the layout (Simple Loadout System W3 1.0.1, 2026-10-14) | process, packaging, powershell |
+| 11753 | A Papyrus script slot passed IsObject() and still crashed AMF - type and value are separate words, and GetObject() writes a refcount through the value (AMF Skyrim 2.2.1, 2026-10-17) | skyrim, crash, cpp |
+| 11775 | w3-tb.ps1 quit pressed CONTINUE at the Witcher 3 main menu, loaded a save, and the autosave rotated out an old one (WGO 1.0.0 test abort, 2026-10-18) | ui, testing, crash |
+| 11788 | WitcherScript rejects `!(SomeClass)x` - negating a cast is a syntax error (WGO 1.0.0, 2026-10-18) | - |
+| 11799 | A stat ability added to a slotted W3 mutagen item leaked 0.05 spell power per slot cycle (WGO 1.0.0, 2026-10-18) | crash |
+| 11812 | A set bonus was designed around enemies landing critical hits - in W3 5.01 enemies never crit (WGO armour sets, 2026-10-18) | - |
+| 11823 | LMU's map border drew nothing for a week - img:// loadMovie can't load loose DDS, and a disabled code path's log line was read as the cause (LMU 1.3.3, 2026-10-18) | logging, scaleform |
+| 11836 | Ragdoll "flying corpses" read from unsettled bodies; TestBench key presses queued while the game was unfocused fired together (Perfected Wheeler 1.4.0, 2026-10-18) | testing, cpp, crash |
+| 11849 | An outfit replacer recorded "working" never looked at the NPC - outfit overrides don't reach actors an existing save already dressed (Jarl Ulfric Armor Replacer 1.0.1 -> 1.0.2, 2026-10-18) | testing, skyrim |
+| 11862 | "No markers in inns" was a UI replacer's art file overriding the add-on's icon table everywhere (Local Map Item Markers 1.0.1, 2026-10-18) | mo2, packaging, scaleform |
+| 11875 | Norden UI Black's recolour skipped the dialogue box: a "neutral greys only" rule misses hued slate that reads as panel; the packager reverted the fix; a headless PC can't show 16:9 UI (2026-10-19) | packaging, crash, git |
+| 11888 | Five first packages failed the path gates because find-msvc.bat never called the shared build environment (2026-10-19) | cpp, process, packaging |
+| 11901 | Screenshot-run "bugs" were mostly not bugs - check a capture-run observation against live data before building a fix (2026-10-19) | settings, ui |
+| 11912 | The release check read a FOMOD's nested file mapping as "never installed", and a package layout was bent to suit it (Norden UI Black 1.0.4, 2026-10-20) | packaging, process, cpp |
+| 11923 | Three quiet traps met building Perfected Wheeler 1.4.1 (2026-10-20) | packaging, process, python |
+| 11940 | A side effect inside a wrapped permission query that the game polls on a timer repeats forever (WGO Magic system, 2026-10-20) | licensing, ui, logging |
+| 11954 | A Witcher 3 inventory "stats" hint never showed - the stats module is never selectable, so its context is never created (WGO 1.0.0, 2026-10-20) | ui |
+| 11967 | A scan for mods that replace a file missed every mod folder with "[" in its name - Python's glob reads brackets as a pattern (WGO build queue A1b, 2026-10-20) | mo2, python, process |
+| 11980 | A regex that edited label text also matched code, and the failed run then truncated the menu XML to 0 bytes (WGO build queue A3, 2026-10-20) | python, git, crash |
+| 11991 | A Witcher 3 item definition can hold <item> tags inside its own <item> block - a non-greedy regex cut the record short (WGO Viper split, 2026-10-20) | python |
+| 12004 | Enemy tiers "did nothing": the resistance step only reached resistances already above 0, and people have none - plus nothing redid the enemies already standing there (WGO fix round, 2026-10-20) | process, settings, ui |
+| 12017 | A "same key as jump" feature tested only against the default layout - the owner's pad has jump on Y and Roll on A (WGO combat jump, 2026-10-20) | settings, mo2 |
+| 12030 | Monster mutagens ran the skill-group colour bonus at LESSER size - the game reads the tier from the item's alchemy_s19 ability (WGO, 2026-10-20) | ui, settings |
+| 12043 | Git Bash grep `$'\r'` reported no CRLF in files that were CRLF, and heredoc edit scripts with literal tabs failed to match (WGO fix round, 2026-10-20) | git, python |
+| 12055 | A control holds several keys on one device: "already bound" and "is the default" checked only the first (Unbind Vanilla Controls Skyrim 1.1.2, 2026-10-20) | settings, packaging |
+| 12071 | A Witcher 3 stats list re-sent from script kept its old right-hand card - the panel refills the card only when the selected row CHANGES (WGO character points, 2026-10-20) | scaleform, ui |
+| 12085 | A Witcher 3 skill-slot list with more rows than sockets hands the extra rows to the MUTAGEN slots - CD PROJEKT RED's count always matched, so it never showed (WGO mutation slots 5-6, 2026-10-20) | ui, scaleform, settings |
+| 12104 | WitcherScript: a method call on an array a function RETURNS does not compile - "Only arrays coming from variables can be modified", even for .Size() (WGO mutation slots 5-6, 2026-10-20) | python |
+| 12119 | A Witcher 3 mod built for 4.0x loads its bundles and texture cache on 5.0, but its collision cache and its world file do not carry over - REDkit 5.0 calls a v9 collision.cache "NOT a collision cache", and a 4.0x .w2w has none of the Remastered lighting (Kaer Morhen Fortress, 2026-10-20) | python, testing, mo2 |
+| 12167 | Witcher 3 skill-grid moves follow each socket's navigation INDEX, not the nearest slot - added sockets got no controller navigation (WGO mutation slots 5-6, 2026-10-20) | scaleform, ui |
+| 12177 | "Launch when ready" was read as "launch with what is built" - the game was launched while a requested change (HPM vanilla adrenaline toggle, colours) was still unbuilt in another session (Main Agent, 2026-10-20) | testing, packaging, settings |
+| 12183 | A Windows bugcheck during a Root Builder deploy zeroed BuildData.json - MO2 then dies silently at "Previous build data exists, updating" (Njordlinger, 2026-10-21) | mo2, crash, testing |
+| 12189 | Nexus description save: SCEditor val() plus textarea input/change events no longer marks the form changed - Save quietly kept the old text (MO2 Modlist Manager 1.1.5, 2026-10-21) | testing, mo2 |
+| 12194 | FFDec's script export is not deterministic - the same SWF exported twice gave different text for some classes, so "only my script differs" checks must compare SWF tags byte by byte (SkyUI Config Diag, 2026-10-21) | scaleform, git, process |
+| 12199 | An edited SkyUI class inside a menu swf never ran - imported libraries ([asset path removed], inventorylists.swf) define the same AS2 class first and the class guard skips later copies (SkyUI Config Diag, 2026-10-21) | scaleform, logging, ui |
+| 12205 | A new settings row "did not appear": an old test mod's copy of the settings JSON won the load order (Perfected Wheeler 1.4.1, 2026-10-22) | settings, python, skyrim |
+| 12223 | A per-line FOMOD pre-selected the SE/AE DLL on every game - 1.7.104 players got "failed to open address library file" (Infinity UI 2.1.2, 2026-10-22) | cpp, scaleform, skyrim |
+| 12228 | LIO reported lock-breaking as a theft (StealAlarm) - guards shouted "Stop right there" but no bounty or arrest followed (Lock Interaction Overhaul 1.0.6, 2026-10-22) | python |
+| 12233 | A standalone pre-finalize check before finalize-mod blocked the finalize on gate C (AMF 2.2.3, 2026-10-22) | process, powershell, python |
+| 12248 | A sanitiser that names what it removes is itself the leak (Pipeline Kit, 2026-10-22) | git, process, python |
+| 12256 | Editing the repo CHANGELOG between packaging and finalize made finalize refuse (Lock Interaction Overhaul 1.1.0, 2026-10-22) | packaging, process |
+| 12264 | A lock answers "is it free?", not "may you launch?" - five agents each launched their own run (rule 69, 2026-10-23) | process, testing, mo2 |
+| 12272 | A gate saw a file hidden in MO2 (.mohidden) as "never installed" (Norden UI - Black 1.1.0, 2026-10-23) | process, mo2, cpp |
+| 12280 | A new Nexus page's first file can't go through nexus-upload.py or a browser upload over 10 MB (New Game in Third Person, 2026-10-23) | python, process |
+| 12289 | An MO2 Python plugin passed under python.exe and failed in MO2: ModOrganizer.exe is not long-path aware (Modlist Manager 1.1.5, 2026-10-23) | python, mo2, packaging |
+| 12305 | "Every page works but HPM's" under TW3SE: a loader guess stood for a week while a run's own logs already ruled it out (HUD Position Manager W3, 2026-10-23) | ui, logging, settings |
+| 12323 | A derived FOMOD kept "only recoloured files" and silently dropped the settings file that pairs with the art (Norden UI - Black 1.0.4-1.1.0, 2026-10-23) | settings, python, packaging |
+| 12337 | Shipping a mod's settings file to restore the source's values also overrides the PLAYER's own settings underneath (Norden UI - Black 1.1.1, 2026-10-23) | settings, mo2, testing |
+| 12352 | TestBench input in SkyUI lists and "mod off" tests in Njordlinger (batch B-20261023-192904, 2026-10-23) | process, skyrim, testing |
+| 12365 | Listed to-do items as "not worked on" from their HEADINGS while the bodies said done (Main Agent, 2026-10-23) | - |
+| 12378 | combined-run finish: crashes on a surrogate after restoring, and does not undo test-build installs (batch B-20261023-201147, 2026-10-23) | crash, process, mo2 |
+| 12391 | Probing a settings mod through its own control op wrote the owner's third-party files (UVC 1.2.0, 2026-10-23) | settings |
+| 12402 | Staged test profiles fail the order audit without loadorder.txt and every plugin of their enabled mods (2026-10-23) | mo2, crash, scaleform |
+| 12415 | Closing the map with TestBench "menu close" during SkyUI's finder search leaks a text-entry count (batch B-20261023-205401, 2026-10-23) | ui, testing |
+| 12429 | A test teleported with `cow Tamriel 5 -3` into Whiterun's Tamriel stand-in, and the frame looked like broken terrain (batch B-20261023-220257, 2026-10-23) | skyrim |
+| 12442 | Matching an owner's screenshot framing in game: camera, vanity, placement and horse traps (batch B-20261023-233541, 2026-10-24) | skyrim, testing |
+| 12458 | Running PGPatcher with an override mod enabled feeds the override's meshes back in as PGPatcher's input (2026-10-24) | skyrim, build, mo2 |
+| 12473 | Two sessions staging in the same .MD index: one commit swept up the other's staged files (2026-10-24) | git, powershell, python |
+| 12485 | combined-run result refused a short request id that start --only had accepted, and finish then wrote NOT-RUN over a real pass (batch B-20261024-004955-caa9, 2026-10-24) | logging |
+| 12497 | A text-position edit to gate-rules.json put a note into another row's id and switched the whole package gate off (2026-10-24) | process, packaging, git |
+| 12511 | Input Manager action ids are positions that go stale - a UVC bind renumbered every action (batch B-20261024-010711, 2026-10-24) | - |
+| 12523 | Tool and test-harness gotchas from the 2026-10-24 backlog run | settings, ui, mo2 |
+| 12538 | Modlist Manager judged a master "missing" by mod folders only, and the judgement cascaded down every dependent (1.1.5, 2026-10-24) | mo2, python, settings |
+| 12555 | Teleporting the test character by coordinates/drop killed it with falling damage - use coc (the owner, 2026-10-24) | skyrim |
+| 12567 | Searching swap files by the new plant's name missed City Trees' BOS swaps: NotWL renames vanilla tree editor ids (2026-10-24) | settings, skyrim, logging |
+| 12582 | A PBR base colour shipped under a non-PBR texture name rendered paper white, and noon test frames could not see it - they clip at 218 (All Snow Ground Match, 2026-10-24) | python |
+| 12602 | Nexus's description save strips the line break after [/quote] when the next line starts a tag - a raw SHA check fails (2026-10-24) | testing, ui |
+| 12615 | A Nexus reply drafted from a summary of the comment asked the commenter what they had already said (2026-10-24) | process, settings |
+| 12629 | A test that runs git, started from a pre-commit hook, inherited GIT_INDEX_FILE and read the repo being committed (2026-10-24) | git, cpp, python |
+| 12642 | A test's own SendInput presses made MO2 Agent Control report the PC "in use" (2026-10-24) | mo2 |
+| 12653 | The request named a version the profile did not have active (2026-10-24) | mo2, ui |
+| 12663 | Helgen tone ratios moved with weather state and box choice (2026-10-24) | - |
+| 12674 | AMF in-process capture black for a whole launch; what reaches Atelier's ImGui popup (2026-10-24) | testing |
+| 12686 | Two release-gate false results: a folder plugin could never pass rule 29, and a "<version>" placeholder read as an MIT label (MO2 Agent Control, 2026-10-25) | process, licensing, python |
+| 12699 | New Nexus page: the browser Files step attached the zip but never uploaded; the generated description duplicated Credit/Support/Source (Deep Snow, 2026-10-25) | python, crash |
+| 12713 | "Recorded working" was taken as "ready to finalize": three of six finalizes refused on stale packages and unfixed rules (release batch, 2026-10-25) | packaging, process, ui |
+| 12729 | Nexus informal warning: our pages disclosed AI code but not AI page media (2026-10-25) | process, python, ui |
+| 12746 | Finalize text step and build tools wipe or bump before the gate decides (2026-10-25) | process, packaging, python |
+| 12757 | Test-design lessons from combined run 2026-10-25 (presets, DEM typed entry, MO2 stand-in program) | testing, ui, mo2 |
+| 12774 | Hand-built parent CELL / WRLD overrides blanked the master's data (Ysgramor's Armor addon 1.0.1, Souls to Perks 1.0.6, 2026-10-25) | packaging, powershell, process |
+| 12791 | Wrapped text followed the content width once AMF's page got a horizontal scroll bar (AMF 2.3.0, 2026-10-25) | - |
+| 12802 | Naked Vigilants of Stendarr: a SkyPatcher outfit mod built for the ESL file of its master, installed beside the ESP file (Njordlinger, 2026-10-25) | skyrim, logging, process |
+| 12818 | No '= NULL' default is not 'ImGui dereferences it', and a parameter's name is not its contract (AMF 2.3.0 cimgui null checks, 2026-10-25) | settings, cpp, crash |
+| 12834 | An empty-string stand-in for a null pointer is not always safe (AMF 2.3.0 cimgui null checks, 2026-10-25) | cpp, settings |
+| 12849 | The null-check audit's memory floor stalls while the game runs (AMF null-check gate, 2026-10-25) | process, skyrim, packaging |
+| 12860 | "No snow in Riverwood": two saves named Save3, and Seasons keeps a season per save (Njordlinger, 2026-10-25) | testing, skyrim, settings |
+| 12875 | libclang positions are byte offsets - cutting decoded text at them hid every later `else` (AMF null-check audit, 2026-10-25) | python, process |
+| 12891 | A null guard on a job that holds a busy flag or a queue slot must end the job, not just return (AMF 2.3.0 null checks, 2026-10-25) | process, cpp, logging |
+| 12906 | Helgen "paper-white / grey snow" was a landscape layer, not the meshes we retoned twice (Njordlinger, 2026-10-25) | build, settings |
+| 12923 | A crash log's source line names the call, not the fault - and null checks never cover the engine's own reads (AMF 2.2.3 Discover crash, 2026-10-25) | crash, skyrim, logging |
+| 12943 | A slider held active steps at ImGui's nav-tweak rate (~54/s), not the key-repeat rate (AMF 2.3.0 one-way sliders, 2026-10-25) | crash, scaleform, skyrim |
+| 12957 | An ESL-flagged Nexus file can be invalid on SE 1.5.97 (Immersive Gathering, 2026-10-25) | skyrim, ui, settings |
+| 12968 | Two helpers of one session shared the MO2 instance lock (2026-10-25) | mo2, process |
+| 12979 | Scaleform calls queued through SKSE AddTask raced the HUD movie on another thread (Dragon's Eye Minimap 1.7.5, 2026-10-25) | ui, scaleform, crash |
+| 12994 | A UI task that re-queues itself runs every pass in the same frame (Hjerim Start 1.0.3, 2026-10-25) | process, skyrim, scaleform |
+| 13005 | Wrapping SetFormEditorID never captured LTEX/TXST/STAT editor IDs on SE 1.5.97 (Deep Snow 1.1.0, 2026-10-25) | logging, testing |
+| 13018 | A test save made with a behaviour mod ticked crashed every load once that mod was unticked (Njordlinger Test, 2026-10-25) | testing, crash, cpp |
+| 13033 | A merge that kept records but dropped the group tree broke a plugin, and the launch gate never looked at it (Civil War Guard Armor Replacer, 2026-10-25) | skyrim, process, python |
+| 13041 | A patch that gated every perk entry still left the chopping block opening another mod's menu (ChoppingBlockToIG, 2026-10-26) | settings, process, ui |
+| 13049 | SPID conversion: faction filters lost other mods' guards, and NPC filters spread through templates (Civil War Guard Armor Replacer 2.0.0, 2026-10-26) | skyrim, python, settings |
+| 13057 | combined-run keep on a folder did not protect a folder snapshotted with backup --dir (batch d1f8/721d, 2026-10-26) | skyrim |
+| 13065 | A "missed" road stretch was a vanilla road mesh brought back by a later plugin, and Seasons repaints every non-winter landscape texture (Njordlinger roads / no snow under roofs, 2026-10-26) | settings, skyrim |
+| 13073 | CommonLib API differences between build lines, and tooling blind spots, found building Njordlinger 1.0 (2026-10-26) | packaging, python, cpp |
+| 13081 | install-test-build kept shipped framework data INIs as "player settings", so changed KID/SkyPatcher data never reached the game (Njordlinger CGO, 2026-10-26) | settings, packaging |
+| 13089 | SPID never gave our gear perks to the player on an existing save, though its log showed every NPC getting them (Njordlinger CGO phase 3, 2026-10-26) | logging, testing, cpp |
+| 13097 | A sprint-cost effect did nothing because Paragon zeroes the game's sprint-drain setting and drains with its own spells (Njordlinger CGO, 2026-10-26) | settings, logging, skyrim |
+| 13105 | Every compiled Papyrus script we shipped carried this machine's Windows account and computer name in its .pex header (found 2026-10-26) | process, skyrim, packaging |
+| 13113 | Offline Mutagen staging without the Strings BSA made every localized vanilla text read empty (Stormcrown Forward, 2026-10-26) | git, skyrim |
+| 13121 | install-test-build left files the new package no longer ships, so an old loot INI kept stones in boss chests (Njordlinger CGO, 2026-10-26) | packaging, settings, mo2 |
+| 13129 | Backticks inside a double-quoted `python -c "..."` string were run by the shell, so the written text lost its file names (plan edits, 2026-10-26) | python, process |
+| 13140 | A combined-run result with quoted notes was split by PowerShell 5.1, failed unseen, and finish recorded NOT RUN (batch B-20261027-000506-8eac, 2026-10-27) | powershell |
+| 13149 | An esp/bsa-only MCM Helper did not reproduce a "script type without the function" crash (AMF 1.7.104 report, 2026-10-27) | crash, skyrim, testing |
+| 13157 | Python text-mode edit of modlist.txt wrote mixed newlines (AMF repro, 2026-10-27) | mo2, git, python |
+| 13165 | A game launched behind MO2 hung at frame 0 and nothing could close it cleanly (AMF repro, 2026-10-27) | mo2, testing, crash |
+| 13173 | Test teleports dropped the player into the void (combined run eacb, 2026-10-27) | skyrim |
+| 13181 | The owner-presence gate never saw the owner's Steam Controller (2026-10-27) | process |
+| 13189 | Posted versions of our mods sat unticked in the Test profile while older ones stayed active (found 2026-10-27) | mo2, process |
+| 13197 | A helper repackaged AMF 2.3.1 with a different fix while 2.3.1 was mid-test (2026-10-27) | packaging, cpp, process |
+| 13205 | A see-through floor you can walk over was a reverted room marker, not a missing floor (Blue Palace, 2026-10-27) | mo2, process, skyrim |
+| 13213 | Turning a town mod off: generated landscape patchers and PGPatcher output keep its traces (GCoS off, 2026-10-27) | mo2, skyrim |
+| 13221 | A beam-dimming patch that edited only the lighting mod's own records left bright beams (Lux Dim Beams, 2026-10-27) | - |
+| 13229 | First public release of a private fork hit four knowable stops (RaceMenu Atelier 1.0.1, 2026-10-27) | process, cpp, licensing |
+| 13237 | Items 'sent to the Recycle Bin' were purged within minutes by Storage Sense (disk cleanup, 2026-10-27) | build, cpp |
+| 13245 | Cyrillic showed as ????? in RaceMenu Atelier: the framework's font, plus lossy path conversion (2026-10-27) | ui, settings, build |
+| 13253 | AAOS blanked slots in the game's sound hash table and broke its chains (Bluetooth-at-startup CTD, 2026-10-27) | crash, cpp, skyrim |
+| 13261 | Two generated landscape patchers fed each other and left 3-4 m seams (Katla's Farm, 2026-10-27) | skyrim, build, python |
+| 13269 | A release-link label with words before its version passed the label gate, and the sync never relabelled it (RaceMenu Atelier 1.1.0, 2026-10-28) | process, ui, versioning |
+| 13277 | package-mod.ps1 packaged AMF as a flat folder without the SMF name stub; AMF's packager is tools/build-fomod.py, whose default output is the wrong folder (AMF 2.3.1 search focus, 2026-10-28) | packaging, python, process |
+| 13285 | A helper's navigate reused the owner's open Nexus edit tab and lost it (2026-10-28) | process, testing, settings |
+| 13293 | Unbind Vanilla Controls' Controls page broke on the plain SkyUI journal (Atttomsk, 2026-10-28) | scaleform, cpp, process |
+| 13302 | A "settled" check counted quiet frames, so it closed mid-animation at a high frame rate - and one test profile hid it (Dragon's Eye Minimap 1.8.1, 2026-11-01) | mo2, ui, scaleform |
+| 13310 | A profile tick written before the mod folder exists is dropped by MO2 - the game then runs without the mod, and the failure looks like a tool error (Dragon's Eye Minimap 1.8.1 test, 2026-11-01) | mo2, testing, ui |
+| 13319 | Researched how to build a render feature without first searching for mods that already do it (Depth First Culling, 2026-11-01) | process |
+| 13328 | PGPatcher waits at a "Generation Complete" window after an --autostart run, so a script waiting for it to exit waits for nothing (unified run, 2026-11-01) | mo2, logging |
+| 13336 | Installed a mod without checking the list already had it, then told the owner it was out (Texture Downscaler, 2026-11-01) | mo2, cpp, logging |
+| 13344 | Copied a winter sibling's total stats into SkyPatcher rules, and the race's starting values were added on top (Winter Animals, 2026-11-02) | testing |
+| 13352 | Reading test state from fields that only update on a press (combined run, 2026-11-02) | settings, devbench |
+| 13360 | A sheet that looked right on the game's own journal crashed on the first remap (UVC 1.2.0, 2026-11-02) | crash |
+| 13368 | Test harness traps from the 2026-11-02 batch: hard requirements, meta.ini, hold 6 | mo2, settings, testing |
+| 13376 | A sheet intercepting input only knew one journal's name for Accept (UVC 1.2.0, 2026-11-02) | crash, ui |
+| 13384 | Test run traps: INI sections, a connected pad, Steam F12 during a key capture (2026-11-02) | settings, mo2, testing |
+| 13392 | A log line and a flag read as proof that a corpse was placed (Ysgramor addon 1.0.2, 2026-11-02) | logging, skyrim |
+| 13400 | Rolling a mod back to its Nexus build brought its bundled DLL back, and the launch gate hid why it refused (2026-11-02) | testing, cpp, mo2 |
+| 13408 | Tomb steps went into combined runs against the owner's standing instruction (2026-11-02) | process |
+| 13416 | build.ps1 -OutRoot given a Git Bash path made an empty D:\d (2026-11-02) | powershell, git |
+| 13424 | A patch disabled the "duplicate" College bridge and the whole bridge vanished (Winterhold patch, 2026-11-02) | mo2, testing |
+| 13432 | A Morthal teleport crash was a placed object with no base, from a patch built for another Fortified Morthal (2026-11-02) | crash, skyrim, logging |
+| 13440 | A land texture change was aimed at the record while Seasons decided the picture (green ground, 2026-11-02) | settings |
+| 13448 | An observe-only tool hook reused by player widgets let a keybind press also walk the menu's tabs (AMF 2.4.0, 2026-11-04) | cpp, settings, devbench |
+| 13456 | A MODT copied across form 40 crashed at load: flat hashes below it, a header from it on (Campfire Camp Addon, 2026-11-04) | skyrim, crash, process |
+| 13466 | Finalize still refuses a patch number of 10 or more after semantic versioning retired the roll-over (release batch, 2026-11-05) | process, cpp, versioning |
+| 13474 | A "dry run" of a permanent action really did it: `Clear-RecycleBin -Force -WhatIf` emptied D's Recycle Bin (phone recycle bin page, 2026-11-05) | powershell, packaging |
+| 13482 | Told the owner a tool "is already on your PC and phone" without checking, then gave advice that could have removed his saves (OneDrive, 2026-11-05) | settings |
+| 13490 | A straight-edged flooded block on a rendered map was the renderer drawing each water shape as its bounding box (World Map Render, 2026-11-05) | python |
+| 13498 | Staged fixes sat uninstalled while the owner judged old pictures (World Map Render, 2026-11-05) | testing, process |
+| 13506 | A compositor's denoise broke on the largest pictures only, and a colour-mask smoothing wrecked a picture (World Map Render, 2026-11-05) | python |
+| 13514 | An order to build a fix arrived after the fix had already shipped (AMF, 2026-11-05) | git, process, powershell |
+| 13522 | An install reported "equal" for a package that did not exist (install-test-build, 2026-11-06) | packaging, python |
+| 13530 | A new Nexus page's header image silently didn't save (Nexus media step, 2026-11-06) | testing |
+| 13538 | A gate passed only after a file's timestamp was set back by hand (release gates, 2026-11-06) | process, build, cpp |
+| 13546 | A config keyed by DynDOLOD.esm FormIDs went dead after a regeneration (Fires Hurt RE, 2026-11-06) | skyrim, python, testing |
+| 13554 | A guessed-argument call into RaceMenu's CharGen object crashed the game (Mirrorwright run 15, 2026-11-06) | crash, testing, devbench |
+| 13562 | A new package shipped the previous version inside its FOMOD installer (QuickLoot Container Merge 1.1.0, UVC 1.5.0, 2026-11-07) | packaging, process, powershell |
+| 13570 | A "$key" message UVC sent to the Controls page showed its "$" although the key was in UVC's own translation file (UVC 1.5.0, batch B-20261107-000625-368b, 2026-11-07) | cpp, python, scaleform |
+| 13578 | DLL mods shipped without a Skyrim 1.7.x build - fourteen of them, five with a Line-17 preset nobody ever built (Line-17 ports, 2026-11-07) | packaging, cpp, process |
+| 13587 | A wider search for "who answers" let players into houses nobody was home in (Dynamic Simple Knock 1.0.0, found 2026-11-07) | - |
+| 13595 | A camera "that doesn't follow" was a camera that never turned (Hit Detection Meter yaw test, 2026-11-07) | build, process |
+| 13603 | A late default change left the FOMOD description and CHANGELOG saying the old value (Hit Detection Meter, 2026-11-07) | settings, git, packaging |
+| 13611 | An annotation comment appended to a line turned the code after it into comment text (AMF 2.3.0-2.4.0, 2026-11-07) | crash, process, settings |
+| 13619 | An AE DLL that lists its runtimes is refused on any runtime not in the list, even with every address from Address Library (World Map Selector for Controller 1.2.0, GOG 1.6.1179, 2026-11-08) | cpp, process, skyrim |
+| 13627 | A hook on an input handler's vtable slot is dead on Skyrim 1.7 because the header's index is the pre-1.7 one (Walk or Run for Controller 1.2.0, 2026-11-08) | cpp, process |
+| 13635 | A PGPatcher run for the Test profile sat on a hidden "Critical Error" box, and its wrapper switched the shared output back on (Wildfire removal, 2026-11-08) | mo2, logging, powershell |
+| 13644 | A version bump rebuilt CommonLibSSE outside the build environment, and the linker's long-lived mspdbsrv kept the user TEMP in the PDBs (AMF 2.4.2, 2026-11-08) | build, cpp, versioning |
+| 13653 | A static ship's deck held the player but he walked out through the bow, the stern and one side - the collision had open ends and the game meets a MOPP triangle from its front only (Longship 0.1.0, 2026-11-09) | process, python, testing |
+| 13662 | A boat-seat signal read from another mod's source did not hold in game - the player's collision flag stayed on (UVC 1.6.0 Boat context, 2026-11-09) | testing, build, devbench |
+| 13670 | One added collision box in a script-built ship crashed the game on loading the cell, with no Crash Logger file (Longship 0.2.0, 2026-11-09) | crash, skyrim, logging |
+| 13678 | TexGen's and DynDOLOD's end-of-run choice dialogs ignore BM_CLICK; UI Automation Invoke works, and a PGPatcher-wrapper lock outlived MO2 again (PGLite install, 2026-11-09) | mo2, testing, powershell |
+| 13688 | A full package install replaced newer hand-made data in the test folder with the package's older copies (World Map Render, 2026-11-09) | packaging, cpp, process |
+| 13697 | An AP menu injection took Alternate Perspective's built-in None/Random cards for a loaded menu and drew a dead card twice (AP Home Start - Winter Cove 1.0.0, Nexus report, 2026-11-09) | ui, scaleform, cpp |
+| 13706 | Finishing a stale combined run restores the profile from the batch-start backup and wipes every change made since (combined-run, 2026-11-10) | mo2, git, testing |
+| 13715 | Copying PGPatcher's metal TruePBR block onto a new mesh without a fuzz map gives a wrong material (nif, 2026-11-10) | packaging, process, python |
+| 13724 | "Followed the owner's drawn outline" while the result did not match it (weapon modelling, 2026-11-10) | - |
+| 13733 | A plate built in rows silently loses material where its outline rises again (Blender weapon builds, 2026-11-10) | - |
+| 13742 | A vague visual complaint was answered with a rule instead of a question - "wider on one side" became a symmetry fix that reshaped the wrong part (weapon modelling, 2026-11-10) | mo2 |
+| 13751 | A flat steel end face mirrored the render's warm backdrop and read as a brown wooden block in the side view (weapon renders, 2026-11-10) | - |
+| 13760 | Fixing one part by "taking the old version's lines" also brought back a line the owner had already redrawn (warhammer v2c, 2026-11-10) | mo2 |
+| 13769 | One px-per-unit value for a mixed-density atlas halved the normal strength on the parts painted denser (Truly Nordic weapons, 2026-11-10) | - |
+| 13778 | The shared tube builder sizes a part's texture slot from the round shaft, so a wider square core overlaps its neighbours' UVs (Truly Nordic weapons, 2026-11-10) | process |
+| 13787 | A flanged mace head drawn with a smooth superellipse profile read as an egg or a cage, not a mace (weapon modelling, 2026-11-10) | mo2 |
+| 13796 | The owner's "fill to here" outline was built as a "trim to here" limit, and his position-marker triangles were built as real triangles (Nordic shield v2, 2026-11-10) | - |
+| 13805 | Packaging the Truly Nordic set: five quiet traps between Blender and the game (nif/packaging, 2026-11-10) | packaging, skyrim, mo2 |
+| 13819 | Chaining after another mod's 6-byte call hook used the trampoline's pointer-slot address as the function (UVC 1.6.0, 2026-11-10) | cpp, crash, skyrim |
+| 13828 | A shield looked solid in every review render but was see-through from behind in game - design renders draw both sides of every face (Truly Nordic shield, 2026-11-11) | testing, mo2, process |
+| 13837 | A skinned mesh given a rigid weapon's shader block draws nothing (Truly Nordic bow, visual-design, nif, 2026-11-11) | python |
+| 13845 | A hook on the object's own Activate misses presses a perk takes first (Dynamic Simple Knock vs ESO Lockpick Menu, cpp, skyrim, 2026-11-11) | cpp, settings, ui |
+| 13853 | Nexus v3 refuses a single-part upload over 100 MiB; the multipart endpoint is /uploads/multipart (Truly Nordic first file, nexus, upload, 2026-11-11) | python |
+| 13862 | A repo with both dist\ and data\: the packager ignores data\ and ships the previous release's copies (TK Dodge AIO 1.1.0, release, packaging, 2026-11-11) | packaging, settings, powershell |
+| 13870 | A rename that only changed the code left the old name in the behaviour patch Pandora shows (Simple Dodge 1.1.0, release, packaging, 2026-11-11) | packaging, settings, logging |
+| 13878 | A roll's "head stays off the floor" check passed while the crown could still hit - the head bone sits at the base of the skull (Simple Dodge rolls, animation, 2026-11-11) | python |
+| 13888 | Open hands built as a small finger curl stayed curled - the vanilla rest pose is already half-closed (Simple Dodge unarmed, animation, 2026-11-11) | - |
+| 13898 | A replacement that inserted text with CRLF into an LF file hid whole lines behind bare carriage returns (build_stepdodge.py, animation tooling, 2026-11-11) | git, powershell, python |
+| 13908 | A package silently dropped files that share a NAME with another file in it - the packager's FOMOD by-name skip ran on a plain package (Simple Dodge 1.1.0, packaging, animation, 2026-11-11) | packaging, powershell, git |
+| 13918 | Pandora's run-and-close mode built none of a new patch - --auto_run reuses the saved selection, where a new or once-unticked code stays OFF (Simple Dodge, BFCO, MCO, launch, 2026-11-11) | process, testing, python |
+| 13928 | The installer put its backup INSIDE the mod folder - a full-path mod argument made os.path.join drop the backup root (install-test-build, Simple Dodge 1.1.0, 2026-11-11) | mo2, python |
+| 13938 | A build script wrote its package outside the pipeline - its OutRoot default pointed at an old folder (Ysgramor's Armor addon 1.1.0, build, 2026-11-11) | process, packaging, powershell |
+| 13948 | A Blender top-down render came out as flat background - the ortho camera's default clip_end (100 units) cut the whole scene (Simple Dodge showcase GIFs, blender, 2026-11-11) | settings, python |
+| 13958 | A PowerShell script used $p and $P (and $b and $B) as two variables - PowerShell names are case-insensitive, so one overwrote the other (combined-run launch scripting, 2026-11-11) | powershell, mo2, python |
+| 13968 | A reshaped weapon face broke the old build and engraving - a double crescent needs a slanted seam, a new split, and a weave field (Truly Nordic battle axe v10, visual design, 2026-11-11) | - |
+| 13978 | A point the owner drew beside an existing point meant MOVE it there, not ADD a second one (Truly Nordic battle axe v10 -> v11, visual design, 2026-11-11) | - |
+| 13988 | A sheath offset from the blade's outline can't be drawn - it must hold the blade's whole draw path (Truly Nordic sheaths v1, visual design, 2026-11-11) | settings |
+| 13998 | Two rebuilds came from tracing the owner's drawing by eye off a chat image - get it on disk and trace its pixels (Truly Nordic battle axe v10/v11 -> v12, visual design, 2026-11-11) | build, testing |
+| 14008 | A narrow face dropped the owner's symbol because it inherited a wider face's layout; and open tubes came out wound inside-out (Truly Nordic sheaths v2 / straight sword, visual design, 2026-11-11) | process |
+| 14018 | The sheath tips got a braid border with nothing inside it to go around - against the owner's braid rule (Truly Nordic sheaths v1-v4, visual design, 2026-11-11) | - |
+| 14028 | A model mod's installer named its alternate models in words only - the player could not see what he was choosing (Truly Nordic 1.0.0 -> 1.1.0, packaging, 2026-11-11) | process, python |
+| 14038 | A reshaped part clipped through its neighbour - and the original had clipped too, hidden inside the ferrule (Truly Nordic saber A5g -> A5h, visual design, 2026-11-11) | - |
+| 14048 | Two approved weapons broke the owner's braid rule and nothing caught it - the engraving checks measured margins, not layout (Truly Nordic battleaxe v12 and war axe v3, visual design, 2026-11-11) | process, python |
+| 14058 | A swept part folded through itself where it bent tighter than it was wide - the owner saw it as a crack (Truly Nordic saber pommel A5h -> A5i, visual design, 2026-11-12) | cpp |
+| 14068 | Finishing a stale combined-run batch rolled the test profile back nine hours, undoing the owner's decisions (Main session, combined-run, 2026-11-12) | mo2, git, testing |
+| 14078 | A release with several main files had no pipeline path - every release tool assumed one archive (Truly Nordic 1.1.0, release, 2026-11-12) | process, packaging, python |
+| 14088 | A Nexus image posted with an empty description, after a title the form refused (nexus-media, 2026-11-12) | settings |
+| 14096 | Building from the owner's markup without recovering the camera it was drawn on (weapon-engraving, 2026-11-12) | - |
+| 14104 | A "scratch" copy of Pandora rebuilt the live modlist's behaviour output (pandora, behaviour, sandbox, 2026-11-12) | mo2, settings, logging |
+| 14112 | "Tested with Pandora" said nothing about Nemesis: an empty info.ini field crashed Nemesis at start (nemesis, pandora, behaviour, 2026-11-12) | settings, crash, packaging |
+| 14120 | A tap detector built from "down" events fired on a held key (input, skse, 2026-11-12) | cpp, skyrim |
+| 14128 | Packaging keyed files by NAME in an animation patch, dropping a node file (packaging, behaviour, 2026-11-12) | packaging, powershell, process |
+| 14136 | A translation check that compares languages to English misses a key missing from English too (translations, 2026-11-12) | settings, process, python |
+| 14145 | A sticky was edited on the wrong mod page because the script ran before the navigation finished (nexus-media, browser, 2026-11-12) | process |
+| 14153 | The same full-package install reverted the hand-smoothed world maps a second time, a day after it was caught and logged (World Map Render, 2026-11-10, found 2026-11-12) | packaging, python, cpp |
+| 14163 | A "first look" built from a re-texture and from block-outs was rejected as low effort (visual design, engraving, 2026-11-12) | - |
+| 14171 | A Sketchfab reupload reported as "uploaded and processing" was never live - it waited for an approval click (Truly Nordic 1.1.0, 2026-11-12) | - |
+| 14179 | A scripted text insert doubled the whole to-do list because str.find returned -1 (to-do list edit, 2026-11-12) | python |
+| 14187 | A reply draft claimed eight first-person dodges because the eight event names were in the first-person graph (Simple Dodge reply, 2026-11-12) | - |
+| 14195 | Copying the game's state writes is not enough - the game refreshes the HUD after its setter, not inside it (Sprint or Sneak for Controller 1.1.0, 2026-11-12) | ui, cpp, crash |
+| 14211 | A "DevBench" folder name does not make code test-only, and a bound on a read value does not protect the pointer read (Perfected Wheeler 1.7.0, 2026-11-12) | process, crash, devbench |
+| 14229 | A texture check that matched an old path prefix passed while checking nothing (Truly Nordic verify.py / build-packages.py, 2026-11-12) | python, packaging, git |
+| 14241 | A measuring script given "--nif NAME" silently measured the first NIF in the folder (surface_profile_measure.py, 2026-11-12) | mo2, python, settings |
+| 14250 | KID creates an unresolved keyword EditorID instead of skipping the line (Truly Nordic spear KID ini, 2026-11-12) | logging, settings |
+| 14261 | Re-running an old painter on today's libraries changed pixels outside the face being repainted (Truly Nordic ring pass, 2026-11-12) | crash, git |
+| 14272 | "Our code never calls it" came from a grep that skipped the headers (Simple Dodge, Perk Entry Point Extender report, 2026-11-12) | cpp, logging |
+| 14286 | Behaviour nodes copied to another graph carry that graph's hard-coded event and variable numbers (Simple Dodge 1.2.0 sheathed dodge, 2026-11-12) | cpp, python, settings |
+| 14304 | The packager copied only fomod/info.xml, so a new installer choice never reached the package (Simple Dodge 1.2.0, 2026-11-12) | packaging, process, powershell |
+| 14317 | An IK knee aim set in the foot's frame follows a turned-out foot outward (Simple Dodge step rework, 2026-11-12) | - |
+| 14330 | A low-priority OAR weapon set loses to any combat overhaul replacing the same clip names (Simple Dodge 1.2.0 bow, 2026-11-12) | mo2, cpp, logging |
+| 14345 | Shading patches on a large face came from base-colour grime sized to the atlas, not from normals (Truly Nordic shields, 2026-11-12) | process |
+| 14361 | A batch's profile restore put the old mod back but left Pandora's output built for the new one (combined runs, 2026-11-12) | process, mo2, testing |
+| 14380 | A two-handed grip solved at the hand bone left the palm 14 units off the shaft (Simple Dodge polearm sets, 2026-11-12) | python |
+| 14394 | Pandora dropped a patch's new nodes over one invalid enum value, still listed the mod as built, and the save crashed (Simple Dodge 1.2.0 chain patch, 2026-11-12) | git, logging, mo2 |
+| 14412 | Amendment: a fresh Pandora output did not bring back the player's sitting, so stale output was not the whole cause (combined runs, 2026-11-12) | mo2, skyrim, testing |
+| 14428 | "The player never sits" was a sit that started and ended inside the poll interval (combined runs, 2026-11-12) | skyrim, ui |
+| 14444 | The player's furniture exit came from code, not from an animation replacer - the graph-event log settled it in one run (combined runs, 2026-11-12) | logging, cpp, skyrim |
+| 14462 | A trace's "culprit" was the outermost hook on the player's update, not the code that stood the player up (combined runs, 2026-11-13) | cpp, testing, skyrim |
+| 14485 | The player's furniture stand-up was our own test tool: TestBench.esp gives the player an AI package from game start (combined runs, 2026-11-13) | packaging, skyrim, testing |
+| 14515 | A Sketchfab reupload kept the 1.0.0 materials by name - ten pieces showed old textures on new UVs, "defaced" and blurry (Truly Nordic 1.2.0, sketchfab, nexus-media, 2026-11-13) | settings, python, testing |
+| 14540 | A proof that applied the same rotation as the export could not catch the export's wrong rotation (Truly Nordic Sketchfab GLB, quiver, 2026-11-13) | python, settings |
+| 14555 | TestBench advanceTime ran the game clock backwards, so time-based checks after a jump were invalid (Knock 1.3.2 test, 2026-11-13) | crash, mo2, scaleform |
+| 14571 | A packaging gate started Pandora's window over the owner's game (pandora-patch-builds gate, 2026-11-13) | process, packaging |
+| 14585 | A sheath designed and approved off the body was buried in the owner's armour at the hip - nothing measured it on a body (Truly Nordic saber C2 / straight sheath v3, 2026-11-13) | python |
+| 14606 | A mod DLL flagged as malware right after a compiler update, with no code change behind it (Simple Dodge 1.2.0 / Knock 1.3.2 quarantined on Nexus, 2026-11-13) | cpp, build, process |
+| 14615 | A sed replacement holding a Windows path split the line and also hit an older line (Truly Nordic notes.txt, 2026-11-13) | git, python |
+| 14623 | Nexus media editor: the gallery order is not set through media/save, and the Sketchfab properties page locks on a set file input (2026-11-13) | testing, settings, ui |
+| 14632 | A test install that "read back equal to the package" laid the files out in the package's option folders (Nordic Ebony Armor and Weapons Replacer 1.1.0, 2026-11-14) | packaging, testing |
+| 14641 | A part that rendered fine in Blender came out flat black in game (Ebony Wolf warhammer face, 2026-11-14) | python, testing, process |
+| 14649 | Light came through a bow every render drew solid - pieces that did not meet and open shells, invisible to a two-sided render and to a winding vote (Ebony Wolf bow and arrow, nif, blender, 2026-11-14) | process, python, testing |
+| 14657 | A UV and tangent gate that passed the bow because it never read it - a skinned shape keeps its vertices in the skin partition (Ebony Wolf bow r02, nif, 2026-11-14) | python, process, mo2 |
+| 14667 | A "is the player moving" check read the rider, not the horse, so a mounted feature broke (Walk or Run for Controller 1.2.1, 2026-11-14) | settings, git |
+| 14675 | Copying another framework's pause copied what it looked like, not how it was done (AMF 2.4.0, found 2026-11-14) | ui, skyrim, testing |
+| 14683 | Blind scripted mesh edits pick the wrong vertices and tear the model; a hole needs new faces, not dragged ones (Ysgramor cuirass, 2026-11-15) | process |
+| 14691 | A crash with no Crash Logger log was blamed on the mod under test; the Windows dump named another mod (Deep Snow 1.3.0, 2026-11-15) | crash, logging, cpp |
+| 14699 | An INI re-read at load changed the setting but not the value in force (Walk or Run for Controller 1.2.2, 2026-11-15) | settings, logging, ui |
+| 14707 | A Nexus description save does not move "Last updated" or the recently-updated list - only a file change does (Auto Draw pilot, 2026-11-15) | testing |
+| 14715 | A Controls-page binding row that nothing read (AMF on-screen keyboard, found 2026-11-15) | settings, cpp |
+| 14722 | The FOMOD package shipped an old INI because the repo kept its INI at dist's root (UVC 1.6.0, found 2026-11-15) | settings, packaging, skyrim |
+| 14730 | A mod's own INI in its MO2 folder can hold saved settings that User.ini does not show (AMF 2.4.2 test 9ce3, 2026-11-15) | settings, mo2 |
+| 14743 | A gate piped through `\| tail -1` reported OK while it FAILED (katana scabbard runner, 2026-11-15) | process, python |
+| 14755 | A quiver "kept all six arrows at 3 and 1" because the same ammo was re-equipped - the quiver only rebuilds on an ammo change (Nordic Skyforged 1.1.0 test c381, 2026-11-15) | build, devbench, testing |
+| 14763 | The package render died on a BodySlide NIF at a 263-character path - PyNifly cannot open past MAX_PATH (Nordic Skyforged 1.1.0 finalize, 2026-11-15) | packaging, python, git |
+| 14772 | Two asset mods reached "post it" with a NOTICE that checked only the main source's permissions - Xtudo's textures and the HIMBO files need their authors' permission (Nordic Ebony / Nordic Skyforged 1.1.0, 2026-11-15) | licensing, process |
+| 14781 | A FOMOD package whose core folder is not "Common" was installed raw - "00 Core" sat inside the MO2 mod folder, and in game the armour was invisible (Nordic Ebony / Nordic Skyforged 1.1.0 TruePBR test, 2026-11-15) | packaging, mo2, python |
+| 14789 | A FOMOD option that "replaces the cuirass" shipped its meshes on the vanilla path while the plugin pointed the worn armour at our own folder - the option changed only the ground model (Nordic Ebony 1.1.0, before posting, 2026-11-15) | git, python, settings |
+| 14796 | A recolour gain chosen from "the black look keeps ~0.5x" turned an already dark fur into a flat black silhouette - and the proof renderer drew every alpha-tested shape black anyway (Nordic Ebony / Skyforged 1.1.0 fur collar, 2026-11-15) | python |
+| 14803 | Armour equipped while TestBench's free camera is on does not redraw - it looks invisible (Ebony chainmail test, 2026-11-16) | build |
+| 14811 | nexus-upload's single-file path still did a single-part upload - a 119 MB first file was refused although multipart was already written (Nordic Ebony 1.1.0, nexus, upload, 2026-11-16) | python, packaging |
+| 14818 | Disabling and re-enabling a test NPC strips the armour equipped on it (in-game FPS test, 2026-11-16) | settings |
+| 14826 | Weather set with fw drifts back to the region default in Njordlinger (in-game FPS test, 2026-11-16) | settings, testing |
+| 14834 | A long unattended in-game run started while the permission classifier is failing can be stranded half-way (combined-run executor, 2026-11-16) | licensing, mo2, testing |
+| 14842 | With AI off (tai), SetPosition moves an actor's data but not its drawn model (in-game FPS test, 2026-11-16) | settings |
+| 14850 | FPS compared across launches is skewed by scene differences such as snow cover (in-game FPS test, 2026-11-16) | testing |
+| 14858 | Close-ups of leveled NPCs do not repeat between launches; use frozen ground models (in-game test, 2026-11-16) | testing |
+| 14866 | Right after an Alternate Perspective new game, start-up scripts re-dress the player (in-game test, 2026-11-16) | - |
+| 14874 | A parallax claim went onto banners before the effect was seen in game (3D armour banners, 2026-11-16) | ui, testing |
+| 14882 | A record copied from another mod's template carries that template's defects (Skyforged shield not shown on the back by IED, 2026-11-16) | skyrim, python, process |
+| 14890 | A record generator that copies subrecords but writes its own header drops the template's record flags (Skyforged shield not on the back with Simple Dual Sheath, 2026-11-16) | process, python, skyrim |
+| 14898 | A PreToolUse guard that matches tool names anywhere in a command blocks notes that only mention them (windowed-tool-while-game-guard, 2026-11-16) | testing, git, powershell |
+| 14906 | A FormID typed from memory equipped the wrong item (in-game test, 2026-11-16) | - |
+| 14914 | Papyrus DrawWeapon/SheatheWeapon on the player desyncs the weapon state (in-game test, 2026-11-16) | skyrim, settings |
+| 14922 | At the main menu, Down then Enter picks Continue, not New Game, when a save exists (in-game test, 2026-11-16) | ui, testing |
+| 14930 | A request queued after combined-run start is not in the batch and cannot be recorded (batch B-20261116-050228-04d1) | process |
+| 14939 | A two-download package failed repo-fomod-installer-ships - the gate looked for fomod\ at the version folder only, and the packager rewrote one installer's title (Truly Nordic Ebony / Skyforged 1.0.0, packaging, 2026-11-16) | packaging, process, python |
+| 14949 | After a mod rename, finalize leaves the old-named zip in the distro folder and the audit reads the old version (Truly Nordic 1.0.0, 2026-11-16) | packaging |
+| 14957 | A Nexus page that is not yet published fails nexus-upload's verify, so the number is not recorded posted (Truly Nordic 1.0.0, 2026-11-16) | process |
+| 14965 | A comment's sticky/lock calls on Nexus raise confirm() dialogs that block the browser (Truly Nordic 1.0.0, 2026-11-16) | settings |
+| 14973 | Importing a page script for its data re-ran every page build (nlysg-1.1.0 gen_pages.py, 2026-11-16) | python |
+| 14981 | Package renders started at posting time held a release for hours (Truly Nordic 1.0.0, 2026-11-16) | packaging, process, logging |
+| 14989 | A full build on a WIP branch replaced the release's test package in place (Truly Nordic Carved 1.4.0, 2026-11-16) | packaging, testing, git |
+| 14997 | Matching _0/_1 armour meshes came out with different vertex orders and triangles (own-armour exercise 1 bracers, 2026-11-16) | process |
+| 15005 | Equip changes didn't show while TestBench's free camera was on, and sleeves hid forearm armour (combined run B-20261116-163944-953a, 2026-11-16) | testing, settings, ui |
+| 15013 | A new page's first update would have posted its files as new files, not new versions (Truly Nordic Skyforged 1.0.1, 2026-11-16) | packaging, process |
+| 15021 | A dark notch on the greatsword's bevel was another part painted onto the blade's texels (Truly Nordic Carved, shipped since 2026-11-12, found 2026-11-16) | process, python |
+| 15029 | A test combination was refused because a generated patch masters our Standalone plugin; KID's log can't count one ini's items (combined run B-20261116-185706-77ad, 2026-11-16) | logging, settings, skyrim |
+| 15037 | The blade's hard seams came from the 1.1.0 shading-fix pass, not from unwelded vertices (mirror-finish study, Truly Nordic Carved, 2026-11-16) | git, python |
+| 15045 | UE4SS probes crashed Norse twice: hundreds of hooks at once, and ForEach over an array with null slots (Norse Phase 0, 2026-11-17) | cpp, crash, python |
+| 15053 | RE-UE4SS C++ mods need a private submodule; build against the installed UE4SS.dll instead (NorseRealtimeNative 0.1.0, 2026-11-17) | cpp, crash, git |
+| 15061 | A UObject pointer kept across frames crashed the game once the game rebuilt the object (NorseRealtimeNative 0.2.1, 2026-11-17) | crash, cpp, ui |
+| 15069 | The log said the projectile flew, the screen said it never moved: K2_TeleportTo refused every move (NorseRealtimeNative 0.5.x arrows, 2026-11-17) | logging |
+| 15077 | A reused game animation clip ran the game's own gameplay through its notifies (NorseRealtimeNative 0.5.x bow, 2026-11-17) | - |
+| 15085 | A movement test passed because the owner's stick was moving the hero, not because the feature worked (NORSE dodge root motion, 2026-11-17) | logging |
+| 15093 | A reflected UFunction call with a hand-sized parameter block fails silently (NORSE aim hold, 2026-11-17) | logging |
+| 15101 | A runtime post-process anim blueprint "does nothing" because the game disables the post-process stage (NORSE upper layer, 2026-11-17) | build |
+| 15109 | A test hero that keeps walking one way ends up off the walkable area, and the safety guard's stop looks like a feature bug (NORSE walk tests, 2026-11-17) | logging |
+| 15117 | A UE4SS C++ mod's callbacks registered in its constructor are dropped without any error (NorsePatcher 0.1.0, 2026-11-17) | logging, cpp |
+| 15125 | A deleted test file kept changing the game: Root Builder's clean-up was cut short by killing MO2 (NORSE, 2026-11-17) | mo2, testing |
+| 15133 | A setting edited in a Root Builder mod while the game ran was silently reverted at game exit (NorseHUD, 2026-11-17) | settings, testing, logging |
+| 15141 | An address library that verifies bytes rejects a function another mod has already hooked (Norse Address Library, 2026-11-17) | cpp, crash |
+| 15149 | A UObject pointer cached across frames crashes once its actor is destroyed (Norse UE4SS frameworks, 2026-11-17) | crash, ui |
+| 15157 | An object written into a start-up asset is garbage-collected at the next map change (Norse UE4SS frameworks, 2026-11-18) | crash |
+| 15167 | A frame-count delay runs many times slower when the game window is not in front (Norse UE4SS frameworks, 2026-11-18) | - |
+| 15175 | A condition engine that needs a unit for every term makes world conditions false with no unit (NorseConditions, 2026-11-18) | - |
+| 15183 | A game widget set up before it is constructed ignores the setup, and its setter's name can mislead (NMMF, Norse UMG, 2026-11-18) | settings, logging |
+| 15191 | A good result credited to a fix whose own call never ran (NMMF decimal display, 2026-11-18) | process |
+| 15199 | A check that returns quietly on missing input looks exactly like "nothing happened" (NorseRealtimeNative fight end, 2026-11-18) | logging |
+| 15207 | A "remove" that only switches a flag off does nothing where the flag was already off (NorseEncounters on a real mission, 2026-11-18) | logging, cpp |
+| 15215 | A test kit built during a session lived only in its scratchpad - a whole night's helpers would vanish when the session was archived (Norse frameworks retrospective, 2026-11-18) | process, settings |
+| 15223 | The library held the same lesson three times and it was repeated a fourth - "read the area's entries first" did not fire because a copy did not feel like an area (Norse frameworks retrospective, 2026-11-18) | process, cpp, testing |
+| 15231 | A test that passed by itself failed inside the pre-commit hook - the hook's GIT_DIR aimed the test's git calls at the repo being committed (kit-daily-push, 2026-11-18) | git, cpp, python |
+| 15239 | Blender resolved a relative texture path against the .blend file, not the working folder - renders came out untextured (Pipeline Kit 1.1.0 render_lib, 2026-11-18) | process, python |
+| 15247 | The self-test hid Blender's add-ons by moving USERPROFILE - PyNifly read as "not installed" when it was (Pipeline Kit 1.1.0 self-test, 2026-11-18) | mo2, powershell, process |
+| 15255 | The kit copied the skills folder whole, so a skill another session was still writing would have shipped (Pipeline Kit 1.1.0 build, 2026-11-18) | python, git, process |
+| 15263 | A skill line said the Pipeline Kit is never mentioned on Nexus, and a memory a month newer said it is free - the skill was believed (Nexus reply to nexusguy, 2026-11-18) | process |
+| 15271 | A read-only Lua probe crashed the game - pcall does not catch a UFunction called on a null object (Norse, UE4SS Lua, 2026-11-18) | crash, cpp |
+| 15279 | Four PreToolUse guards let every call through when stdin began with a UTF-8 BOM - they exit 0 on unparseable input (Pipeline Kit 1.1.0 self-test, 2026-11-18) | git, mo2, powershell |
+| 15287 | Every bow draw stalled 125-224 ms - each clip lookup searched the whole object list, and our clips were collected between uses (NorseRealtimeNative, UE4SS, 2026-11-18) | logging |
+| 15295 | A retarget's checks all passed while the pose was visibly wrong: no check compared joint angles with the source (NORSE dodge port, 2026-11-18) | python, testing |
+| 15303 | A port compared against the source file it was handed, not against what the player sees (NORSE dodge port, 2026-11-18) | python, testing |
+| 15311 | Told the owner AMF 2.4.2's stutter fix was "not yet tested" from the CHANGELOG heading - its test request had PASSED ten days earlier (AMF 2.4.2, 2026-11-18) | packaging, git, testing |
+| 15319 | The package-render gate refused posting every FOMOD mod - it looked for "<Mod> X.Y.Z" and the finalized folder is "<Mod> X.Y.Z FOMOD" (AMF 2.4.2, 2026-11-18) | packaging, process, git |
+| 15327 | The game lookup turned "Norse" into "Skyrim" with no error - every release tool would have handled a Norse mod as a Skyrim one (Norse frameworks release, 2026-11-18) | packaging, process, settings |
+| 15335 | Every Norse framework's PDB carried the build user's Temp path - the builds skipped MODS_BUILD_ENV (Norse frameworks release, 2026-11-18) | build, packaging, process |
+| 15343 | Six Norse pages went live showing version "1.0" - the Nexus "Mod version" field was never set, and the page fell back to the file's short form (Norse frameworks release, 2026-11-19) | crash, logging, packaging |
+| 15351 | NorseHUD failed its finalize gate after its Nexus draft and media were already made (Norse frameworks release, 2026-11-19) | process, cpp, ui |
 
-*822 entries.*
+*830 entries.*
 
 ### Visual design index - modelling, texturing, engraving, renders, the owner's drawn marks
 
@@ -923,58 +931,58 @@ reasoning that produced the mistake has faded.
 
 | line | entry |
 |---:|---|
-| 3367 | A recalled decision about MECHANISM has to be checked before the first line of the implementation, not after it looks wrong (2026-09-03) |
-| 4438 | The game's inventory 3D renderer draws nothing when driven from a Present-hook overlay - loaded is not drawn (2026-09-09) |
-| 4479 | Showing a game model on your own UI: three preconditions, and each one fails silently (2026-09-09) |
-| 6319 | An ARMO's addon list is one MODL subrecord PER addon - packed into one, the engine keeps none, and the piece is invisible (2026-09-17) |
-| 8689 | A rounded-box brush does not clip a MATERIAL in Oblivion Remastered - Minimap Menu's round map became a turning square; nested turned clip panels make the circle (2026-09-30) |
-| 10615 | WaitIdle before a Release is not enough in an overlay: the frame being built may already show the texture - free it after THAT frame's fence (AMF Witcher 3 3D preview, 2026-10-06) |
-| 11526 | A control drawn with art lost its outline: the art path skipped ImGui's border, no shipped box, button or tick box part had an edge layer, and faces are the panel colour - Norden - Black's buttons were invisible (AMF next after 2.1.9, 2026-10-12) |
-| 12572 | A PBR base colour shipped under a non-PBR texture name rendered paper white, and noon test frames could not see it - they clip at 218 (All Snow Ground Match, 2026-10-24) |
-| 12896 | Helgen "paper-white / grey snow" was a landscape layer, not the meshes we retoned twice (Njordlinger, 2026-10-25) |
-| 13055 | A "missed" road stretch was a vanilla road mesh brought back by a later plugin, and Seasons repaints every non-winter landscape texture (Njordlinger roads / no snow under roofs, 2026-10-26) |
-| 13643 | A static ship's deck held the player but he walked out through the bow, the stern and one side - the collision had open ends and the game meets a MOPP triangle from its front only (Longship 0.1.0, 2026-11-09) |
-| 13678 | A full package install replaced newer hand-made data in the test folder with the package's older copies (World Map Render, 2026-11-09) |
-| 13705 | Copying PGPatcher's metal TruePBR block onto a new mesh without a fuzz map gives a wrong material (nif, 2026-11-10) |
-| 13714 | "Followed the owner's drawn outline" while the result did not match it (weapon modelling, 2026-11-10) |
-| 13723 | A plate built in rows silently loses material where its outline rises again (Blender weapon builds, 2026-11-10) |
-| 13732 | A vague visual complaint was answered with a rule instead of a question - "wider on one side" became a symmetry fix that reshaped the wrong part (weapon modelling, 2026-11-10) |
-| 13741 | A flat steel end face mirrored the render's warm backdrop and read as a brown wooden block in the side view (weapon renders, 2026-11-10) |
-| 13750 | Fixing one part by "taking the old version's lines" also brought back a line the owner had already redrawn (warhammer v2c, 2026-11-10) |
-| 13759 | One px-per-unit value for a mixed-density atlas halved the normal strength on the parts painted denser (Truly Nordic weapons, 2026-11-10) |
-| 13768 | The shared tube builder sizes a part's texture slot from the round shaft, so a wider square core overlaps its neighbours' UVs (Truly Nordic weapons, 2026-11-10) |
-| 13777 | A flanged mace head drawn with a smooth superellipse profile read as an egg or a cage, not a mace (weapon modelling, 2026-11-10) |
-| 13786 | The owner's "fill to here" outline was built as a "trim to here" limit, and his position-marker triangles were built as real triangles (Nordic shield v2, 2026-11-10) |
-| 13795 | Packaging the Truly Nordic set: five quiet traps between Blender and the game (nif/packaging, 2026-11-10) |
-| 13818 | A shield looked solid in every review render but was see-through from behind in game - design renders draw both sides of every face (Truly Nordic shield, 2026-11-11) |
-| 13958 | A reshaped weapon face broke the old build and engraving - a double crescent needs a slanted seam, a new split, and a weave field (Truly Nordic battle axe v10, visual design, 2026-11-11) |
-| 13968 | A point the owner drew beside an existing point meant MOVE it there, not ADD a second one (Truly Nordic battle axe v10 -> v11, visual design, 2026-11-11) |
-| 13978 | A sheath offset from the blade's outline can't be drawn - it must hold the blade's whole draw path (Truly Nordic sheaths v1, visual design, 2026-11-11) |
-| 13988 | Two rebuilds came from tracing the owner's drawing by eye off a chat image - get it on disk and trace its pixels (Truly Nordic battle axe v10/v11 -> v12, visual design, 2026-11-11) |
-| 13998 | A narrow face dropped the owner's symbol because it inherited a wider face's layout; and open tubes came out wound inside-out (Truly Nordic sheaths v2 / straight sword, visual design, 2026-11-11) |
-| 14008 | The sheath tips got a braid border with nothing inside it to go around - against the owner's braid rule (Truly Nordic sheaths v1-v4, visual design, 2026-11-11) |
-| 14018 | A model mod's installer named its alternate models in words only - the player could not see what he was choosing (Truly Nordic 1.0.0 -> 1.1.0, packaging, 2026-11-11) |
-| 14028 | A reshaped part clipped through its neighbour - and the original had clipped too, hidden inside the ferrule (Truly Nordic saber A5g -> A5h, visual design, 2026-11-11) |
-| 14038 | Two approved weapons broke the owner's braid rule and nothing caught it - the engraving checks measured margins, not layout (Truly Nordic battleaxe v12 and war axe v3, visual design, 2026-11-11) |
-| 14048 | A swept part folded through itself where it bent tighter than it was wide - the owner saw it as a crack (Truly Nordic saber pommel A5h -> A5i, visual design, 2026-11-12) |
-| 14086 | Building from the owner's markup without recovering the camera it was drawn on (weapon-engraving, 2026-11-12) |
-| 14153 | A "first look" built from a re-texture and from block-outs was rejected as low effort (visual design, engraving, 2026-11-12) |
-| 14335 | Shading patches on a large face came from base-colour grime sized to the atlas, not from normals (Truly Nordic shields, 2026-11-12) |
-| 14505 | A Sketchfab reupload kept the 1.0.0 materials by name - ten pieces showed old textures on new UVs, "defaced" and blurry (Truly Nordic 1.2.0, sketchfab, nexus-media, 2026-11-13) |
-| 14530 | A proof that applied the same rotation as the export could not catch the export's wrong rotation (Truly Nordic Sketchfab GLB, quiver, 2026-11-13) |
-| 14575 | A sheath designed and approved off the body was buried in the owner's armour at the hip - nothing measured it on a body (Truly Nordic saber C2 / straight sheath v3, 2026-11-13) |
-| 14631 | A part that rendered fine in Blender came out flat black in game (Ebony Wolf warhammer face, 2026-11-14) |
-| 14639 | Light came through a bow every render drew solid - pieces that did not meet and open shells, invisible to a two-sided render and to a winding vote (Ebony Wolf bow and arrow, nif, blender, 2026-11-14) |
-| 14647 | A UV and tangent gate that passed the bow because it never read it - a skinned shape keeps its vertices in the skin partition (Ebony Wolf bow r02, nif, 2026-11-14) |
-| 14753 | The package render died on a BodySlide NIF at a 263-character path - PyNifly cannot open past MAX_PATH (Nordic Skyforged 1.1.0 finalize, 2026-11-15) |
-| 14786 | A recolour gain chosen from "the black look keeps ~0.5x" turned an already dark fur into a flat black silhouette - and the proof renderer drew every alpha-tested shape black anyway (Nordic Ebony / Skyforged 1.1.0 fur collar, 2026-11-15) |
-| 14864 | A parallax claim went onto banners before the effect was seen in game (3D armour banners, 2026-11-16) |
-| 14971 | Package renders started at posting time held a release for hours (Truly Nordic 1.0.0, 2026-11-16) |
-| 14987 | Matching _0/_1 armour meshes came out with different vertex orders and triangles (own-armour exercise 1 bracers, 2026-11-16) |
-| 15003 | A new page's first update would have posted its files as new files, not new versions (Truly Nordic Skyforged 1.0.1, 2026-11-16) |
-| 15011 | A dark notch on the greatsword's bevel was another part painted onto the blade's texels (Truly Nordic Carved, shipped since 2026-11-12, found 2026-11-16) |
-| 15027 | The blade's hard seams came from the 1.1.0 shading-fix pass, not from unwelded vertices (mirror-finish study, Truly Nordic Carved, 2026-11-16) |
-| 15229 | Blender resolved a relative texture path against the .blend file, not the working folder - renders came out untextured (Pipeline Kit 1.1.0 render_lib, 2026-11-18) |
+| 3377 | A recalled decision about MECHANISM has to be checked before the first line of the implementation, not after it looks wrong (2026-09-03) |
+| 4448 | The game's inventory 3D renderer draws nothing when driven from a Present-hook overlay - loaded is not drawn (2026-09-09) |
+| 4489 | Showing a game model on your own UI: three preconditions, and each one fails silently (2026-09-09) |
+| 6329 | An ARMO's addon list is one MODL subrecord PER addon - packed into one, the engine keeps none, and the piece is invisible (2026-09-17) |
+| 8699 | A rounded-box brush does not clip a MATERIAL in Oblivion Remastered - Minimap Menu's round map became a turning square; nested turned clip panels make the circle (2026-09-30) |
+| 10625 | WaitIdle before a Release is not enough in an overlay: the frame being built may already show the texture - free it after THAT frame's fence (AMF Witcher 3 3D preview, 2026-10-06) |
+| 11536 | A control drawn with art lost its outline: the art path skipped ImGui's border, no shipped box, button or tick box part had an edge layer, and faces are the panel colour - Norden - Black's buttons were invisible (AMF next after 2.1.9, 2026-10-12) |
+| 12582 | A PBR base colour shipped under a non-PBR texture name rendered paper white, and noon test frames could not see it - they clip at 218 (All Snow Ground Match, 2026-10-24) |
+| 12906 | Helgen "paper-white / grey snow" was a landscape layer, not the meshes we retoned twice (Njordlinger, 2026-10-25) |
+| 13065 | A "missed" road stretch was a vanilla road mesh brought back by a later plugin, and Seasons repaints every non-winter landscape texture (Njordlinger roads / no snow under roofs, 2026-10-26) |
+| 13653 | A static ship's deck held the player but he walked out through the bow, the stern and one side - the collision had open ends and the game meets a MOPP triangle from its front only (Longship 0.1.0, 2026-11-09) |
+| 13688 | A full package install replaced newer hand-made data in the test folder with the package's older copies (World Map Render, 2026-11-09) |
+| 13715 | Copying PGPatcher's metal TruePBR block onto a new mesh without a fuzz map gives a wrong material (nif, 2026-11-10) |
+| 13724 | "Followed the owner's drawn outline" while the result did not match it (weapon modelling, 2026-11-10) |
+| 13733 | A plate built in rows silently loses material where its outline rises again (Blender weapon builds, 2026-11-10) |
+| 13742 | A vague visual complaint was answered with a rule instead of a question - "wider on one side" became a symmetry fix that reshaped the wrong part (weapon modelling, 2026-11-10) |
+| 13751 | A flat steel end face mirrored the render's warm backdrop and read as a brown wooden block in the side view (weapon renders, 2026-11-10) |
+| 13760 | Fixing one part by "taking the old version's lines" also brought back a line the owner had already redrawn (warhammer v2c, 2026-11-10) |
+| 13769 | One px-per-unit value for a mixed-density atlas halved the normal strength on the parts painted denser (Truly Nordic weapons, 2026-11-10) |
+| 13778 | The shared tube builder sizes a part's texture slot from the round shaft, so a wider square core overlaps its neighbours' UVs (Truly Nordic weapons, 2026-11-10) |
+| 13787 | A flanged mace head drawn with a smooth superellipse profile read as an egg or a cage, not a mace (weapon modelling, 2026-11-10) |
+| 13796 | The owner's "fill to here" outline was built as a "trim to here" limit, and his position-marker triangles were built as real triangles (Nordic shield v2, 2026-11-10) |
+| 13805 | Packaging the Truly Nordic set: five quiet traps between Blender and the game (nif/packaging, 2026-11-10) |
+| 13828 | A shield looked solid in every review render but was see-through from behind in game - design renders draw both sides of every face (Truly Nordic shield, 2026-11-11) |
+| 13968 | A reshaped weapon face broke the old build and engraving - a double crescent needs a slanted seam, a new split, and a weave field (Truly Nordic battle axe v10, visual design, 2026-11-11) |
+| 13978 | A point the owner drew beside an existing point meant MOVE it there, not ADD a second one (Truly Nordic battle axe v10 -> v11, visual design, 2026-11-11) |
+| 13988 | A sheath offset from the blade's outline can't be drawn - it must hold the blade's whole draw path (Truly Nordic sheaths v1, visual design, 2026-11-11) |
+| 13998 | Two rebuilds came from tracing the owner's drawing by eye off a chat image - get it on disk and trace its pixels (Truly Nordic battle axe v10/v11 -> v12, visual design, 2026-11-11) |
+| 14008 | A narrow face dropped the owner's symbol because it inherited a wider face's layout; and open tubes came out wound inside-out (Truly Nordic sheaths v2 / straight sword, visual design, 2026-11-11) |
+| 14018 | The sheath tips got a braid border with nothing inside it to go around - against the owner's braid rule (Truly Nordic sheaths v1-v4, visual design, 2026-11-11) |
+| 14028 | A model mod's installer named its alternate models in words only - the player could not see what he was choosing (Truly Nordic 1.0.0 -> 1.1.0, packaging, 2026-11-11) |
+| 14038 | A reshaped part clipped through its neighbour - and the original had clipped too, hidden inside the ferrule (Truly Nordic saber A5g -> A5h, visual design, 2026-11-11) |
+| 14048 | Two approved weapons broke the owner's braid rule and nothing caught it - the engraving checks measured margins, not layout (Truly Nordic battleaxe v12 and war axe v3, visual design, 2026-11-11) |
+| 14058 | A swept part folded through itself where it bent tighter than it was wide - the owner saw it as a crack (Truly Nordic saber pommel A5h -> A5i, visual design, 2026-11-12) |
+| 14096 | Building from the owner's markup without recovering the camera it was drawn on (weapon-engraving, 2026-11-12) |
+| 14163 | A "first look" built from a re-texture and from block-outs was rejected as low effort (visual design, engraving, 2026-11-12) |
+| 14345 | Shading patches on a large face came from base-colour grime sized to the atlas, not from normals (Truly Nordic shields, 2026-11-12) |
+| 14515 | A Sketchfab reupload kept the 1.0.0 materials by name - ten pieces showed old textures on new UVs, "defaced" and blurry (Truly Nordic 1.2.0, sketchfab, nexus-media, 2026-11-13) |
+| 14540 | A proof that applied the same rotation as the export could not catch the export's wrong rotation (Truly Nordic Sketchfab GLB, quiver, 2026-11-13) |
+| 14585 | A sheath designed and approved off the body was buried in the owner's armour at the hip - nothing measured it on a body (Truly Nordic saber C2 / straight sheath v3, 2026-11-13) |
+| 14641 | A part that rendered fine in Blender came out flat black in game (Ebony Wolf warhammer face, 2026-11-14) |
+| 14649 | Light came through a bow every render drew solid - pieces that did not meet and open shells, invisible to a two-sided render and to a winding vote (Ebony Wolf bow and arrow, nif, blender, 2026-11-14) |
+| 14657 | A UV and tangent gate that passed the bow because it never read it - a skinned shape keeps its vertices in the skin partition (Ebony Wolf bow r02, nif, 2026-11-14) |
+| 14763 | The package render died on a BodySlide NIF at a 263-character path - PyNifly cannot open past MAX_PATH (Nordic Skyforged 1.1.0 finalize, 2026-11-15) |
+| 14796 | A recolour gain chosen from "the black look keeps ~0.5x" turned an already dark fur into a flat black silhouette - and the proof renderer drew every alpha-tested shape black anyway (Nordic Ebony / Skyforged 1.1.0 fur collar, 2026-11-15) |
+| 14874 | A parallax claim went onto banners before the effect was seen in game (3D armour banners, 2026-11-16) |
+| 14981 | Package renders started at posting time held a release for hours (Truly Nordic 1.0.0, 2026-11-16) |
+| 14997 | Matching _0/_1 armour meshes came out with different vertex orders and triangles (own-armour exercise 1 bracers, 2026-11-16) |
+| 15013 | A new page's first update would have posted its files as new files, not new versions (Truly Nordic Skyforged 1.0.1, 2026-11-16) |
+| 15021 | A dark notch on the greatsword's bevel was another part painted onto the blade's texels (Truly Nordic Carved, shipped since 2026-11-12, found 2026-11-16) |
+| 15037 | The blade's hard seams came from the 1.1.0 shading-fix pass, not from unwelded vertices (mirror-finish study, Truly Nordic Carved, 2026-11-16) |
+| 15239 | Blender resolved a relative texture path against the .blend file, not the working folder - renders came out untextured (Pipeline Kit 1.1.0 render_lib, 2026-11-18) |
 
 *52 visual design entries.*
 
@@ -984,29 +992,31 @@ reasoning that produced the mistake has faded.
 
 | line | entry |
 |---:|---|
-| 5943 | A control must come from the SAME toolchain, or it proves nothing - "Pandora didn't patch the dodge" was wrong twice over (2026-09-15) |
-| 6989 | A behaviour engine's OUTPUT shipped in a package outranks the player's own Pandora run wherever the mod sits above it - the T-pose with magic in hand (2026-09-20) |
-| 13860 | A rename that only changed the code left the old name in the behaviour patch Pandora shows (Simple Dodge 1.1.0, release, packaging, 2026-11-11) |
-| 13868 | A roll's "head stays off the floor" check passed while the crown could still hit - the head bone sits at the base of the skull (Simple Dodge rolls, animation, 2026-11-11) |
-| 13878 | Open hands built as a small finger curl stayed curled - the vanilla rest pose is already half-closed (Simple Dodge unarmed, animation, 2026-11-11) |
-| 13888 | A replacement that inserted text with CRLF into an LF file hid whole lines behind bare carriage returns (build_stepdodge.py, animation tooling, 2026-11-11) |
-| 13898 | A package silently dropped files that share a NAME with another file in it - the packager's FOMOD by-name skip ran on a plain package (Simple Dodge 1.1.0, packaging, animation, 2026-11-11) |
-| 13908 | Pandora's run-and-close mode built none of a new patch - --auto_run reuses the saved selection, where a new or once-unticked code stays OFF (Simple Dodge, BFCO, MCO, launch, 2026-11-11) |
-| 13938 | A Blender top-down render came out as flat background - the ortho camera's default clip_end (100 units) cut the whole scene (Simple Dodge showcase GIFs, blender, 2026-11-11) |
-| 14094 | A "scratch" copy of Pandora rebuilt the live modlist's behaviour output (pandora, behaviour, sandbox, 2026-11-12) |
-| 14102 | "Tested with Pandora" said nothing about Nemesis: an empty info.ini field crashed Nemesis at start (nemesis, pandora, behaviour, 2026-11-12) |
-| 14118 | Packaging keyed files by NAME in an animation patch, dropping a node file (packaging, behaviour, 2026-11-12) |
-| 14177 | A reply draft claimed eight first-person dodges because the eight event names were in the first-person graph (Simple Dodge reply, 2026-11-12) |
-| 14276 | Behaviour nodes copied to another graph carry that graph's hard-coded event and variable numbers (Simple Dodge 1.2.0 sheathed dodge, 2026-11-12) |
-| 14307 | An IK knee aim set in the foot's frame follows a turned-out foot outward (Simple Dodge step rework, 2026-11-12) |
-| 14351 | A batch's profile restore put the old mod back but left Pandora's output built for the new one (combined runs, 2026-11-12) |
-| 14370 | A two-handed grip solved at the hand bone left the palm 14 units off the shaft (Simple Dodge polearm sets, 2026-11-12) |
-| 14384 | Pandora dropped a patch's new nodes over one invalid enum value, still listed the mod as built, and the save crashed (Simple Dodge 1.2.0 chain patch, 2026-11-12) |
-| 14434 | The player's furniture exit came from code, not from an animation replacer - the graph-event log settled it in one run (combined runs, 2026-11-12) |
-| 14561 | A packaging gate started Pandora's window over the owner's game (pandora-patch-builds gate, 2026-11-13) |
-| 15067 | A reused game animation clip ran the game's own gameplay through its notifies (NorseRealtimeNative 0.5.x bow, 2026-11-17) |
+| 5953 | A control must come from the SAME toolchain, or it proves nothing - "Pandora didn't patch the dodge" was wrong twice over (2026-09-15) |
+| 6999 | A behaviour engine's OUTPUT shipped in a package outranks the player's own Pandora run wherever the mod sits above it - the T-pose with magic in hand (2026-09-20) |
+| 13870 | A rename that only changed the code left the old name in the behaviour patch Pandora shows (Simple Dodge 1.1.0, release, packaging, 2026-11-11) |
+| 13878 | A roll's "head stays off the floor" check passed while the crown could still hit - the head bone sits at the base of the skull (Simple Dodge rolls, animation, 2026-11-11) |
+| 13888 | Open hands built as a small finger curl stayed curled - the vanilla rest pose is already half-closed (Simple Dodge unarmed, animation, 2026-11-11) |
+| 13898 | A replacement that inserted text with CRLF into an LF file hid whole lines behind bare carriage returns (build_stepdodge.py, animation tooling, 2026-11-11) |
+| 13908 | A package silently dropped files that share a NAME with another file in it - the packager's FOMOD by-name skip ran on a plain package (Simple Dodge 1.1.0, packaging, animation, 2026-11-11) |
+| 13918 | Pandora's run-and-close mode built none of a new patch - --auto_run reuses the saved selection, where a new or once-unticked code stays OFF (Simple Dodge, BFCO, MCO, launch, 2026-11-11) |
+| 13948 | A Blender top-down render came out as flat background - the ortho camera's default clip_end (100 units) cut the whole scene (Simple Dodge showcase GIFs, blender, 2026-11-11) |
+| 14104 | A "scratch" copy of Pandora rebuilt the live modlist's behaviour output (pandora, behaviour, sandbox, 2026-11-12) |
+| 14112 | "Tested with Pandora" said nothing about Nemesis: an empty info.ini field crashed Nemesis at start (nemesis, pandora, behaviour, 2026-11-12) |
+| 14128 | Packaging keyed files by NAME in an animation patch, dropping a node file (packaging, behaviour, 2026-11-12) |
+| 14187 | A reply draft claimed eight first-person dodges because the eight event names were in the first-person graph (Simple Dodge reply, 2026-11-12) |
+| 14286 | Behaviour nodes copied to another graph carry that graph's hard-coded event and variable numbers (Simple Dodge 1.2.0 sheathed dodge, 2026-11-12) |
+| 14317 | An IK knee aim set in the foot's frame follows a turned-out foot outward (Simple Dodge step rework, 2026-11-12) |
+| 14361 | A batch's profile restore put the old mod back but left Pandora's output built for the new one (combined runs, 2026-11-12) |
+| 14380 | A two-handed grip solved at the hand bone left the palm 14 units off the shaft (Simple Dodge polearm sets, 2026-11-12) |
+| 14394 | Pandora dropped a patch's new nodes over one invalid enum value, still listed the mod as built, and the save crashed (Simple Dodge 1.2.0 chain patch, 2026-11-12) |
+| 14444 | The player's furniture exit came from code, not from an animation replacer - the graph-event log settled it in one run (combined runs, 2026-11-12) |
+| 14571 | A packaging gate started Pandora's window over the owner's game (pandora-patch-builds gate, 2026-11-13) |
+| 15077 | A reused game animation clip ran the game's own gameplay through its notifies (NorseRealtimeNative 0.5.x bow, 2026-11-17) |
+| 15295 | A retarget's checks all passed while the pose was visibly wrong: no check compared joint angles with the source (NORSE dodge port, 2026-11-18) |
+| 15303 | A port compared against the source file it was handed, not against what the player sees (NORSE dodge port, 2026-11-18) |
 
-*21 animation entries.*
+*23 animation entries.*
 <!-- INDEX:END -->
 ---
 
@@ -15281,3 +15291,67 @@ Topics: packaging, fomod, release
 **Fix.** A path -> (object, object-array slot) cache in front of every lookup, Alive-checked; every clip and class the mod plays preloaded at map load and kept in the root set; FindAllOf routed through one timed wrapper and a 0.25 s unit cache. After: second draw 0 slow frames, possession preload 0 ms, object searches 7 ms per 5 s.
 **Root cause:** a mod's per-frame cost was never measured, so expensive engine calls (`*_InternalSlow`, FindAllOf, synchronous loads) sat on hot paths, and assets only the mod referenced were assumed to stay loaded.
 **Rule.** Ship a frame-time log in any mod that acts per frame (PERF summary + HITCH naming the part) and read it before judging a stutter. Never call StaticFindObject_InternalSlow / FindAllOf / a blocking load on a per-frame or per-event path without a cache; load at map load and pin (root set) anything only the mod references.
+
+## A retarget's checks all passed while the pose was visibly wrong: no check compared joint angles with the source (NORSE dodge port, 2026-11-18)
+
+**Symptom.** The owner looked at the proof sheet of the ported Simple Dodge step and said "The hands up dont match though": on the NORSE body the fists sat at the chest, on the Skyrim source up by the collarbones. The overnight check report had passed all 24 clips (travel, pelvis height, foot plants, toes, hands not through the hips).
+**Cause.** After the IK Retargeter's chain-to-chain auto-align, every forearm came out a constant 17.8 deg less bent than the source - both arms, every frame, every clip, about the elbow hinge. The upper arms matched exactly. Nothing in the check measured a joint angle against the source; the hand check only asked whether a hand went through the pelvis, and the agent's eye review called the guard "a little lower, in proportion to the smaller torso" - a plausible story for a measurable error.
+**Fix.** A 17.8 deg yaw offset on lowerarm_l/r in the target retarget pose (dodge_03_setup.py); elbows now within 0.3 deg of the source. dodge_05_check.py compares the elbow bend with the source on every frame and flags over 8 deg.
+**Root cause:** the retarget checks were written from the failure modes seen before (sliding feet, sinking pelvis, travel), not from what the retarget promises - that each FK joint reproduces the source's angle - so a constant per-joint error could only be found by eye, and an eye review explains a difference instead of measuring it.
+**Rule.** A retarget check compares every FK joint's bend with the source's, frame by frame; "it looks a bit different because the body is different" is a hypothesis to measure (the angle difference in the parent bone's frame - constant means a retarget-pose error), not a finding.
+
+## A port compared against the source file it was handed, not against what the player sees (NORSE dodge port, 2026-11-18)
+
+**Symptom.** After the elbow fix the owner asked "Are you looking at the same thing that I am? Because that is not what the animations look like. Maybe you should review my previous input on the Simple Dodge project."
+**Cause.** The port took Simple Dodge's base StepDodge clips, whose arms are a generic closed-fist guard. In game that guard almost never plays: with a weapon drawn every step holds the weapon type's own combat-idle grip (OAR weapon sets, build_stepdodge.py GRIPS - the owner asked for them on 2026-11-12), and sheathed plays the open-hand unarmed set (hands at the cheeks, left further out). The elbow measurement in the entry above was right about the retarget and wrong about the goal: it matched the port more closely to a pose the owner does not see.
+**Fix.** dodge_08_grips.py builds the step dodges per NORSE weapon set with every bone from the clavicles out taken from that set's combat idle (Simple Dodge's own method); NorseRealtimeNative plays the class's set; rolls stay shared.
+**Root cause:** the reference was chosen by file name ("StepDodgeLeft.blend") instead of by asking which clip plays in the situation being replaced, and the owner's own design history for the mod (memory dodge-animation-rules, the changelog's weapon-grip sets) was not read before the port.
+**Rule.** Before porting or matching an animation, establish which variant actually plays in game for the case at hand (OAR conditions, the mod's changelog, the owner's notes for that mod), and compare against that one.
+
+## Told the owner AMF 2.4.2's stutter fix was "not yet tested" from the CHANGELOG heading - its test request had PASSED ten days earlier (AMF 2.4.2, 2026-11-18)
+
+**Symptom.** Answering a Nexus comment about save-load hitches, the reply said the fix was "built but not yet tested or posted". The owner corrected it: "you said it was already tested". Test request 48af (2026-11-08) had PASSED: discovery passes 123-138 ms on 2.4.1 down to 1.7-2.7 ms.
+**Cause.** The CHANGELOG heading and the version ledger both said "untested", because the build was repackaged after that test (later commits) and nobody re-recorded it. The test-request results in .MD\agent-bus\test-requests were not read.
+**Fix.** Read the four 2.4.2 results (three PASS, the keyboard one BLOCKED), told the owner which part was untested, and recorded 2.4.2 working with each request's evidence once he chose to post.
+**Root cause:** a status label was read as the test record; the label only tracks the ledger, which lags whenever a tested build is repackaged.
+**Rule.** Before telling the owner whether a change is tested, grep .MD\agent-bus\test-requests for the mod and version and read the verdicts; the CHANGELOG/ledger "untested" label says only that no record was made for the current package.
+
+## The package-render gate refused posting every FOMOD mod - it looked for "<Mod> X.Y.Z" and the finalized folder is "<Mod> X.Y.Z FOMOD" (AMF 2.4.2, 2026-11-18)
+
+**Symptom.** finalize-mod exited 4 "NOT POSTABLE: package render did not run" for AMF, which ships no .nif, and nexus-upload's dry run said the render gate would refuse: "no finalized package folder (None)".
+**Cause.** package-render.py finalized_package() matched the folder name exactly against "<display> <version>", so the " FOMOD" tail finalize-mod keeps never matched, and the gate's "ships no .nif passes" branch was never reached.
+**Fix.** Match on the finder's mod and version fields with the tail "" or " FOMOD" (.MD commit 2d5cd63); the gate then read "ships no .nif (not a model mod)" and the upload went through.
+**Root cause:** the gate was written and self-tested on model mods' plain package folders only; no case used a FOMOD-named folder.
+**Rule.** A gate that locates a package by name is tested once against a FOMOD-named package before it is wired into finalize or upload.
+
+## The game lookup turned "Norse" into "Skyrim" with no error - every release tool would have handled a Norse mod as a Skyrim one (Norse frameworks release, 2026-11-18)
+
+**Symptom.** Preparing the 22 Norse frameworks for Nexus, `resolve.py distro game` returned Skyrim for a Norse mod; nexus-upload said "unknown game prefix" only because the folder name was checked separately.
+**Cause.** ConvertTo-DistroGame and the resolver's game lookup ended in a default branch (Skyrim) instead of refusing a game they did not know. No package carried a check that its contents' game matched its folder's game.
+**Fix.** Norse added to the resolver, version-gate (-Domain norse, kind norse-mod), package-norse (new), package-gate rows norse-package-is-a-loadable-ue4ss-tree and norse-package-carries-no-other-games-tree, nexus-version-audit's domain map (report: 4. plans\norse-realtime-combat-20261116\distro-notes\REPORT-norse-release-pipeline.md).
+**Root cause:** a lookup with a default made "unknown" look like "the usual game"; the tools were only ever run on games they knew.
+**Rule.** A new game goes into the resolver first. A game lookup refuses an unknown game rather than defaulting; a package whose contents and folder name disagree on the game fails the gate.
+
+## Every Norse framework's PDB carried the build user's Temp path - the builds skipped MODS_BUILD_ENV (Norse frameworks release, 2026-11-18)
+
+**Symptom.** package-gate's build-path row hit NorseTagger's main.pdb: C:\Users\<user>\AppData\Local\Temp\.xmake\...; NorseRealtimeNative, NorseEvents and NMMF the same.
+**Cause.** The Norse repos were built with plain `xmake`, not `"%MODS_BUILD_ENV%" xmake build`, which moves TEMP out of the user profile. PREFLIGHT already said to build through it.
+**Fix.** Every Norse DLL is rebuilt through MODS_BUILD_ENV at its 1.0.0 bump (a scratch rebuild came out clean).
+**Root cause:** a new game's repos were set up outside the release pipeline, so the gate that would have caught it never ran until release - a known solution applied late.
+**Rule.** A new repo's FIRST build goes through MODS_BUILD_ENV, and package-gate runs on its first test package, not first at release.
+
+## Six Norse pages went live showing version "1.0" - the Nexus "Mod version" field was never set, and the page fell back to the file's short form (Norse frameworks release, 2026-11-19)
+
+**Symptom.** After posting, the public pages of Crash Log, Conditions, Manifest, Address Library, Input and Moveset (norse/mods 6, 10-14) showed version 1.0; the others showed 1.0.0. Fable's closing check caught it.
+**Cause.** The page-public procedure never set /edit/general's "Mod version" box; its placeholder reads "1.0.0", so the empty box looked filled. Pages saved after nexus-upload picked up 1.0.0 by luck of order.
+**Fix.** Set 1.0.0 on all six (2026-11-19 02:44) and read every page's stat-version box back; the procedure's step 5 now sets the field.
+**Root cause:** a placeholder was read as a value - the check looked at what the box showed, not at input.value.
+**Rule.** Read a form field's value, never its look; every posting run ends by reading each public page's version back against the posted number.
+
+## NorseHUD failed its finalize gate after its Nexus draft and media were already made (Norse frameworks release, 2026-11-19)
+
+**Symptom.** pre-finalize-check refused NorseHUD 1.0.0 (rule 31 Norse branch: a DLL with no console command), leaving draft page norse/mods/17 with media but no file or description.
+**Cause.** The posting order made the page first and finalized second; finalize is where the gates run.
+**Fix.** HUD parked and reported to Main Agent (console command or a ruled exemption); the other 12 passed. The procedure now says to run the gates before creating the draft.
+**Root cause:** a public, hard-to-undo step was placed before the cheapest refusing check.
+**Rule.** Run every refusing gate before the first public step of a release.

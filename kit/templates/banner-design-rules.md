@@ -48,6 +48,23 @@ the at-a-glance strip, close-up mats and any other rendered page image use `#e6d
 brown text and hairline above - never the black `#050505` of the Skyrim cards. Screenshots themselves are untouched;
 only what we draw around them follows the paper white.
 
+## NORSE: Oath of Blood mods: charcoal and silver sampled from the game's own UI - design decision, 2026-11-18
+
+The owner chose (2026-11-18) "colours sampled from Norse's own UI" over our Skyrim black-and-white, then approved the
+sample ("use it for all 22"). Sampled from the game's Options screen and title screen (4. plans\norse-realtime-combat-20261116\distro-notes\ui-shots\):
+
+```css
+background: #141617;          /* smoky charcoal - the Options screen's background */
+color: #e5e5e6;               /* soft white - the Options row labels */
+border: 3px solid #a09995;    /* silver - the NORSE logo (2px on the small banner) */
+/* #383838 the row separators; #a36849 ember rust (title-screen sky and shield) - accent hairlines and the version pill only */
+```
+
+Type: a classic serif like the game's menus - EB Garamond (Google Fonts). The small banner stays BLANK (charcoal field,
+silver rim). The large banner carries an in-game shot in a silver-ruled frame. Every drawn page card on a Norse page uses
+the same charcoal and silver. Start from `_banner-template-1920x1080-norse.html` / `_banner-template-1300x372-norse.html`;
+the first set is `Norse - Tagger\`.
+
 ## The large banner (1920x1080) - where screenshots go
 
 Game imagery belongs here and only here. This is the format with the room for it.

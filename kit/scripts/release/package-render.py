@@ -71,7 +71,10 @@ def distro_folder(display, game=""):
 def finalized_package(display, version):
     import package_paths as P
     for p in P.find_packages(P.STAGE10, mod=display, version=version, folders=True):
-        if p["is_dir"] and p["name"] == f"{display} {version}": return p["path"], p["game"]
+        # A FOMOD package folder is named "<Mod> X.Y.Z FOMOD" (finalize-mod keeps the suffix); accept it too, or every
+        # FOMOD mod reads as "no finalized package" and posting is refused (AMF 2.4.2, 2026-11-18).
+        if p["is_dir"] and p["mod"] == display and p["version"] == version and p.get("tail", "") in ("", " FOMOD"):
+            return p["path"], p["game"]
     return None, None
 
 

@@ -1,7 +1,7 @@
 {
   "kit": "Pipeline Kit",
   "version": "1.1.0",
-  "built": "2026-11-18T14:00:01",
+  "built": "2026-11-19T14:00:01",
   "sources": {
     "RULES-DIGEST.md": {
       "from": ".MD/RULES-DIGEST.md",
@@ -13,7 +13,7 @@
     },
     "PAST-MISTAKES-LIBRARY.md": {
       "from": ".MD/PAST-MISTAKES-LIBRARY.md",
-      "source_sha256": "28cb67c3a3abf11376f92abfe41c95a91d3145ac017fea92ab92487f70455432"
+      "source_sha256": "fbb5161bcc3860f28c382f70123d1680a89690961613f4eceef006f438d5daf2"
     },
     "LOGIC-LIBRARY.md": {
       "from": ".MD/LOGIC-LIBRARY.md",
@@ -93,15 +93,15 @@
     },
     "scripts/gates/version-gate.ps1": {
       "from": ".MD/scripts/gates/version-gate.ps1",
-      "source_sha256": "35444a83a729230c0af2346c9dea7414c92c24f702c6e3f5230285a124a33952"
+      "source_sha256": "a9e5d26a50d17f9d7d0d3888fc4ab46385adfa965b36546fc4cbb19e6c58b746"
     },
     "scripts/gates/package-gate.ps1": {
       "from": ".MD/scripts/gates/package-gate.ps1",
-      "source_sha256": "72e62cae1074d001ef2cdba9d5fbb896c4fc4f696fe5e8420483c148b661bc53"
+      "source_sha256": "c4ca4e7d93dcf49ee11d283d71dfcb3286737bf8fc0ebca9f3a7acf895211471"
     },
     "scripts/release/pre-finalize-check.ps1": {
       "from": ".MD/scripts/release/pre-finalize-check.ps1",
-      "source_sha256": "3449723704ba72d0f7b86e8641ad382d76be805a8050e368efb0e13d7e4c980a"
+      "source_sha256": "97d8b969f1e96a05fe022030bd26afb099fbce0d90c33f6e8a0cf3ed92ea7eb6"
     },
     "scripts/release/sync-nexus-distro.ps1": {
       "from": ".MD/scripts/release/sync-nexus-distro.ps1",
@@ -185,7 +185,7 @@
     },
     "scripts/distro-names.ps1": {
       "from": ".MD/scripts/distro-names.ps1",
-      "source_sha256": "755dc8c9b1d6accba459a713ec7bb46ff755fb203215cdee12e0af7165d72bc8"
+      "source_sha256": "55640ff8ce651023d97df3dec6a5b3fe63e3bf97cabb32cb3bfc39ea7c5597f8"
     },
     "scripts/release/finalize-mod.ps1": {
       "from": ".MD/scripts/release/finalize-mod.ps1",
@@ -225,7 +225,7 @@
     },
     "scripts/package_paths.py": {
       "from": ".MD/scripts/package_paths.py",
-      "source_sha256": "45756a62608dfaa5288ef5a02ae227e8a36b2caa7676f7421190cb39778ad2ce"
+      "source_sha256": "05790be63dc38bea76008be1cf06e0ebd0efea49f2b0103f86f37f9171969b54"
     },
     "scripts/memory-index.py": {
       "from": ".MD/scripts/memory-index.py",
@@ -241,7 +241,7 @@
     },
     "scripts/release/test-build-pick.ps1": {
       "from": ".MD/scripts/release/test-build-pick.ps1",
-      "source_sha256": "e015a52c76d82235f07df4b8372029df6f3613cf6c41d9906e0a225f43753c2c"
+      "source_sha256": "f3bf69b6f57bd17f4e380f2280d11626051f0f775673c38266f4bb62ef4a9f3d"
     },
     "scripts/release/post-release-prune.ps1": {
       "from": ".MD/scripts/release/post-release-prune.ps1",
@@ -261,7 +261,7 @@
     },
     "scripts/release/package-render.py": {
       "from": ".MD/scripts/release/package-render.py",
-      "source_sha256": "09c025efb34fe0a15b9b8d0062c0eda8c76b439f772a50d6ad2009e1053f2204"
+      "source_sha256": "337d840404d6c09e22ae00d03f36f64d6f5e760285dbe6fb474e30fec1ad2f8a"
     },
     "scripts/release/package_render_blender.py": {
       "from": ".MD/scripts/release/package_render_blender.py",
@@ -457,7 +457,7 @@
     },
     "scripts/release/package-mod.ps1": {
       "from": ".MD/scripts/release/package-mod.ps1",
-      "source_sha256": "67a30d4b4d4e2f23aab76640489eb6413fdaa515548ce70f8384b43564c97a11"
+      "source_sha256": "6dffe4f02440380741f46721ef752c33c533b0467c13ece79750d5f732cd87a0"
     },
     "scripts/plugins/repack-fomod.ps1": {
       "from": ".MD/scripts/plugins/repack-fomod.ps1",
@@ -609,11 +609,11 @@
     },
     "scripts/gate-rules.json": {
       "from": ".MD/scripts/gate-rules.json",
-      "source_sha256": "8a6caa81a7a0af23f688d4318367d195c0df4bd1d6d48bb74c42f76d3d0720e1"
+      "source_sha256": "2f29e13a5ae75fdc5f45d70ce7644d8031e0de7b834d515eedea865d486cc57b"
     },
     "resolvers/resolve.py": {
       "from": ".MD/resolvers/resolve.py",
-      "source_sha256": "7a2d2a1e1af01cb5873b80b86aaf67143d5245c1da101241304a1edb447b7c01"
+      "source_sha256": "aae82291f334a97f11512d888bf3563e2721771f03337a05f7dcd52dbe99464b"
     },
     "resolvers/resolve.ps1": {
       "from": ".MD/resolvers/resolve.ps1",
@@ -637,7 +637,7 @@
     },
     "resolvers/schema/version-registry.json": {
       "from": ".MD/resolvers/schema/version-registry.json",
-      "source_sha256": "8ccb6087ec8c471c1c854b1a74e4989c319ff55090022e26b730ca0c5801ef81"
+      "source_sha256": "9d0525b09521b9ccd50ecb076183f6d13860e89d16be9b54228297512c52d6ec"
     },
     "skills/amf-menu-port/SKILL.md": {
       "from": ".MD/skills/amf-menu-port/SKILL.md",
@@ -713,7 +713,7 @@
     },
     "templates/banner-design-rules.md": {
       "from": "11. Nexus distro/_BANNER-DESIGN-RULES.md",
-      "source_sha256": "4932fcd42da98708a90e40b3798856b89574574aa584673e204f879079ab0d0d"
+      "source_sha256": "45bbc8970fd1edd47e86c20477c8308cd744e9715f10d2e493c3885cbe557d33"
     },
     "templates/banner-template-1920x1080.html": {
       "from": "11. Nexus distro/_banner-template-1920x1080.html",
@@ -757,7 +757,7 @@
     },
     "resolvers/rosters/scripts.json": {
       "from": ".MD/resolvers/rosters/scripts.json",
-      "source_sha256": "30d896029577e1a7f2a51c524e9811d3ed91e9fb6cbe9b6a33d8457880b0dbb1"
+      "source_sha256": "230942a9d5809f5d582dfc9c99fc2bfdbc55e0a0cefea64e796c2da15ea9728f"
     },
     "resolvers/rosters/stages.json": {
       "from": ".MD/resolvers/rosters/stages.json",
@@ -765,28 +765,28 @@
     },
     "resolvers/rosters/tools.json": {
       "from": ".MD/resolvers/rosters/tools.json",
-      "source_sha256": "a900cfb16d63e2bb8a2aa51e7cff85628c40876b71b96f249d9388f53483fff9"
+      "source_sha256": "c5754c344303ce38db937850260d69dce13a751e09b8dfba63f821c87d0997d2"
     }
   },
   "_about": "files: the SHA-256 of every file in this kit as shipped - check your download against these. sources: the live file each kit file was built from and that file's hash BEFORE sanitising; it does not match the shipped file, by design.",
   "files": {
-    "AGENTS.md": "20e32973fb797f73b3e4c0344865dbe0dd37cf14658331660e5d8aeaf6be5b12",
+    "AGENTS.md": "5d7671a65c8f40c7cfde4acf007bb4e60e2ceeb9101531144019916ce8205111",
     "BANNED-WORDS.md": "ca9a2e7454944a9bc709286b886b0e1d32c4a2acc0122eddc53db27bd5a1b4ed",
     "CC-BY-SA-4.0.txt": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5",
     "CHANGELOG.md": "b7c08e9c50443e80193f5c0331404836744ae4b7bc5d7a259547ce6ed7b483cf",
-    "CLAUDE.md": "72f0876648a3c22702391f54f0d2de3b34c14bb6d5ea6efa0e9e7d473c39efde",
+    "CLAUDE.md": "ef2626e4c1473f0c49230aa6de186b8a7b65e0ed2011edabf28f0df3f9ffabba",
     "commands.md": "7912c0f37911858b7e929037cd6aeac16d383a8a6902744182c82c0902a20449",
     "LICENSE-GPL-3.0.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "LOGIC-LIBRARY.md": "acb7f68c04e0388ab324809b296fdf7f9317e12810a94b5b250c5923a53a7db1",
     "NOTICE.md": "1712d6ae428acfa3cb51d84cc20214755f25ccba93b0c60f80128e7fb95ca05f",
     "OPTIONAL-SCRIPTS.md": "3a3fa66fe2fe5974a5fd4eba732f280da8fbb2d2fb3da51dcb04be759bc1eed6",
-    "PAST-MISTAKES-LIBRARY.md": "96bfd2b4f591e5d435d43236b7e442ddb4baf4ba7777a22805aad4e43418b39f",
+    "PAST-MISTAKES-LIBRARY.md": "f00cd5e5b956f36aced17dfad5dcb7a5788b3cf200c5848cb5fbf455e1b58c7f",
     "pipeline-events.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "pipeline.config.json": "7c0c91a7d6b2554b4afc9f5f1a7260d30c0d4796b71e07e44eabd6a09909d2bf",
     "PREFLIGHT.md": "43a9896e4e36c557fa97731d975722c2651132fd9ac7d474b63e29dbdf3d7751",
     "README-FOR-AI.md": "aebed9fd8d1daece7bcbbb266b19e4c9f03562d529e65e10e98e24e1fe69ed2c",
-    "README.md": "cef3700e6f4c322e9c7e18c1d0605b022bf846432c2311f1519b5eb2492aad0b",
-    "RULES-DIGEST.md": "fc23aed5ac1e9e3d416c94fe90faa60980a946c722e7230bd81f88f6ab143e6d",
+    "README.md": "b2435196bd11ac0f1a359efb203ec9e58df3e39f94cc82cfbd761eb5a1a9160d",
+    "RULES-DIGEST.md": "c8c94806cb9acb20a0b9d78636583730b36147a88c7621828ecfbc898eb85633",
     "sub-agent-routing.md": "a1a64f00ef30911fd3763c2f57d135a5c025e86e17b2df59d28d61ea4638ad2a",
     "agent-bus/README.md": "b1606df34720f13296c49b383a6ff2f29fe853b3a2e90821caf9200f781a4558",
     "docs/AI-PIPELINE-REFERENCE.md": "63c666bf4447fd661ab55268a564c6bfe9658183ccb7fc7fb059036883c5d475",
@@ -812,7 +812,7 @@
     "example/render-test/uv-strip-test.py": "09cd21ee4632bd5cba2cc2af35752c6e0cb9593c4341cd37bc7ec9ad72966ad0",
     "problem-cards/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "resolvers/resolve.ps1": "7d3d17de7823c3986647db3cbda10de489964b5dd1ec2b8b27a137472d1fe34d",
-    "resolvers/resolve.py": "55e45107c79eb89f7e2f90f56abfa5e1c558ef7b85b939220d0321ce6dc6fea5",
+    "resolvers/resolve.py": "cb048107bf09ffded150c05f23a9609f27a57056d57eae28483815d1d702f652",
     "resolvers/session-start.py": "a2106a813d058a0f584d65efdaade64e92357c74d29e082ae6fb3224863aa579",
     "resolvers/rosters/data.json": "cb02c017499281f3dcc05ea14b72d39dd4932b4ee4165b4846e95cd5b62de29f",
     "resolvers/rosters/external.json": "c551eb4bae56b8751c3993998c6e350e3adbde55e8509adaffd93fd0b60830a0",
@@ -824,7 +824,7 @@
     "resolvers/schema/gate-rules.json": "2a7eb5fd87a8bfd83d16132dc5327e5ff72eac4b53595ad302f628bb9e26b50b",
     "resolvers/schema/roster.json": "c35d9dce0921fdba886ed354ae00e100b1bd9ffbc7e2b78287ff0930d4fc654d",
     "resolvers/schema/version-ledger.json": "7baaacb63e7527e69ded0794fb2ae9a58f7c73ad89ae130cb296b91e0fd6ce4d",
-    "resolvers/schema/version-registry.json": "d6d79377e1302dcd7b1f6d009b34b3e83888a27942022fc34949fd22f1bd4a23",
+    "resolvers/schema/version-registry.json": "3e89fba46744edaf95547d1692533166ce1e9ab4c6ee8e6fa74577ceae6350ba",
     "rules/01-pipeline-topology.md": "bb62dd85fad0be40c467ba0795604414ba5abf19a472b8362f8cc53e23eed78a",
     "rules/02-build-toolchain.md": "0c10aceb1921299b14a39aec2021df4965b20065aba4000f0543121ed577f98c",
     "rules/03-versioning-and-release.md": "19e939082fb370af31a71866fa65c96b12801b3103a1fff642dba6b21a94706c",
@@ -834,20 +834,20 @@
     "rules/07-operations-and-machine-health.md": "f280f186a06b5df466f1356ba9aa4e8144f6cd9b90791b1b1b5ea8598cb78ee7",
     "scripts/bash-backslash-guard.py": "b5ab2aa469103435d59caf2c53b60e518f8519ad3a81f79c47144498bfd1f3a3",
     "scripts/check-export-parity.py": "e6bad7c4e60122896147a36642d5ababe3701fb9c5086bdc0d93c0fa00079202",
-    "scripts/distro-names.ps1": "30193f5a0f455352bd30d47412b0e733ed0073d2ffcf4889a8a528b8e68c5ec8",
+    "scripts/distro-names.ps1": "2752351f1413cb10527f8de4cbecc55c7b38bb9d4ea96f1982de65cbff5342c5",
     "scripts/docs-pipeline.ps1": "52ac082c16909e2404e5836907097bb1872af3604e48aaf211111f34fd7a5e28",
     "scripts/events-keymap.json": "f34595c1e4227579c5b65192bff8a692da32ef4eacc3fb723b97358f95516de0",
     "scripts/events.py": "1d7ef6ede872584184992f77a42f9c0985c7a3ec602be4bac4782e6ba0698efb",
     "scripts/falsification-log.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "scripts/falsification-log.ps1": "c77c79d319b420a788a84caae732ecccaaefd89150fe962a09e2e9ef3769e3d6",
     "scripts/find-stale-paths.py": "2fe4eb2b22ca56b0b58354825ce8d35c9e765da2162d0f2e53006151afa17707",
-    "scripts/GATE-CATALOGUE.md": "93206fddc51cf1e5de0b3e1a4173f7d63c9c2745c390b4622244b45b636326c3",
+    "scripts/GATE-CATALOGUE.md": "311f5ffa691314507f75e8aba2d5e7e44bc3718713559ce3244d6edb129cc349",
     "scripts/gate-catalogue.py": "f57e96ecaf0854fbb5592152620d12fa728b0d7cac226a77d94d89526bd82f0a",
     "scripts/gate-ledger.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "scripts/gate-ledger.ps1": "dbe001a49d7183ee84cc509c1d538afcfc871c2710e90c541f97b19437dceddc",
-    "scripts/gate-rules-INDEX.md": "05644eb31ac718920d84a8e67b23bb4638e9633a4c876040abcd6993594b887b",
+    "scripts/gate-rules-INDEX.md": "3b413d0c5472c0fc24b79800060f12c6795a591c5a487445fa58d846dfef7173",
     "scripts/gate-rules-index.py": "f01f2ed19506d929503d60a64dcb755810599b66b3b03d0814413c4dfee55ae5",
-    "scripts/gate-rules.json": "cd50f00cf8e0f60ab376944ee0c5653d31b19e39680268dc4b81f70c36e3fee3",
+    "scripts/gate-rules.json": "3d272aa0607694ccaf5dcfcd2200659d7896bc985071039660739582497aba14",
     "scripts/gate-sweep.ps1": "a8d8d3cbee62d4824b443405ff55dbf2e2334f5e6e92d2f9033b7cb3cc1f8487",
     "scripts/home-index.py": "4ba2af05152c2da839de3b3c6867cfb4f8a9ddf5207b30001077884fd9feb4f5",
     "scripts/ini-edit.py": "a0b94fcdfc005c2bc93811e5a8e6a931daa09f2fb801c3b296fc946e6d13027c",
@@ -860,7 +860,7 @@
     "scripts/mo2-elevated-launch-guard.py": "8e0c23449ab21a8a1aeee02ef5f76dfb7cf18bca96319a2fe652aa71240f6c20",
     "scripts/optimize-project.ps1": "85f454353f3794311761aa149482c0e3dd10f5f0cb40174af85de50adcd8afbd",
     "scripts/package-path-guard.ps1": "37237696874baafc99b39742a4a0f79834c7f976d39d5656fa153aea88c12c64",
-    "scripts/package_paths.py": "45756a62608dfaa5288ef5a02ae227e8a36b2caa7676f7421190cb39778ad2ce",
+    "scripts/package_paths.py": "05790be63dc38bea76008be1cf06e0ebd0efea49f2b0103f86f37f9171969b54",
     "scripts/pipeline-log.ps1": "e1aedac1022fabb2e924dbb9b014df2ead1669aa613b71a38ec1539339d538c6",
     "scripts/pipeline-status.ps1": "fda4606eed4e7b23ca188a576805907bd063a0de79157a9cc5abca5c189591cf",
     "scripts/problem-card.py": "a46564c646347556757daebca543465281ab6a9c6b240144dc39d841e09b4f21",
@@ -917,7 +917,7 @@
     "scripts/gates/nemesis-patch-info-gate.py": "88b671207eb5cf2504fef65aca62715ccd979a612c52940728969860d1042e59",
     "scripts/gates/nexus-ai-tags-gate.py": "cd82105c05db14a0b82197b0d529f71c44ce889602b117f56e5ca4a8d4af92be",
     "scripts/gates/nif-uv-overlap-gate.py": "69fea539a059804fd2b23c9ac0095b2629d25ae4f61c3769864e95f3fdf79df1",
-    "scripts/gates/package-gate.ps1": "0ce69d19cfbc4162d721e9d7c488e2ffc6935013f13b640e048c4236ad7bc350",
+    "scripts/gates/package-gate.ps1": "7dd863d60392a31e982dff2670c2dda38b06a4a87538b45ad7928f04adb538af",
     "scripts/gates/package-render-gate.py": "c9761c7de8c98c16830edb2363b42f00cea7dfd00b95a3a372d05b6215ca11c3",
     "scripts/gates/pattern-gate.py": "d1b4ce6db01b4f28033178b16466540124bffe3cef5550a6244ab2cb4dd9b785",
     "scripts/gates/pex-header-gate.py": "06051496b8be30caa7801c5342ae907bfb7a915802a6b8894923b1be4f8416a3",
@@ -931,7 +931,7 @@
     "scripts/gates/tr-keys-translated-gate.py": "34b7adf824cca18953f8cc593d1a1e4560019a752b0aba4fd4a2df9f5ba2ff88",
     "scripts/gates/translation-script-gate.py": "076426aac93b01f108a4dbcaecc5323d30f18932563a357fdcb6d770db9b4c86",
     "scripts/gates/ue-cached-pointer-gate.py": "6313653f4d932addd91872cd6fecd895ff514d00b6c720c814344d6d74990032",
-    "scripts/gates/version-gate.ps1": "f00f80555b8e4bbfa8b79d4d7aee4d51c3255c3b9792f323eddf163bb9264318",
+    "scripts/gates/version-gate.ps1": "8c93f881ee4761e7ad234b663a756dc393f9682f3721efcad3f062d00cf10dfb",
     "scripts/gates/xinput-import-gate.py": "4a8e0c1628d5444704266a19040603c5275a50861cc8eaddf37681efca3f08ca",
     "scripts/git-hooks/pre-push": "4dbeea48aba9ec79e33052f666d43eed8d1e36b1c8e464041b656ed1ef43f134",
     "scripts/ops/agent-lock.py": "4004260c3f50b370bc6d6ee85624463462e365a140f4a1320cf5952c80a29de5",
@@ -963,14 +963,14 @@
     "scripts/release/finalize-mod.ps1": "b08184651176219494084d93f9b129e1bc67409d581c3d986dbd164627b97a56",
     "scripts/release/nexus-distro-sweep.ps1": "941491332327fc4cbcc03707351cfd07b0e242d3060d9888ee0b6518d5c10b6c",
     "scripts/release/nexus_files.py": "42a3dba51a76ff6e08ef064042020b155d8b7dfb4de55964fb86891b927b80d8",
-    "scripts/release/package-mod.ps1": "11c6afa64b89c5038a7ff3ba3435cba776a67ace80901d6ad0ba16fa8c12ae7b",
-    "scripts/release/package-render.py": "18c849adc35f956f40f48eb5bad5da707bf0bf6fa29dc70a7ecba9995ff3b082",
+    "scripts/release/package-mod.ps1": "ab54a298847bb07b5b5baa52a3f15b415d2eef88ced2f0f5e274dceb786c1d49",
+    "scripts/release/package-render.py": "1644566aa7e9533371a1d0ed7950ad641d4a29306b8a9021f77d2a9a20eb92a4",
     "scripts/release/package_render_blender.py": "d3ef978fbdf96c1ed0a729a592204f9bdee4fb9a80905cae680a4d9ed558c2d1",
     "scripts/release/package_render_uv.py": "698ee525b966d6da996b5907ed232a0f9327ef5526eef709887cc4170af69dba",
     "scripts/release/post-release-prune.ps1": "c7a1b05cd4fece2928ea3f0f1fd5ce5da5c016dd704f1d0ce92637ff853b3dfa",
-    "scripts/release/pre-finalize-check.ps1": "f7c53edd5078f9fb0458900eba9e9450177b3040fb3e0e27cc1f419a0d1ce603",
+    "scripts/release/pre-finalize-check.ps1": "921fd3f1762ce23cc50665112985ad252c872e625d423149f1aaadd6563ed953",
     "scripts/release/sync-nexus-distro.ps1": "943a228845e477393712e24029e0c884fd272a3db37d474167027f91f1f088b5",
-    "scripts/release/test-build-pick.ps1": "2c668f0c9e0eda8b8d73e23bf185fa262723697a43a793b7cc6594b726179d22",
+    "scripts/release/test-build-pick.ps1": "29f9bde5765ec6e30de186a48fe60b0241da2e21820f777545b38f9aed6840f6",
     "scripts/render/before-after-sheet.py": "9168702e179ab3799874a23f45a37a53934fed6383bcad1efd17da76a88989b1",
     "scripts/render/nif-readback.py": "99a82b1f3e376f37972b2f6c3d4c35b56c121fff96eb436ff89034a7b243eb21",
     "scripts/render/niflib.py": "af82bead2605716fd5f0f3e38730711e9d951ba1fe6eab9e90ab2d12872675ed",
@@ -993,7 +993,7 @@
     "skills/troubleshooting/references/FALSIFICATION-MODE.md": "d4bf2e5aa5c8f83d6b57b1afa6f0fbb6a0ff49556ef4438255f2691a5373eb4f",
     "skills/troubleshooting/references/PROBLEM-CARD.md": "4cc800c25a489847d6ba018051fbf8cd6ca6fb495d805dc765dae3241100179d",
     "skills/weapon-engraving/SKILL.md": "b90b4400ec5f4818bff64dc31374f6db8b67e0481cd40d9ee29b4a5f36d9d6f2",
-    "templates/banner-design-rules.md": "3d6bbbaccad64b40f5b7ddf4da7f569c08532b45007083ada31a9499564245d4",
+    "templates/banner-design-rules.md": "64750d68be588bc66ec158f96837c5c6d6a8b28c7d2043fd5a7633454aa7de74",
     "templates/banner-template-1300x372.html": "e78a8f9ca432647c761beced458f109362d3cfed7363fd5b418d9b368e46767e",
     "templates/banner-template-1920x1080.html": "9c1fce812e26e522069c005be484cbc1a585fbaaddd0be5677ff3b59f2f4751d",
     "templates/nexus-changelog-template.txt": "88aa0b36e4145bf6305a61af75bbbbcaa4661b8a6bf60d3cec3eb37ac2929d45",

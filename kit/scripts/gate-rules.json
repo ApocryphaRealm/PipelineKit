@@ -1,5 +1,5 @@
 {
-  "_version": "1.0.50",
+  "_version": "1.0.51",
   "_revised": "2026-11-18",
   "_about": "Dynamic package gate rules. package-gate.ps1 evaluates every rule here against a package folder (and, when given, its Nexus distro folder and the previous release) and exits non-zero on any hit. ADD A ROW WHEN A CLASS OF DEFECT SHIPS OR NEARLY SHIPS - the same day, beside the logic-library entry. The owner, 2026-09-16: 'come up with a way to dynamically add logic gates to close logic loops as needed when possible instead of just adding to the logic library'. Kinds: see package-gate.ps1's header - forbid-path-regex, forbid-extension, esp-must-be-light, no-doubled-segment, keep-file-classes-of-previous, archive-matches-folder, page-text-forbid-regex, page-text-require-regex, require-file-content-regex, changelog-top-version, distro-file-first-line, translations-complete, lines-match-build-tree, dll-newer-than-sources, page-summary-max-chars, forbid-file-content-regex, esp-record-integrity, json-parses, swf-colour-band, distro-images-are-sdr, launch-gate (a launch gate's row: the package gate only checks it is still wired into its launcher). 'exemptMods' matches the mod's display name or ledger key. 'kinds' limits a rule to the registry kinds listed (skse-mod, or-mod, w3-mod, mo2-plugin, mo2-theme, skyrim-asset, tool).",
   "rules": [
@@ -112,15 +112,23 @@
       "pathPattern": "(^|[\\\\/])LICENSE(-[^\\\\/]*)?(\\.txt|\\.md)?$",
       "contentPattern": "GNU GENERAL PUBLIC LICENSE",
       "added": "2026-09-17",
-      "why": "Logic library 19 (a licence declared in a manifest is not evidence - only the LICENSE file is), 4283 (the LICENSE inside an archive may be the upstream's) and 4725 (Nexus took Lock Interaction Overhaul down for MIT beside CommonLibSSE-NG 7.2). Every mod of ours is GPL-3.0-or-later since 2026-09-13; the shipped LICENSE must be the GPL text."
+      "why": "Logic library 19 (a licence declared in a manifest is not evidence - only the LICENSE file is), 4283 (the LICENSE inside an archive may be the upstream's) and 4725 (Nexus took Lock Interaction Overhaul down for MIT beside CommonLibSSE-NG 7.2). Every mod of ours is GPL-3.0-or-later since 2026-09-13; the shipped LICENSE must be the GPL text.",
+      "exemptMods": [
+        "NorseAddressLibrary",
+        "Norse Address Library"
+      ],
+      "exemptWhy": "Norse Address Library is MIT: a header other modders compile into their own mods (the owner chose MIT and approved this exemption, 2026-11-18)."
     },
     {
       "id": "notice-file-present",
       "kind": "require-file-content-regex",
       "pathPattern": "(^|[\\\\/])NOTICE\\.md$",
       "contentPattern": "GPL|GNU General Public License",
+      "exemptMods": [
+        "Norse Address Library"
+      ],
       "added": "2026-09-17",
-      "why": "The GPL relicense rule: LICENSE plus NOTICE.md (copyright and the GPL notice) ship in every download."
+      "why": "The GPL relicense rule: LICENSE plus NOTICE.md (copyright and the GPL notice) ship in every download. Exempt 2026-11-18: Norse Address Library is MIT (its repo LICENSE; the address tables are data, no GPL part is linked) - it still ships LICENSE and an MIT NOTICE.md, which norse-package-is-a-loadable-ue4ss-tree checks for the LICENSE."
     },
     {
       "id": "readme-carries-the-version",
@@ -1533,6 +1541,15 @@
       "added": "2026-11-18",
       "fix": "keep the object-array slot beside the pointer (IndexOf at store, Alive before each use) - or, if it is true, mark the declaration key-only / lives-forever / owned / alive-checked via <companion>",
       "why": "The stale-UObject crash class is in the past-mistakes library four times across two games (NorseRealtimeNative 0.2.1, the Norse UE4SS frameworks, an Oblivion Remastered menu widget, a runtime UMG widget). The first run of this gate on the 20 Norse repos found two real cases (NorseImpact's slow-motion context and asset cache) and NorseEncounters' point sets never cleared at map load. Also run at every Norse launch by norse-deployed-build-check. Tested by scripts\\tests\\test_ue_cached_pointer_gate.py."
+    },
+    {
+      "id": "norse-package-carries-no-other-games-tree",
+      "kind": "one-game-per-package",
+      "markerPattern": "^Norse[\\\\/]Binaries[\\\\/]",
+      "pattern": "^(fomod|Line-17|Line-SE-AE16|Common|SKSE|Data|Interface|OblivionRemastered|bin|Mods|Root)([\\\\/]|$)",
+      "added": "2026-11-18",
+      "fix": "a Norse package holds the Norse\\ game tree only - package it with package-norse, never seeded from another game's package; a Root\\ folder is Root Builder's (MO2) and is added by install-test-build, never shipped",
+      "why": "Rule 10: the game is read from what a package contains (Get-PackageGame now reads Norse\\Binaries\\ as Norse, 2026-11-18). Before that day 'Norse' fell through ConvertTo-DistroGame to 'Skyrim' without a word, so a Norse mod could have been placed, seeded or pruned as a Skyrim one; a package that mixes the Norse tree with another game's installer folders is the visible form of that mis-route."
     }
   ]
 }

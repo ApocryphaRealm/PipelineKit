@@ -140,7 +140,10 @@ param(
     [string]$File,
     [switch]$Backfill,
     [int]$NexusModId,
-    [ValidateSet('skyrimspecialedition','oblivionremastered','witcher3','site')][string]$Domain,
+    [ValidateSet('skyrimspecialedition','oblivionremastered','witcher3','norse','site')][string]$Domain,
+    # register: the game a new mod is for (2026-11-18, NORSE): Norse writes game, nexusDomain, kind, pluginDir, instances
+    # and installPrefix the way the Oblivion Remastered entries carry them; omitted = Skyrim, as before
+    [ValidateSet('Skyrim','Norse')][string]$Game,
     [switch]$Additional,
     [switch]$NoRepo,
     [string]$Mod,
@@ -554,6 +557,13 @@ function Discover-Locations([string]$repoPath) {
             $t = Get-Content -LiteralPath $_.FullName -Raw
             if ($t -match '<Version>\s*\d+\.\d+\.\d+\s*</Version>') { & $add $rel "$rel <Version>" '(<Version>\s*)\d+\.\d+\.\d+(\s*</Version>)' '${1}{V}${2}' }
         }
+    # NORSE pack manifests (2026-11-18): package\NorsePacks\_<Mod>.ini carries 'Version=X.Y.Z', which NorseManifest reads
+    # and the package ships - the same number as xmake.lua's, so the gate writes and checks it with the others
+    Get-ChildItem -LiteralPath (Join-Path $repoPath 'package\NorsePacks') -Filter '*.ini' -File -ErrorAction SilentlyContinue | ForEach-Object {
+        $rel = 'package\NorsePacks\' + $_.Name
+        $t = Get-Content -LiteralPath $_.FullName -Raw
+        if ($t -match '(?m)^Version\s*=\s*\d+\.\d+\.\d+') { & $add $rel "$rel Version=" '(?m)^(Version\s*=\s*)\d+\.\d+\.\d+' '${1}{V}' }
+    }
     # A plugin-only mod with no build system (Ysgramor's Armor addon, 2026-09-17): a top-level VERSION
     # file holding X.Y.Z alone, which its build.ps1 reads and stamps into the package.
     if (Test-Path -LiteralPath (Join-Path $repoPath 'VERSION')) {
@@ -743,6 +753,8 @@ function Get-NexusDomain($e) {
     # Oblivion Remastered pages read SKYRIM mods 5662-5668 and recorded two of them "working" in the ledger). A registry
     # nexusDomain wins; otherwise a repo that ships an OblivionRemastered\ tree is oblivionremastered.
     if ($e.PSObject.Properties['nexusDomain'] -and $e.nexusDomain) { return [string]$e.nexusDomain }
+    # a NORSE mod (game Norse, 2026-11-18) lives in the 'norse' section - never read as a Skyrim page id
+    if ($e.PSObject.Properties['game'] -and "$($e.game)" -ieq 'Norse') { return 'norse' }
     if ($e.repo -and (Test-Path -LiteralPath (Join-Path $Root "6. current wip mods\$($e.repo)\dist\OblivionRemastered"))) { return 'oblivionremastered' }
     return 'skyrimspecialedition'
 }
@@ -882,6 +894,18 @@ switch ($Action) {
             ignore      = $ign
             nexusModId  = $(if ($NexusModId) { $NexusModId } else { $null })
             registered  = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        }
+        if ($Game -eq 'Norse') {
+            # NORSE: Oath of Blood (2026-11-18): a UE4SS mod ships game-root relative, Norse\Binaries\Win64\ue4ss\Mods\<Repo>\
+            # (dlls\main.dll beside enabled.txt), is tested in the Norse MO2 instance under Root\ (Root Builder), and its page
+            # is in the 'norse' section. package-norse reads these fields; package-gate's kind filter reads 'kind'.
+            $norseMods = "$(@(& py -3 $ResolverPy find norse-mods 2>$null)[0])".Trim()
+            $entry | Add-Member -NotePropertyName game -NotePropertyValue 'Norse'
+            $entry | Add-Member -NotePropertyName nexusDomain -NotePropertyValue 'norse'
+            $entry | Add-Member -NotePropertyName kind -NotePropertyValue 'norse-mod'
+            $entry | Add-Member -NotePropertyName pluginDir -NotePropertyValue ("Norse\Binaries\Win64\ue4ss\Mods\{0}\dlls" -f $Repo)
+            $entry | Add-Member -NotePropertyName instances -NotePropertyValue @($(if ($norseMods -and $norseMods -notlike 'MISSING*' -and $norseMods -notlike 'NO SUCH*') { $norseMods } else { '<MO2>\Norse\mods' }))
+            $entry | Add-Member -NotePropertyName installPrefix -NotePropertyValue 'Root'
         }
         Write-Output ("register  {0}   repo '{1}'   display '{2}'" -f $Mod, $Repo, $DisplayName)
         foreach ($l in $locs) { Ok ("location: {0}" -f $l.label) }

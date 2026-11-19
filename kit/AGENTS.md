@@ -1,8 +1,8 @@
 # Pipeline Kit - entry file (AGENTS.md, identical to CLAUDE.md)
 
-<!-- KIT-VERSION: 1.1.0 | rules 3.3.0 | built 2026-11-18 -->
+<!-- KIT-VERSION: 1.1.0 | rules 3.3.0 | built 2026-11-19 -->
 <!-- RULES-VERSION: 3.3.0 | 70 rules | 2026-11-16 -->
-**Pipeline Kit 1.1.0** - a build of the rules set **3.3.0**, generated 2026-11-18. Prose CC BY-SA 4.0,
+**Pipeline Kit 1.1.0** - a build of the rules set **3.3.0**, generated 2026-11-19. Prose CC BY-SA 4.0,
 scripts GPL-3.0-or-later (`LICENSE-GPL-3.0.txt`, `CC-BY-SA-4.0.txt`, `NOTICE.md`).
 
 This folder is a **mod pipeline for an AI coding agent**: a set of standing rules, a record of past failures, and a

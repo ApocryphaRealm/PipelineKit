@@ -915,11 +915,15 @@ foreach ($r in $rules) {
             # Witcher 3 1.0.0 was judged against Njordlinger's and Oblivion's "Apocrypha Menu Framework" folders - the
             # Skyrim and OR frameworks, same display name - and failed as "never installed there").
             $pkgWitcher = @($files | Where-Object { $_ -match '(^|[\\/])bin[\\/]x64_dx12[\\/]' }).Count -gt 0
+            # ...and a NORSE package (Norse\Binaries\, UE4SS) only in the Norse instance (2026-11-18)
+            $pkgNorse = @($files | Where-Object { $_ -match '^Norse[\\/]Binaries[\\/]' }).Count -gt 0
             foreach ($root in @($r.instances)) {
                 if (-not (Test-Path -LiteralPath $root)) { continue }
                 $rootOblivion = $root -match '(?i)oblivion'
                 $rootWitcher = $root -match '(?i)witcher'
+                $rootNorse = $root -match '(?i)[\\/]Norse[\\/]'
                 if ($rootWitcher -ne $pkgWitcher) { continue }
+                if ($rootNorse -ne $pkgNorse) { continue }
                 if (($rootOblivion -and $pkgSkse -and -not $pkgObse) -or (-not $rootOblivion -and $pkgObse -and -not $pkgSkse)) { continue }
                 # WHICH FOLDER HOLDS THE BUILD UNDER TEST (2026-09-23). Njordlinger's convention: a build in test
                 # sits in "test <Display> <X.Y.Z>" (or "test <Display>", "unpublished <Display>"), while a folder
@@ -931,6 +935,8 @@ foreach ($r in $rules) {
                 foreach ($n in @($display, $ModName) | Select-Object -Unique) {
                     $want += @("test $n $Version", "test $n", "unpublished $n")
                 }
+                # the Norse instance names a mod folder "<Repo> <X.Y.Z>" (NorseTagger 0.1.0), the repo's own name (2026-11-18)
+                if ($pkgNorse -and $RepoPath) { $want += @("$(Split-Path $RepoPath -Leaf) $Version") }
                 $dirs = @(Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue)
                 $candidates = @($dirs | Where-Object { $want -contains $_.Name })
                 # the exact "test <Display> <X.Y.Z>" folder is the one under test when it exists (2026-09-28)

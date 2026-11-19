@@ -447,6 +447,24 @@ if (-not $repo) {
 }
 Write-Ok "source repo: $repo"
 
+# A NORSE (UE4SS) MOD IS ASSEMBLED BY ROLE package-norse (2026-11-18). This script seeds from the previous package and
+# drops one <Target>.dll into pluginDir; a Norse mod's layout is a rule (dlls\main.dll + enabled.txt, ue4ss\NorsePacks,
+# data-only mods, the licence in the mod folder), computed from the repo by package-norse.py, which runs the same gates
+# (version gate, changelog, pdb pairing, prune, package-gate). The registry's game decides, never the name.
+try {
+    $regNorse = Get-Content -LiteralPath $RoleRegistry -Raw | ConvertFrom-Json
+    $norseProp = @($regNorse.PSObject.Properties | Where-Object { $_.Value.repo -ieq (Split-Path $repo -Leaf) -and "$($_.Value.game)" -ieq 'Norse' }) | Select-Object -First 1
+} catch { $norseProp = $null }
+if ($norseProp) {
+    $norseArgs = @('run', 'package-norse', '--mod', $norseProp.Name, '--version', $Version)
+    if ($Force) { $norseArgs += '--force' }
+    if ($NoPrune) { $norseArgs += '--no-prune' }
+    if ($WhatIfPreference) { $norseArgs += '--dry-run' }
+    Write-Ok "game: Norse - handing over to role package-norse"
+    & py -3 $ResolverPy @norseArgs
+    exit $LASTEXITCODE
+}
+
 # THE AGENT-LOCK GATE (the owner, 2026-10-12; .MD\agent-bus\README.md): one session builds or commits a mod repo at a
 # time. A free or stale lock is taken, our own is refreshed, a LIVE lock held by ANOTHER session refuses (agent-lock exit
 # 3). The lock this run took is released when it ends (the token: never a lock an outer call took). A missing or failing

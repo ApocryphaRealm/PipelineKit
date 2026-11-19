@@ -1369,7 +1369,27 @@ if ($RepoPath) {
     foreach ($f in $srcFiles) {
         if (Select-String -LiteralPath $f.FullName -Pattern 'RegisterTool\s*\(|GetDevBenchInterface' -ErrorAction SilentlyContinue -Quiet) { $devbenchHit = $true; break }
     }
-    if ($devbenchHit) {
+    # NORSE mods (Main Agent's ruling, 2026-11-18): DevBench/TestBench is Skyrim's API, so a Norse mod is exempt from it.
+    # What counts instead: (a) a live command surface - console commands the mod answers in game (UE4SS
+    # RegisterProcessConsoleExecCallback / ProcessConsoleExec) - or, for a pure library or data mod, its consumer's;
+    # (b) its own log; (c) in-game evidence, which version-gate's 'record ... -Status working' already requires.
+    # The game is read from the registry entry of this repo, never from the mod's name.
+    $isNorse = ($modGame -eq 'Norse')   # the game from this repo's registry entry (read once near the top)
+    $norseSurface = $false
+    if ($isNorse) {
+        foreach ($f in $srcFiles) {
+            if (Select-String -LiteralPath $f.FullName -Pattern 'RegisterProcessConsoleExecCallback|ProcessConsoleExec' -ErrorAction SilentlyContinue -Quiet) { $norseSurface = $true; break }
+        }
+    }
+    $norseDll = $isNorse -and (Test-Path -LiteralPath (Join-Path $RepoPath 'xmake.lua')) -and
+        (Select-String -LiteralPath (Join-Path $RepoPath 'xmake.lua') -Pattern 'set_kind\(\s*"shared"\s*\)' -Quiet -ErrorAction SilentlyContinue)
+    if ($isNorse -and $norseSurface) {
+        Add-Result -Rule '31/Playbook' -Check 'DevBench tool registration present' -Status PASS -Detail 'Norse mod (exempt from DevBench, Main Agent 2026-11-18): it answers console commands in game (ProcessConsoleExec); its in-game evidence is version-gate''s working record.'
+    } elseif ($isNorse -and -not $norseDll) {
+        Add-Result -Rule '31/Playbook' -Check 'DevBench tool registration present' -Status SKIP -Detail 'Norse library/data mod (no DLL of its own): its consumer''s command surface and log count (Main Agent 2026-11-18).'
+    } elseif ($isNorse) {
+        Add-Result -Rule '31/Playbook' -Check 'DevBench tool registration present' -Status FAIL -Detail 'Norse mod with a DLL but no console command surface (no RegisterProcessConsoleExecCallback/ProcessConsoleExec). Norse mods are exempt from DevBench but must answer live commands in game (Main Agent 2026-11-18).'
+    } elseif ($devbenchHit) {
         Add-Result -Rule '31/Playbook' -Check 'DevBench tool registration present' -Status PASS -Detail 'RegisterTool/GetDevBenchInterface found in source.'
     } elseif (@($srcFiles).Count -eq 0) {
         # An ASSET-ONLY mod has no code at all - no DLL, nothing running, nothing for a DevBench tool

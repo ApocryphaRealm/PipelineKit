@@ -54,11 +54,11 @@ function Get-PackagePlugins([string]$Path) {
 function Get-PackageAssets([string]$Path) {
     # 2026-09-29 (Oblivion Paper Theme, one INI and four PNGs): a file under a GAME tree (Data\, SKSE\, OblivionRemastered\,
     # stylesheets\, bin\, Mods\) is an asset whatever its extension - the extension list only keeps a package's own
-    # documents and previews from counting.
+    # documents and previews from counting. 2026-11-19: Norse (NORSE game-root packages: a data-only mod ships its table as .txt and its pack manifest as .ini).
     $full = (Get-Item -LiteralPath $Path).FullName
     return @(Get-ChildItem -LiteralPath $full -Recurse -File -ErrorAction SilentlyContinue |
              Where-Object { ($_.Extension -notmatch '^\.(txt|md|ini|json|xml|png|jpg|html)$') -or
-                            ($_.FullName.Substring($full.Length) -match '^[\\/](Data|SKSE|OblivionRemastered|stylesheets|bin|Mods)[\\/]') })
+                            ($_.FullName.Substring($full.Length) -match '^[\\/](Data|SKSE|OblivionRemastered|Norse|stylesheets|bin|Mods)[\\/]') })
 }
 
 function Get-PackageBinaries([string]$Path, [string[]]$Foreign = @()) {

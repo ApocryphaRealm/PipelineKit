@@ -8,7 +8,7 @@
 #     .MD\resolvers\resolve.py distro <sub>     (run "resolve.py distro" with no sub-command for the usage line)
 # Every function below keeps its name, parameters and return type and only asks resolve.py; none has logic of its own.
 #
-#   ConvertTo-DistroGame    -Game <text>                                  -> 'Skyrim' | 'Oblivion Remastered' | 'MO2' | 'Witcher 3' | ''
+#   ConvertTo-DistroGame    -Game <text>                                  -> 'Skyrim' | 'Oblivion Remastered' | 'MO2' | 'Witcher 3' | 'Norse' | ''
 #   Get-DistroRoot / Get-DistroMap / Set-DistroMapEntry                   -> the distro root, the folder -> mod map (hashtable)
 #   ConvertTo-DistroModPart -ModName -Game                                -> the mod part of a folder name
 #   Get-DistroFolderGame    -Folder                                       -> the game a distro folder is for ('' unprefixed)
